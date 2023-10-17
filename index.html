@@ -213,6 +213,8 @@
     
     <footer class="article-footer">
        
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%9A%8F%E7%AC%94/" rel="tag">随笔</a></li></ul>
+
     </footer>
   </div>
 
@@ -245,11 +247,7 @@
     <div class="article-meta">
       <a href="/2020/05/08/%E4%B9%A1%E5%9C%9F%E4%B8%AD%E5%9B%BD-%E4%BB%8E%E6%AC%B2%E6%9C%9B%E5%88%B0%E9%9C%80%E8%A6%81/" class="article-date">
   <time datetime="2020-05-08T00:54:47.000Z" itemprop="datePublished">2020-05-08</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/">阅读笔记</a>
-  </div>
-   
+</a>    
     </div>
       
     <div class="article-entry" itemprop="articleBody">
@@ -271,6 +269,8 @@
     
     <footer class="article-footer">
        
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" rel="tag">阅读笔记</a></li></ul>
+
     </footer>
   </div>
 
@@ -326,6 +326,8 @@
     
     <footer class="article-footer">
        
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" rel="tag">阅读笔记</a></li></ul>
+
     </footer>
   </div>
 
@@ -386,6 +388,81 @@
     
     <footer class="article-footer">
        
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" rel="tag">阅读笔记</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+  
+</article>
+
+    
+    <article
+  id="post-leetcode-312-burst-ballons"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2018/12/10/leetcode-312-burst-ballons/"
+    >Leetcode 312. Burst Balloons</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2018/12/10/leetcode-312-burst-ballons/" class="article-date">
+  <time datetime="2018-12-10T14:21:47.000Z" itemprop="datePublished">2018-12-10</time>
+</a>    
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <blockquote>
+<p>第一次做动态规划的题目</p>
+</blockquote>
+<h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><p>Given n balloons, indexed from <code>0</code> to <code>n-1</code>. Each balloon is painted with a number on it represented by array nums. You are asked to burst all the balloons. If the you burst balloon i you will get <code>nums[left] * nums[i] * nums[right]</code> coins. Here left and right are adjacent indices of <code>i</code>. After the burst, the left and right then becomes adjacent.</p>
+<p>Find the maximum coins you can collect by bursting the balloons wisely.</p>
+<p><strong>Note</strong>:</p>
+<ul>
+<li>You may imagine <code>nums[-1] = nums[n] = 1</code>. They are not real therefore you can not burst them.</li>
+<li><code>0 ≤ n ≤ 500</code>, <code>0 ≤ nums[i] ≤ 100</code></li>
+</ul>
+<p><strong>Example</strong>:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Input: [3,1,5,8]</span><br><span class="line">Output: 167 </span><br><span class="line">Explanation: nums = [3,1,5,8] --&gt; [3,5,8] --&gt;   [3,8]   --&gt;  [8]  --&gt; []</span><br><span class="line">             coins =  3*1*5      +  3*5*8    +  1*3*8      + 1*8*1   = 167</span><br></pre></td></tr></table></figure>
+
+<h1 id="题目解析与分析"><a href="#题目解析与分析" class="headerlink" title="题目解析与分析"></a>题目解析与分析</h1><h2 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h2><p>大概就是：有一排气球，每个标了数字，然后戳一个气球得到的奖励是<code>左气球×该气球×右气球</code>，当然如果左或右没有气球就乘1。问该以什么顺序戳气球得到的奖励最大</p>
+<h2 id="最笨的思路"><a href="#最笨的思路" class="headerlink" title="最笨的思路"></a>最笨的思路</h2><p>枚举法：将所有的情况列举一遍。当有<code>n</code>个气球的时候，第一步我们有<code>n</code>种选择，第二步我们又有<code>n-1</code>个选择……显然全枚举的算法复杂度为$O(N!)$,效率不敢恭维，因此这里就不实现——因为不可能过。</p>
+<h2 id=""><a href="#" class="headerlink" title=""></a></h2><p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/burst-balloons/discuss/76228/Share-some-analysis-and-explanations">参阅</a></p>
+<h2 id="进一步想法"><a href="#进一步想法" class="headerlink" title="进一步想法"></a>进一步想法</h2><p>我们需要去考虑上面枚举法做了什么重复的计算。我们可以想到，给定一组气球，它所能获得的最大的奖励应该和前面已经被戳的气球无关——被戳过的气球只是在求和的时候累积上了而已。</p>
+<p>对于给定<code>k&lt;n</code>, 其可能的组合数有 $C_n^k$ 种，我们可以把<code>k</code>(从1开始)的所有情况都记录在内存上，<code>k+1</code>就可以基于<code>k</code>进行计算，那么我们总共需要进行的计算就是<br>$$C_n^1+C_n^2+…+C_n^n$$<br>这种算法优于$O(N!)$, 但仍然坏于$O(2^N)$; 我们需要更优的算法</p>
+<h2 id="分治的想法"><a href="#分治的想法" class="headerlink" title="分治的想法"></a>分治的想法</h2><p>我们考虑用分治去思考这一道题。先是正常地考虑分治，我戳爆某个气球，可不可以把剩下的气球分成两堆呢？这是否可行的前提是两堆会不会互相干扰：答案是肯定的，在戳爆某个气球以后，左堆的最右气球会需要右堆的最左气球来进行计算。</p>
+<p><strong>这时候我们需要反向的思维</strong>：我们正向地想戳气球的过程，当然会导致两堆相互影响。那如果我们考虑的是<strong>在这一堆里最后戳爆的那个气球</strong>呢？假如A,B,C,D,E中我最后戳C, 那左堆(A,B)在戳的过程中显然会以C为右边界，而右堆(D,E)以C为左边界——这就实现了分治，两个子问题是相互不干扰的。</p>
+<blockquote>
+<p>想一下为什么分治会更好，它少算了哪些步骤</p>
+</blockquote>
+<p>具体的算法如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">maxCoins</span><span class="params">(<span class="type">int</span>[] iNums)</span> &#123;</span><br><span class="line">    <span class="type">int</span>[] nums = <span class="keyword">new</span> <span class="title class_">int</span>[iNums.length + <span class="number">2</span>];</span><br><span class="line">    <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> x : iNums) <span class="keyword">if</span> (x &gt; <span class="number">0</span>) nums[n++] = x;</span><br><span class="line">    nums[<span class="number">0</span>] = nums[n++] = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="type">int</span>[][] memo = <span class="keyword">new</span> <span class="title class_">int</span>[n][n];</span><br><span class="line">    <span class="keyword">return</span> burst(memo, nums, <span class="number">0</span>, n - <span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">burst</span><span class="params">(<span class="type">int</span>[][] memo, <span class="type">int</span>[] nums, <span class="type">int</span> left, <span class="type">int</span> right)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (left + <span class="number">1</span> == right) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (memo[left][right] &gt; <span class="number">0</span>) <span class="keyword">return</span> memo[left][right];</span><br><span class="line">    <span class="type">int</span> <span class="variable">ans</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> left + <span class="number">1</span>; i &lt; right; ++i)</span><br><span class="line">        ans = Math.max(ans, nums[left] * nums[i] * nums[right] </span><br><span class="line">        + burst(memo, nums, left, i) + burst(memo, nums, i, right));</span><br><span class="line">    memo[left][right] = ans;</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 12 ms</span></span><br></pre></td></tr></table></figure> 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag">动态规划</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
+
     </footer>
   </div>
 
@@ -659,11 +736,7 @@
     <div class="article-meta">
       <a href="/2018/11/24/Go-Learning/" class="article-date">
   <time datetime="2018-11-24T03:58:17.000Z" itemprop="datePublished">2018-11-24</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a>
-  </div>
-   
+</a>    
     </div>
       
     <div class="article-entry" itemprop="articleBody">
@@ -703,114 +776,8 @@
     
     <footer class="article-footer">
        
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Go/" rel="tag">Go</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" rel="tag">编程语言</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Go/" rel="tag">Go</a></li></ul>
 
-    </footer>
-  </div>
-
-   
-   
-  
-</article>
-
-    
-    <article
-  id="post-乡土中国"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2018/08/10/%E4%B9%A1%E5%9C%9F%E4%B8%AD%E5%9B%BD/"
-    >乡土中国</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2018/08/10/%E4%B9%A1%E5%9C%9F%E4%B8%AD%E5%9B%BD/" class="article-date">
-  <time datetime="2018-08-10T06:38:19.000Z" itemprop="datePublished">2018-08-10</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/">阅读笔记</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <blockquote>
-<p>再拾起这本书，一晃已是五个月过去。</p>
-</blockquote>
-<h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><blockquote>
-<p>1947首版，1984年再版</p>
-</blockquote>
-<p>  费孝通先生声明了本书并不是完全严密的观点，更多是<strong>启发式的描述</strong>。这本书原本就是教书用的小册子。另外，本书不会深入到具体乡村社会的细节描写，而是<strong>概念的提炼(Ideal Type)</strong></p>
-<h1 id="乡土本色"><a href="#乡土本色" class="headerlink" title="乡土本色"></a>乡土本色</h1><p>土是中心词，对土地的依赖，对土地的依赖导致了：</p>
-<ul>
-<li>人与空间关系上——<strong>不流动</strong></li>
-<li>人在空间上不流动表现为人与人在空间的排列关系上——<strong>孤立和隔绝</strong>。</li>
-</ul>
-<p>这种人与人之间的隔绝不是指单个人与他人之间的，而是<strong>以一处住在一起的集团为单位</strong>(一个村落)。</p>
-<p>但这看起来有点奇怪，因为单就农业来说，并不需要群居合作。以家庭为单位足以维持生产，夫妇和孩子聚居于一处有者两性和抚养上的需要。</p>
-<p>群居的原因：</p>
-<ol>
-<li>小农经济，保证住处离农场近</li>
-<li>水利合作</li>
-<li>安全，共同防卫</li>
-<li>（我觉得这个最重要）土地平等继承，兄弟继承祖业并适当向周围拓展。（三家村-&gt;几千户的大村）</li>
-</ol>
-<p><em><strong>综上，乡土属性导致中国乡土社区的单位是村落，形成了“生于斯、死于斯”的社会，村落之间人口流动少，各地乡村生活则具有地方性</strong></em></p>
-<p>这种低流动性使得乡村形成一种<strong>熟悉</strong>的社会</p>
-<p>两种社会类型：</p>
-<table>
-<thead>
-<tr>
-<th>社会类型</th>
-<th>目的性</th>
-<th>德语</th>
-<th>又名</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>乡村</td>
-<td>无目的，一起生长而发生</td>
-<td>Gemeinschaft“有机的团结”</td>
-<td>礼俗社会</td>
-</tr>
-<tr>
-<td>城市</td>
-<td>有目的，完成任务而聚集</td>
-<td>Gesellschaft “机械的团结”</td>
-<td>法理社会</td>
-</tr>
-</tbody></table>
-<p>乡下人对人和物都是自然习得的，<strong>无需去抽象出普遍规则</strong>，只需在接触所及的范围之中知道从手段到目的间的个别关联。</p>
-<blockquote>
-<p>孔子言孝，没有抽象地加以说明，而是列举具体的行为，并归结于心安二字。</p>
-</blockquote>
-<p>熟悉则可随心所欲而不逾矩，人人都遵守从小习得的规矩，</p>
-<blockquote>
-<p>“大家都是熟人了，打个招呼就是了，还用得着多说吗？”</p>
-</blockquote>
-<p>这种乡村里自然习得的规矩在城里却往往行不通，这便是乡下人“土气”的来源之一 —— 他们不是落后的东西，只是在陌生人所组成的现代社会中无法用规矩去应付，于是“土气”成了骂人的词汇。</p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
     </footer>
   </div>
 
@@ -823,6 +790,11 @@
   </article>
   
 
+  
+  <nav class="page-nav">
+    
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">下一页</a>
+  </nav>
   
 </section>
 </div>
