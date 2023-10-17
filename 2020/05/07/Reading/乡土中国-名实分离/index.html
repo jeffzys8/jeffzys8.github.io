@@ -11,7 +11,7 @@
         name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1"
       />
-      <title>Leetcode 312. Burst Balloons |  Jeff的博客</title>
+      <title>乡土中国-名实分离 |  Jeff的博客</title>
   <meta name="generator" content="hexo-theme-ayer">
       
       <link rel="shortcut icon" href="/favicon.ico" />
@@ -53,7 +53,7 @@
     <main class="content on">
       <section class="outer">
   <article
-  id="post-leetcode-312-burst-ballons"
+  id="post-Reading/乡土中国-名实分离"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -64,7 +64,7 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  Leetcode 312. Burst Balloons
+  乡土中国-名实分离
 </h1>
  
 
@@ -72,15 +72,15 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2018/12/10/leetcode-312-burst-ballons/" class="article-date">
-  <time datetime="2018-12-10T14:21:47.000Z" itemprop="datePublished">2018-12-10</time>
+      <a href="/2020/05/07/Reading/%E4%B9%A1%E5%9C%9F%E4%B8%AD%E5%9B%BD-%E5%90%8D%E5%AE%9E%E5%88%86%E7%A6%BB/" class="article-date">
+  <time datetime="2020-05-07T00:54:51.000Z" itemprop="datePublished">2020-05-07</time>
 </a>   
 <div class="word_count">
     <span class="post-time">
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">863</span>
+            <span class="post-count">932</span>
         </span>
     </span>
 
@@ -96,8 +96,6 @@
  
     </div>
       
-    <div class="tocbot"></div>
-
 
 
 
@@ -105,30 +103,14 @@
     <div class="article-entry" itemprop="articleBody">
        
   <blockquote>
-<p>第一次做动态规划的题目</p>
+<p>晨读day two</p>
 </blockquote>
-<h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><p>Given n balloons, indexed from <code>0</code> to <code>n-1</code>. Each balloon is painted with a number on it represented by array nums. You are asked to burst all the balloons. If the you burst balloon i you will get <code>nums[left] * nums[i] * nums[right]</code> coins. Here left and right are adjacent indices of <code>i</code>. After the burst, the left and right then becomes adjacent.</p>
-<p>Find the maximum coins you can collect by bursting the balloons wisely.</p>
-<p><strong>Note</strong>:</p>
-<ul>
-<li>You may imagine <code>nums[-1] = nums[n] = 1</code>. They are not real therefore you can not burst them.</li>
-<li><code>0 ≤ n ≤ 500</code>, <code>0 ≤ nums[i] ≤ 100</code></li>
-</ul>
-<p><strong>Example</strong>:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Input: [3,1,5,8]</span><br><span class="line">Output: 167 </span><br><span class="line">Explanation: nums = [3,1,5,8] --&gt; [3,5,8] --&gt;   [3,8]   --&gt;  [8]  --&gt; []</span><br><span class="line">             coins =  3*1*5      +  3*5*8    +  1*3*8      + 1*8*1   = 167</span><br></pre></td></tr></table></figure>
-
-<h1 id="题目解析与分析"><a href="#题目解析与分析" class="headerlink" title="题目解析与分析"></a>题目解析与分析</h1><h2 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h2><p>大概就是：有一排气球，每个标了数字，然后戳一个气球得到的奖励是<code>左气球×该气球×右气球</code>，当然如果左或右没有气球就乘1。问该以什么顺序戳气球得到的奖励最大</p>
-<h2 id="最笨的思路"><a href="#最笨的思路" class="headerlink" title="最笨的思路"></a>最笨的思路</h2><p>枚举法：将所有的情况列举一遍。当有<code>n</code>个气球的时候，第一步我们有<code>n</code>种选择，第二步我们又有<code>n-1</code>个选择……显然全枚举的算法复杂度为$O(N!)$,效率不敢恭维，因此这里就不实现——因为不可能过。</p>
-<h2 id=""><a href="#" class="headerlink" title=""></a></h2><p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/burst-balloons/discuss/76228/Share-some-analysis-and-explanations">参阅</a></p>
-<h2 id="进一步想法"><a href="#进一步想法" class="headerlink" title="进一步想法"></a>进一步想法</h2><p>我们需要去考虑上面枚举法做了什么重复的计算。我们可以想到，给定一组气球，它所能获得的最大的奖励应该和前面已经被戳的气球无关——被戳过的气球只是在求和的时候累积上了而已。</p>
-<p>对于给定<code>k&lt;n</code>, 其可能的组合数有 $C_n^k$ 种，我们可以把<code>k</code>(从1开始)的所有情况都记录在内存上，<code>k+1</code>就可以基于<code>k</code>进行计算，那么我们总共需要进行的计算就是<br>$$C_n^1+C_n^2+…+C_n^n$$<br>这种算法优于$O(N!)$, 但仍然坏于$O(2^N)$; 我们需要更优的算法</p>
-<h2 id="分治的想法"><a href="#分治的想法" class="headerlink" title="分治的想法"></a>分治的想法</h2><p>我们考虑用分治去思考这一道题。先是正常地考虑分治，我戳爆某个气球，可不可以把剩下的气球分成两堆呢？这是否可行的前提是两堆会不会互相干扰：答案是肯定的，在戳爆某个气球以后，左堆的最右气球会需要右堆的最左气球来进行计算。</p>
-<p><strong>这时候我们需要反向的思维</strong>：我们正向地想戳气球的过程，当然会导致两堆相互影响。那如果我们考虑的是<strong>在这一堆里最后戳爆的那个气球</strong>呢？假如A,B,C,D,E中我最后戳C, 那左堆(A,B)在戳的过程中显然会以C为右边界，而右堆(D,E)以C为左边界——这就实现了分治，两个子问题是相互不干扰的。</p>
-<blockquote>
-<p>想一下为什么分治会更好，它少算了哪些步骤</p>
-</blockquote>
-<p>具体的算法如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">maxCoins</span><span class="params">(<span class="type">int</span>[] iNums)</span> &#123;</span><br><span class="line">    <span class="type">int</span>[] nums = <span class="keyword">new</span> <span class="title class_">int</span>[iNums.length + <span class="number">2</span>];</span><br><span class="line">    <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> x : iNums) <span class="keyword">if</span> (x &gt; <span class="number">0</span>) nums[n++] = x;</span><br><span class="line">    nums[<span class="number">0</span>] = nums[n++] = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="type">int</span>[][] memo = <span class="keyword">new</span> <span class="title class_">int</span>[n][n];</span><br><span class="line">    <span class="keyword">return</span> burst(memo, nums, <span class="number">0</span>, n - <span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">burst</span><span class="params">(<span class="type">int</span>[][] memo, <span class="type">int</span>[] nums, <span class="type">int</span> left, <span class="type">int</span> right)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (left + <span class="number">1</span> == right) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (memo[left][right] &gt; <span class="number">0</span>) <span class="keyword">return</span> memo[left][right];</span><br><span class="line">    <span class="type">int</span> <span class="variable">ans</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> left + <span class="number">1</span>; i &lt; right; ++i)</span><br><span class="line">        ans = Math.max(ans, nums[left] * nums[i] * nums[right] </span><br><span class="line">        + burst(memo, nums, left, i) + burst(memo, nums, i, right));</span><br><span class="line">    memo[left][right] = ans;</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 12 ms</span></span><br></pre></td></tr></table></figure> 
+<p>这章有点标题党的感觉，虽然名字叫“名实分离”，但其实关于这一部分在最后才有所提及，也是前文论述的部分延伸结果。名实分离实际是变动社会中人们对长老权力的一种适应，在权力未惠及自己（还不是长老）时选择“阳奉阴违”的方式，而后在自己也成为长老以后以注释的方式为权力加入新的解释内容（注释），满足变动社会中维护长老社会的需求。</p>
+<p>来进一步总结一下社会的几种权力的形式。首先就是上文提到的长老权力，这是稳定的乡村社会中具备的一种权力，父命子不可违。其次是横暴权力，是独裁和专制，其基础是剥削。随后是同意权力，发生在契约建立的基础上，辅以对权力的监督；最后是变动社会中特有的权力，可以说是长老权力的反面，时势权力。这里其实是化用了“时势造英雄”这一句，因为这种权力突出的就是英雄这个符号。由英雄带领大家走出社会变更时期的惶恐和迷茫。</p>
+<p>这一章实际上针对时势权力影射了当时的政治内容，但并没有举出时下的例子，也没有拿乡村社会的变更作为示例。这一点其实让我有些不满意，有点“没有值回票价”的感觉。倒不是我想实际地看政治例子，这方面可以自己补充，我想了解的是乡村是怎么样受时势权力影响和变更的。当然这里我自己也有记忆储备，便是前段时间看的《平凡的世界》，里面的孙少安就可以算是这样的一个英雄。</p>
+<p>横暴权力压制反对，同意权力实际上建立在反对（监督）的基础上，长老社会虽也不同意反对但有独特的改进方法。而对于时势权力，反对也当然是存在的，因为文化英雄的观点受其局限性总会有失偏颇或不公的地方，再者说，一个迷茫的时代肯定不止一个英雄，社会不会缺少自信的人。这时候反对的声音引起的结果就是拉阵营、搞宣传、打嘴仗，从而争取人民的跟随和信任。所以实际上时势权力也是无法容忍反对的，反对者不是同一个阵营。因此在我理解上，时势权力也是需要逐渐被同意权力过渡的，这也是因为人民无法容忍一直迷茫，总要向平稳发展过渡。</p>
+<p>另外讲到社会结构的变动时候，作者提到了一个观点（他不同意），社会结构也类似于有机体，也有生长、发展和衰老的阶段。他认为社会结构就是人用于满足生活需要的工具，当社会结构不满足人的需要时，就会发生社会结构的变更，这一动作是人主动去做的。实际我认为两种说法都有合理性，社会结构确实是由人发明和更改的，但根据论文 More Is Different 的说法，更宏观的内容实际上已经不能够用微观的调研方法去研究，正如小球的自由落体不能用分子动力学来研究一样，社会结构本身应该以高于个体的宏观研究方法去研究。</p>
+ 
       <!-- reward -->
       
       <div id="reword-out">
@@ -198,12 +180,12 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://jeffzys8.github.io/2018/12/10/leetcode-312-burst-ballons/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://jeffzys8.github.io/2020/05/07/Reading/%E4%B9%A1%E5%9C%9F%E4%B8%AD%E5%9B%BD-%E5%90%8D%E5%AE%9E%E5%88%86%E7%A6%BB/" alt="微信分享二维码">
     </div>
 </div>
 
 <div id="share-mask"></div>  
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag">动态规划</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" rel="tag">阅读笔记</a></li></ul>
 
     </footer>
   </div>
@@ -211,19 +193,19 @@
    
   <nav class="article-nav">
     
-      <a href="/2020/05/06/%E4%B9%A1%E5%9C%9F%E4%B8%AD%E5%9B%BD-%E8%A1%80%E7%BC%98%E4%B8%8E%E5%9C%B0%E7%BC%98/" class="article-nav-link">
+      <a href="/2020/05/08/Reading/%E4%B9%A1%E5%9C%9F%E4%B8%AD%E5%9B%BD-%E4%BB%8E%E6%AC%B2%E6%9C%9B%E5%88%B0%E9%9C%80%E8%A6%81/" class="article-nav-link">
         <strong class="article-nav-caption">上一篇</strong>
         <div class="article-nav-title">
           
-            乡土中国-血缘与地缘
+            乡土中国-从欲望到需要
           
         </div>
       </a>
     
     
-      <a href="/2018/11/26/Algorithm/graph-edge-type/" class="article-nav-link">
+      <a href="/2020/05/06/Reading/%E4%B9%A1%E5%9C%9F%E4%B8%AD%E5%9B%BD-%E8%A1%80%E7%BC%98%E4%B8%8E%E5%9C%B0%E7%BC%98/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">edge type</div>
+        <div class="article-nav-title">乡土中国-血缘与地缘</div>
       </a>
     
   </nav>

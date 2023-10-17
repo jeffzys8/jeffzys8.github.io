@@ -11,7 +11,7 @@
         name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1"
       />
-      <title>面试经历-字节跳动后台开发(基础架构)实习岗 |  Jeff的博客</title>
+      <title>ad钙奶和房子 |  Jeff的博客</title>
   <meta name="generator" content="hexo-theme-ayer">
       
       <link rel="shortcut icon" href="/favicon.ico" />
@@ -53,7 +53,7 @@
     <main class="content on">
       <section class="outer">
   <article
-  id="post-Interview-ByteDance"
+  id="post-Essay/ad钙奶和房子"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -64,7 +64,7 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  面试经历-字节跳动后台开发(基础架构)实习岗
+  ad钙奶和房子
 </h1>
  
 
@@ -72,19 +72,15 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2018/11/26/Interview-ByteDance/" class="article-date">
-  <time datetime="2018-11-26T05:47:10.000Z" itemprop="datePublished">2018-11-26</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a>
-  </div>
-  
+      <a href="/2023/10/17/Essay/ad%E9%92%99%E5%A5%B6%E5%92%8C%E6%88%BF%E5%AD%90/" class="article-date">
+  <time datetime="2023-10-16T16:22:54.000Z" itemprop="datePublished">2023-10-17</time>
+</a>   
 <div class="word_count">
     <span class="post-time">
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">1.5k</span>
+            <span class="post-count">523</span>
         </span>
     </span>
 
@@ -93,56 +89,25 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">5 min</span>
+            <span class="post-count">1 min</span>
         </span>
     </span>
 </div>
  
     </div>
       
-    <div class="tocbot"></div>
-
 
 
 
   
     <div class="article-entry" itemprop="articleBody">
        
-  <p>昨天下午尝试了第一次视频面试，面试的岗位是字节跳动的[后台开发-基础架构]实习岗，由于我本身的技术的确是远远没有达到岗位的要求，所以这一次的面试也只是抱着试一试的态度，了解一下面试的流程，积累一些经验，同时通过面试进一步了解自己应该努力的方向。</p>
-<span id="more"></span>
-
-<p>时间定在了周日下午的四点，直到面试前都没有加上HR的微信，所以在面试前心中还是有种“我要被鸽了”的感觉。点开通知邮件发给我的面试链接以后，点开展示的就是牛客网的面试系统界面:</p>
-<p><img src="/2018/11/26/Interview-ByteDance/interface.png"></p>
-<p>四点过了两分钟，面试官就上线了，是个很有亲和力的中年男子。此时我还是很紧张的，毕竟是第一次参加正经的面试，所以谈吐都有些不自然了。调整视频连接耽误了一小段时间。</p>
-<h2 id="编程"><a href="#编程" class="headerlink" title="编程"></a>编程</h2><p>面试官看了看我的简历，上面有一项是“熟悉Go语言编程”；我听到他提起这个心里就凉了一半：其实自己对于Go语言也借由本学期的服务计算课进行了个入门而已，远算不上熟悉。然后他说有一道题特别适合用Go来编程，就出给我做了:</p>
-<hr>
-
-<p>先定义了一个<code>read</code>函数，这个函数就是一个Socket接口，每次会读数据入缓冲区；然后要我写一个<code>readLine</code>函数，按行输出Socket读的数据，他一开始先给了我两个提示：</p>
-<ul>
-<li><code>read</code>是会阻塞的</li>
-<li>每次<code>read</code>得到的数据有可能有换行符<code>\n</code>，有可能没有，也有可能会有多个</li>
-</ul>
-<p>这是面试官给出的函数定义:</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// read: socket api </span></span><br><span class="line"></span><br><span class="line"><span class="comment">// - fd: socket 的文件fd</span></span><br><span class="line"><span class="comment">// - buf: 读入缓冲区</span></span><br><span class="line"><span class="comment">// - N: 最大数据大小</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">read</span><span class="params">(fd <span class="type">int</span>,  buf []<span class="type">byte</span>, N <span class="type">int</span>)</span></span> <span class="type">int</span> &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<hr>
-
-<p>听完题后我整个人就很慌了，因为心里总有股声音觉得自己不会。而实际上我也的确对Go不熟悉，很多类似<code>append</code>, <code>channel</code> 这样的操作还需要查自己或别人的博客去写。</p>
-<p>虽然慌的一匹，但总归还是有一点思路（现在想来这也不过就是一道生产者、消费者的问题），中间面试官提示我用<code>channel</code>去做这一道题，但我并没有用过所以短暂思考后也放弃了这个思路。</p>
-<p>最后用一个循环调用<code>read</code>的方法完成了这道题，用<code>last</code>变量来存储上一次调用<code>read</code>所剩下的内容：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Read <span class="keyword">struct</span> &#123;</span><br><span class="line">	fd <span class="type">int</span>          <span class="comment">// socket fd</span></span><br><span class="line">	N  <span class="type">int</span>          <span class="comment">// max size per line</span></span><br><span class="line">	last []<span class="type">byte</span>     <span class="comment">// last read remained</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(r Read)</span></span> readLine() <span class="type">string</span> &#123;</span><br><span class="line">	<span class="keyword">var</span> buf []<span class="type">byte</span></span><br><span class="line">	<span class="keyword">for</span> read(r.fd, buf, r.N) != <span class="number">0</span> &#123;</span><br><span class="line">		<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; buf.size(); i++ &#123;</span><br><span class="line">			<span class="keyword">if</span> buf[i] == <span class="string">&#x27;\n&#x27;</span> &#123;</span><br><span class="line">				temp := <span class="built_in">append</span>(last, buf[:i]...)</span><br><span class="line">				r.last = buf[i+<span class="number">1</span>:]</span><br><span class="line">				<span class="keyword">return</span> temp</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="string">&quot;&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这中间有几个严重的逻辑错误，都是面试官提出来然后我才能反应过来并迅速修正：</p>
-<ul>
-<li><p>如果某次<code>read</code>得到了多行，那么<code>last</code>存储的数据就会是多行的，代码没有考虑这个问题。解决方案我也立马能想出来：在执行循环调用<code>read</code>之前先检查<code>last</code>是否为空，不为空就遍历一遍看看是否有一行存在，有则返回第一行并对<code>last</code>进行切割</p>
-</li>
-<li><p>如果某次<code>read</code>没有换行，这份代码并没有将这次读取的数据保存。显然解决方案就是在每次循环的末尾增加一个<code>append(last, buf...)</code></p>
-</li>
-</ul>
-<p>这也体现出我的思维是很不严谨的，然后代码能力也偏弱。我在以往做算法题的时候就很依赖提交，通过提交去检查自己的代码有没有问题，这样在考试的时候就会体现出我这样效率其实很低，而且长期的依赖也导致了自己基本的Debug能力有所降低。</p>
-<p>在编程测试结束的时候，面试官告诉我简历不能给面试带来信息不对称，比如刚入门Go语言就不应该写成熟悉；也真是令人汗颜。自己的简历的确有着不少的水分，需要重新修改一番。</p>
-<h2 id="后阶段面试"><a href="#后阶段面试" class="headerlink" title="后阶段面试"></a>后阶段面试</h2><p>后阶段面试就更加能显现我简历的水分了，面试官看到我在简历里写了我在做MIT的6.828的实验，他想要从这里展开。到这里我就不得不和盘托出其实我只做了这个系列实验的Lab1，然后考虑到学这个又要去学x86编程，耗费时间有点多然后就搁置了。听到这里其实面试官已经基本宣告面试fail了。他告诉我这个部门是负责存储的，所以对算法或者某一后台领域的知识会要求很高，所以希望我可以明确一个方向，回去好好修炼再去考虑面试的事情。他还推荐我可以去看CMU的存储课程。另外，他还说我可以考虑面试一下后台业务开发的岗位，链接在面试通知邮件里也可以找到。</p>
-<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>这次面试也就这样在不安中结束了。的确这次就是抱着来试试的态度进行面试，所以结果不如意倒也正常。面试时间虽然只有短短的一个多小时，但也还是了解到了自己很多的缺陷：代码能力亟待提高，需要专精一个后台的方向（目前我想做的是网络编程），另外基础课程的知识也非常重要，如果有时间得捡回6.828，再加一些存储的课程。</p>
+  <p>现在对贩卖焦虑的行为已经越来越敏感了。</p>
+<p>上班路上看到了一个这样的广告：一个小男孩一身汗地跑进家里向妈妈哭诉，“妈！我又被班里的高个子男生撞倒了”，妈妈一脸慈爱地拿出了一罐ad钙奶……<br>我在想这种情况的真实版会是怎么样的？小孩的哭诉一直在发生，妈妈真实的话可能会是：“平时让你多喝牛奶你不喝，现在被撞了才知道在这里哭！”看完广告的区别，可能是把牛奶换成两倍的ad钙奶。</p>
+<p>其实我也在贩卖焦虑。最近一年来我们家发生了一件我不愿意发生的大事：在我妈的极力主张下，非常勉强地、左拼右凑地在南沙区买了一套小房子，比较鸡肋、没有什么上升空间，还让降低了爸妈的生活水平。</p>
+<p>所以最近沟通免不了和我妈沟通（吵架）。昨天出门前又聊到了这件事，起因是她现在不舍得打车了，因为还欠着钱想要先紧巴紧巴先还上。我想告诉她的是，小钱省不了多少，我们是应该关注和节省的是那些冲动下花出去的大钱。</p>
+<p>可想而知又是吵一顿，但随着房价真的在下跌，经济情况如当时预料的那样在变坏，我妈吵架的底气越来越弱。从结果来看我好像“赢了”，但我并不怎么开心，因为我妈开始说她后悔了，她也开始想这个决定是不是太冲动了，现在压力很大，然后想到我说的一些话又觉得很绝情，压力就更大了。</p>
+<p>我突然有点惊醒了，我说的话也是在贩卖焦虑；资本家贩卖焦虑能赚钱，我贩卖焦虑赚的是一种延迟复仇的快感；我相信两者最终都没法指向内心的平和与愉悦。</p>
  
       <!-- reward -->
       
@@ -213,12 +178,12 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://jeffzys8.github.io/2018/11/26/Interview-ByteDance/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://jeffzys8.github.io/2023/10/17/Essay/ad%E9%92%99%E5%A5%B6%E5%92%8C%E6%88%BF%E5%AD%90/" alt="微信分享二维码">
     </div>
 </div>
 
 <div id="share-mask"></div>  
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Go/" rel="tag">Go</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag">面试</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%9A%8F%E7%AC%94/" rel="tag">随笔</a></li></ul>
 
     </footer>
   </div>
@@ -226,19 +191,10 @@
    
   <nav class="article-nav">
     
-      <a href="/2018/11/26/Algorithm/graph-scc/" class="article-nav-link">
-        <strong class="article-nav-caption">上一篇</strong>
-        <div class="article-nav-title">
-          
-            强连通分量
-          
-        </div>
-      </a>
     
-    
-      <a href="/2018/11/24/Linux/VitualBox-Double-System/" class="article-nav-link">
+      <a href="/2020/05/08/Reading/%E4%B9%A1%E5%9C%9F%E4%B8%AD%E5%9B%BD-%E4%BB%8E%E6%AC%B2%E6%9C%9B%E5%88%B0%E9%9C%80%E8%A6%81/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">VirtualBox安装 WinXP+CentOS双系统</div>
+        <div class="article-nav-title">乡土中国-从欲望到需要</div>
       </a>
     
   </nav>

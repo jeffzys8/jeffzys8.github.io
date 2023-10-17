@@ -11,7 +11,7 @@
         name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1"
       />
-      <title>强连通分量 |  Jeff的博客</title>
+      <title>LeetCode 42. Trapping Rain Water |  Jeff的博客</title>
   <meta name="generator" content="hexo-theme-ayer">
       
       <link rel="shortcut icon" href="/favicon.ico" />
@@ -53,7 +53,7 @@
     <main class="content on">
       <section class="outer">
   <article
-  id="post-Algorithm/graph-scc"
+  id="post-Algorithm/leetcode-42-trapping-rain-water"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -64,7 +64,7 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  强连通分量
+  LeetCode 42. Trapping Rain Water
 </h1>
  
 
@@ -72,19 +72,15 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2018/11/26/Algorithm/graph-scc/" class="article-date">
-  <time datetime="2018-11-26T06:56:31.000Z" itemprop="datePublished">2018-11-26</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a>
-  </div>
-  
+      <a href="/2019/02/25/Algorithm/leetcode-42-trapping-rain-water/" class="article-date">
+  <time datetime="2019-02-25T01:27:45.000Z" itemprop="datePublished">2019-02-25</time>
+</a>   
 <div class="word_count">
     <span class="post-time">
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">709</span>
+            <span class="post-count">581</span>
         </span>
     </span>
 
@@ -108,57 +104,26 @@
   
     <div class="article-entry" itemprop="articleBody">
        
-  <h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>Definition: A strongly connected component (SCC) of a directed graph G &#x3D; (V, E) is a maximal set of vertices C ⊆ V such that every pair of vertices u and v in C are reachable from each other.</p>
-<p>翻译过来就是，把一个有向图划分成<strong>尽可能大</strong>的几个集合，集合内的结点两两互相都可达，这样的每一个“集合”就是一个<strong>强连通分量</strong></p>
-<span id="more"></span>
+  <h1 id="42-Trapping-Rain-Water"><a href="#42-Trapping-Rain-Water" class="headerlink" title="42. Trapping Rain Water"></a>42. Trapping Rain Water</h1><p>Given <em>n</em> non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it is able to trap after raining.</p>
+<p><img src="/2019/02/25/Algorithm/leetcode-42-trapping-rain-water/image.png" alt="Alt text"></p>
+<p>The above elevation map is represented by array [0,1,0,2,1,0,1,3,2,1,2,1]. In this case, 6 units of rain water (blue section) are being trapped. Thanks <strong>Marcos</strong> for contributing this image!</p>
+<p><strong>Example:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: [0,1,0,2,1,0,1,3,2,1,2,1]</span><br><span class="line">Output: 6</span><br></pre></td></tr></table></figure>
 
-<h2 id="求解过程分析"><a href="#求解过程分析" class="headerlink" title="求解过程分析"></a>求解过程分析</h2><blockquote>
-<p>求解一个有向图的强连通分量的算法不是一蹴而就的，下面就叙述一下这个算法逐步形成的过程</p>
+<h1 id="我的解法"><a href="#我的解法" class="headerlink" title="我的解法"></a>我的解法</h1><blockquote>
+<p>一开始我有一个错误的解法，这个解法是通过有穷自动机分析出来的；虽然这这种解法最终无法实现，但我发现有穷自动机真的是个逻辑分析的好工具，也算增长了经验</p>
 </blockquote>
 <ul>
-<li>将强连通分量都“缩圈”缩成一个点，得到的图是<strong>DAG</strong>（有向无环图） —— 任何一个有向图都是其 强连通分量 组成的DAG</li>
+<li>先遍历一遍找出最大值，并假设一开始每一列都有着<code>max</code>高度的水；这个是个 <code>O(N)</code>的操作；</li>
+<li>而后从上至下，逐行地减去头和尾溢出的部分，这是个<code>kO(N)</code>的操作，<code>k</code>取决于最大的高度能有多大</li>
+<li>总结来说这是一个<code>O(kN)</code>的操作</li>
 </ul>
-<p><img src="/2018/11/26/Algorithm/graph-scc/5.png"></p>
-<ul>
-<li><p>一个DAG，一定会有Sink（入度为0的点）和Source（出度为0的点）</p>
-</li>
-<li><p>如果能从Sink联通量里面任意一个点开始DFS，就可以求出这个Sink联通量，因为它<strong>跑不出去</strong>。</p>
-</li>
-<li><p>然后删去这个联通量，DFS树仍有叶子——就是仍有Sink，<strong>重复上述操作</strong></p>
-</li>
-</ul>
-<p>可是问题就在于：并无法找到Sink联通量里的一个点。那该怎么办呢？</p>
-<ul>
-<li>虽然没法找到Sink联通量，但我们可以找得到<strong>Source</strong>：在完整DFS过程以后，Post值最大的就一定在Source联通量内：<ul>
-<li>假设从Source内的点开始DFS，显然Post最大的就在Source内（Root）</li>
-<li>假设不从Source内的点开始DFS，Source是到不了的；后面必然又要从Source内的点再次DFS，导致Post值最大</li>
-</ul>
-</li>
-</ul>
-<p>但找到Source也没有用啊，从Source内的一点开始DFS，肯定会<strong>跑出去</strong>，那有什么用呢？</p>
-<ul>
-<li><strong>把边反向，Source就变成了Sink</strong>，而且联通的性质是不变的——强联通量还是那些强联通量</li>
-</ul>
-<p><img src="/2018/11/26/Algorithm/graph-scc/6.png"></p>
-<ul>
-<li>这样就可以从Post最大的值开始DFS，找出第一个强联通量，并且从图中删去</li>
-<li>更棒的是，删去第一个强联通量以后，<strong>现在Post最大的就是删后图的Sink值</strong>，这样就可以不断重复前面的步骤</li>
-</ul>
-<h2 id="求解步骤总结"><a href="#求解步骤总结" class="headerlink" title="求解步骤总结"></a>求解步骤总结</h2><blockquote>
-<p>如果完整地看完了上面，下面的求解步骤可以直接忽略的啦</p>
-</blockquote>
-<ol>
-<li>进行DFS，求出每个结点的Post值，存入优先队列</li>
-<li>将有向图边反向 $G {\rightarrow} G^T$</li>
-<li>从Post值最高的点开始DFS，并将DFS所得的点存入一个集合，形成一个强连通分量；同时将这些点从图中删去</li>
-<li>重复第三步，直到所有联通量都形成</li>
-</ol>
-<h2 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h2><ul>
-<li>第一次DFS求Post值并放入优先队列：<br><br>$O(V+E) + O(log_2V) &#x3D; O(V+E)$</li>
-<li>将有向图边反向：<br><br>$O(V+E)$</li>
-<li>求强联通量的过程，实际上加起来就是一次完整的DFS而已：<br><br>$O(V+E)$</li>
-</ul>
-<h3 id="总复杂度"><a href="#总复杂度" class="headerlink" title="总复杂度"></a>总复杂度</h3><p>$O(V+E)$</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">trap</span><span class="params">(height []<span class="type">int</span>)</span></span> <span class="type">int</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(height) == <span class="number">0</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// fill with the max;</span></span><br><span class="line">    max := height[<span class="number">0</span>]</span><br><span class="line">    <span class="keyword">for</span> _, val := <span class="keyword">range</span> height &#123;</span><br><span class="line">        <span class="keyword">if</span> max &lt; val &#123;</span><br><span class="line">            max = val</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    result := max * <span class="built_in">len</span>(height)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// delete the first 0 cols</span></span><br><span class="line">    sp := <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> ; sp &lt; <span class="built_in">len</span>(height) &amp;&amp; height[sp] == <span class="number">0</span>; sp++ &#123;</span><br><span class="line">        result -= max;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// delete the existing places</span></span><br><span class="line">    <span class="keyword">for</span> e:=sp; e&lt;<span class="built_in">len</span>(height); e++&#123;</span><br><span class="line">        result -= height[e];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// delete row by row</span></span><br><span class="line">    <span class="keyword">for</span> curH := max; curH &gt;= <span class="number">1</span>; curH-- &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// delete the head</span></span><br><span class="line">        <span class="keyword">for</span> e := sp;; e++ &#123;</span><br><span class="line">            <span class="keyword">if</span> height[e] &lt; curH &#123;</span><br><span class="line">                result--;</span><br><span class="line">            &#125; <span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// delete the tail</span></span><br><span class="line">        <span class="keyword">for</span> e := <span class="built_in">len</span>(height)<span class="number">-1</span>;;e--&#123;</span><br><span class="line">            <span class="keyword">if</span> height[e] &lt; curH&#123;</span><br><span class="line">                result--;</span><br><span class="line">            &#125; <span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="更巧妙的"><a href="#更巧妙的" class="headerlink" title="更巧妙的"></a>更巧妙的</h1><p>讨论区里利用双指针，可以有 <code>O(N)</code>（只遍历一遍）的算法。具体看<a target="_blank" rel="noopener" href="https://leetcode.com/problems/trapping-rain-water/discuss/17357/Sharing-my-simple-c%2B%2B-code%3A-O(n)-time-O(1)-space">这里</a>，这里不说详细的解析，简单来说就是左右同步扫描，并将水从低处往高处逐列填。这里只贴一下代码</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">trap</span><span class="params">(<span class="type">int</span> A[], <span class="type">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> left=<span class="number">0</span>; <span class="type">int</span> right=n<span class="number">-1</span>;</span><br><span class="line">        <span class="type">int</span> res=<span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> maxleft=<span class="number">0</span>, maxright=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(left&lt;=right)&#123;</span><br><span class="line">            <span class="keyword">if</span>(A[left]&lt;=A[right])&#123;</span><br><span class="line">                <span class="keyword">if</span>(A[left]&gt;=maxleft) maxleft=A[left];</span><br><span class="line">                <span class="keyword">else</span> res+=maxleft-A[left];</span><br><span class="line">                left++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">if</span>(A[right]&gt;=maxright) maxright= A[right];</span><br><span class="line">                <span class="keyword">else</span> res+=maxright-A[right];</span><br><span class="line">                right--;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h1 id="更多的解法"><a href="#更多的解法" class="headerlink" title="更多的解法"></a>更多的解法</h1><p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/trapping-rain-water/solution/">Solution</a>有更多的解法，还有一种动态规划的解法很有意思，将左边加起来，右边加起来，重叠部分就是所求。</p>
  
       <!-- reward -->
       
@@ -229,32 +194,30 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://jeffzys8.github.io/2018/11/26/Algorithm/graph-scc/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://jeffzys8.github.io/2019/02/25/Algorithm/leetcode-42-trapping-rain-water/" alt="微信分享二维码">
     </div>
 </div>
 
 <div id="share-mask"></div>  
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%9B%BE%E8%AE%BA/" rel="tag">图论</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
-
     </footer>
   </div>
 
    
   <nav class="article-nav">
     
-      <a href="/2018/11/26/Algorithm/graph-edge-type/" class="article-nav-link">
+      <a href="/2020/05/06/Reading/%E4%B9%A1%E5%9C%9F%E4%B8%AD%E5%9B%BD-%E8%A1%80%E7%BC%98%E4%B8%8E%E5%9C%B0%E7%BC%98/" class="article-nav-link">
         <strong class="article-nav-caption">上一篇</strong>
         <div class="article-nav-title">
           
-            edge type
+            乡土中国-血缘与地缘
           
         </div>
       </a>
     
     
-      <a href="/2018/11/26/Essay/Interview-ByteDance/" class="article-nav-link">
+      <a href="/2018/12/10/Algorithm/leetcode-312-burst-ballons/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">面试经历-字节跳动后台开发(基础架构)实习岗</div>
+        <div class="article-nav-title">Leetcode 312. Burst Balloons</div>
       </a>
     
   </nav>
