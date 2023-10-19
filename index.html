@@ -517,7 +517,14 @@
 <blockquote>
 <p>想一下为什么分治会更好，它少算了哪些步骤</p>
 </blockquote>
-<p>具体的算法如下：</p>
+<p>定义一个函数 <code>burst(left, right)</code>，它的值表示以<code>left</code> <code>right</code>分别为左右边界的时候 <code>[left,right]</code>所能得到的最大的奖励值。这里需要说明的是<strong>这里定义的左右边界都需要晚于中间的任意气球被戳</strong>，那样在剩下的气球(<code>i</code>)里任意选取一个作为倒数第三（边界是倒数一、二）去戳，所能得到的最大值是</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nums[left]*nums[i]*nums[right] + burst(left,i) + burst(i,right)</span><br></pre></td></tr></table></figure>
+<p>然后一些细节：</p>
+<ul>
+<li>假设 <code>nums[-1]=nums[n]=1</code>，这样两个假边界就显然是整组气球里“最晚被戳的气球”了</li>
+<li>当两个边界相邻，说明中间无球可戳，所以应该有<code>burst(i,i+1)=0</code></li>
+</ul>
+<p>按照上面说的就可以实现如下具体的算法了：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">maxCoins</span><span class="params">(<span class="type">int</span>[] iNums)</span> &#123;</span><br><span class="line">    <span class="type">int</span>[] nums = <span class="keyword">new</span> <span class="title class_">int</span>[iNums.length + <span class="number">2</span>];</span><br><span class="line">    <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> x : iNums) <span class="keyword">if</span> (x &gt; <span class="number">0</span>) nums[n++] = x;</span><br><span class="line">    nums[<span class="number">0</span>] = nums[n++] = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="type">int</span>[][] memo = <span class="keyword">new</span> <span class="title class_">int</span>[n][n];</span><br><span class="line">    <span class="keyword">return</span> burst(memo, nums, <span class="number">0</span>, n - <span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">burst</span><span class="params">(<span class="type">int</span>[][] memo, <span class="type">int</span>[] nums, <span class="type">int</span> left, <span class="type">int</span> right)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (left + <span class="number">1</span> == right) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (memo[left][right] &gt; <span class="number">0</span>) <span class="keyword">return</span> memo[left][right];</span><br><span class="line">    <span class="type">int</span> <span class="variable">ans</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> left + <span class="number">1</span>; i &lt; right; ++i)</span><br><span class="line">        ans = Math.max(ans, nums[left] * nums[i] * nums[right] </span><br><span class="line">        + burst(memo, nums, left, i) + burst(memo, nums, i, right));</span><br><span class="line">    memo[left][right] = ans;</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 12 ms</span></span><br></pre></td></tr></table></figure> 
       <!-- reward -->
       
@@ -1045,6 +1052,30 @@
     viewer_init()
 </script> 
 <!-- MathJax -->
+ <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+      tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+  });
+
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for(i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/mathjax/2.7.7/MathJax.js"></script>
+<script src="https://cdn.staticfile.org/mathjax/2.7.7/config/TeX-AMS-MML_HTMLorMML-full.js"></script>
+<script>
+  var ayerConfig = {
+    mathjax: true,
+  };
+</script>
 
 <!-- Katex -->
 
