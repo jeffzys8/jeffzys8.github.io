@@ -11,7 +11,7 @@
         name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1"
       />
-      <title>Linux |  Jeff的博客</title>
+      <title>对网络编程的思考 |  Jeff的博客</title>
   <meta name="generator" content="hexo-theme-ayer">
       
       <link rel="shortcut icon" href="/favicon.ico" />
@@ -52,74 +52,171 @@
       
     <main class="content on">
       <section class="outer">
-  
-  <ul class="ads">
+  <article
+  id="post-Essay/对网络编程的思考"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
     
-        <li>
-            <a target="_blank" rel="noopener" href="https://curl.qcloud.com/kvO7hb43">
-                <img src="https://pic.imgdb.cn/item/62174b452ab3f51d912a5ccc.jpg" width="300" alt="云服务器限时秒杀">
-            </a>
-        </li>
-    
-        <li>
-            <a target="_blank" rel="noopener" href="https://www.vultr.com/?ref=8630075">
-                <img src="https://pic.imgdb.cn/item/62174b452ab3f51d912a5cd7.png" width="300" alt="vultr优惠vps">
-            </a>
-        </li>
-    
-</ul>
-  
-  
-  <article class="articles">
-    
-    
-    <h1 class="page-type-title">Linux</h1>
-    
-    
-  
-  
-  
-  
-  
-  
-  <div class="archives-wrap">
-    <div class="archive-year-wrap">
-      <a href="/archives/2018" class="archive-year">2018</a>
-    </div>
-    <div class="archives">
-      
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2018/11/24/Linux/VitualBox-Double-System/" class="archive-article-date">
-  <time datetime="2018-11-24T06:11:22.000Z" itemprop="datePublished">11/24</time>
-</a>
+    <header class="article-header">
        
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2018/11/24/Linux/VitualBox-Double-System/"
-    >VirtualBox安装 WinXP+CentOS双系统</a> 
-</h2>
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  对网络编程的思考
+</h1>
  
 
+      
     </header>
-    
-      
+     
+    <div class="article-meta">
+      <a href="/2024/12/22/Essay/%E5%AF%B9%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E7%9A%84%E6%80%9D%E8%80%83/" class="article-date">
+  <time datetime="2024-12-22T09:18:07.000Z" itemprop="datePublished">2024-12-22</time>
+</a> 
   <div class="article-category">
-    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+    <a class="article-category-link" href="/categories/%E6%9D%82%E8%AE%B0/">杂记</a>
   </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">899</span>
+        </span>
+    </span>
 
-    
-    
-  </div>
-</article>
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">3 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
       
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>加入Spex接近两年，但是其实到今年七月份开始才真正做agent相关的工作，并且也是到最近才算是半只脚迈进对agent进行性能分析的部分；在做这一部分工作的时候，除了有“这一部分真有意思”的激动，同时也觉察出自己在网络编程方面知识和经验的欠缺，阻碍了对程序的优化 —— 而且这样的现象在组里其实比较普遍。</p>
+<p>Spex agent的代码基本是一个proxy server（IO-&gt;逻辑处理-&gt;IO，既接收连接又对外创建连接）， 服务端部分采用的是类似经典的reactor的事件处理模型。值得一提的是逻辑处理环节利用了Go的channel特性划分了几个阶段，这也给性能和代码逻辑分析带来了一定的挑战。</p>
+<p>萌生对网络编程进行更系统化学习的起因是最近一次失败的性能优化尝试。在现有Spex agent的代码中，客户端部分（即作为client向外创建连接并交换数据的部分，这包括client agent向server agent建立TCP连接 &amp; server agent向server instance建立UDS连接的部分）中是每个goroutine用一个for loop处理一个连接的序列化和I&#x2F;O，我怀疑这部分可能会造成队头阻塞，就用goroutine pool来调用序列化和I&#x2F;O。结果在和QA的简单验证下，发现延时P99并无法得到明显的改善，而与此同时系统的吞吐量下降了。</p>
+<p>但并不是说这一个思路不正确就说明这个尝试失败了，而是在验证的过程中其实很大程度是不严谨的 —— 使用的是最基础的性能测试场景以及凭借自己猜测增加了请求包大小的测例，并没有尝试构建复现队头阻塞的场景，对于应该关注哪些指标，怎么看系统是否达到了瓶颈也有些无头苍蝇的感觉……当然这些问题其实都可以逐一地去研究并解决，但就是如果有更系统化的知识体系，这些问题本来也应该是很常见思路比较明确的问题，没有必要一个劲地瞎闯，还是需要更系统地学习网络编程。</p>
+<p>之前也看了一些书，比如《UNP》、《Linux高性能服务器编程》，同时也有对Go HTTP的源码进行学习。但之前的学习没有领悟到一个比较重要的原则：抓大放小 —— 很容易就陷入到某一细分领域的某一个细节，但这往往在进行系统化学习的时候都是不重要且会分散注意力的。因此这些书的学习基本都虎头蛇尾，对于关键内容也没有清晰的认识和总结。</p>
+<p>这次我选的核心阅读书目是陈硕的《Linux多线程服务器编程》，也是在许久之后把C++重新捡回来，为后面envoy相关的项目打一下基础。既然遵循抓大放小的原则，就对一些觉得是重点的内容深入代码和示例去看去运行，但不要去纠结小的点。同时CSAPP也是要继续学习，但这属于长时间的打地基工作，没必要说一定把CSAPP学完了自底向上都明白了再去接触和实际工程更接近的内容。</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          Donate
+        </div>
+      </div>
       
     </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://jeffzys8.github.io/2024/12/22/Essay/%E5%AF%B9%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E7%9A%84%E6%80%9D%E8%80%83/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Networking/" rel="tag">Networking</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%9A%8F%E7%AC%94/" rel="tag">随笔</a></li></ul>
+
+    </footer>
   </div>
-  
-  
+
+   
+  <nav class="article-nav">
+    
+    
+      <a href="/2023/11/02/Essay/%E5%9C%A8%E5%B7%A5%E4%BD%9C%E4%B8%AD%E4%BF%9D%E6%8C%81%E4%B8%B4%E5%9C%A8/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">在工作中保持临在</div>
+      </a>
+    
+  </nav>
 
   
+   
+  
+   
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
 </section>
       <footer class="footer">
   <div class="outer">
@@ -252,6 +349,22 @@
 <script src="/js/lazyload.min.js"></script>
 
 <!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
 
 <script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
 <link

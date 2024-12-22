@@ -170,6 +170,65 @@
     
     
     <article
+  id="post-Essay/对网络编程的思考"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2024/12/22/Essay/%E5%AF%B9%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E7%9A%84%E6%80%9D%E8%80%83/"
+    >对网络编程的思考</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2024/12/22/Essay/%E5%AF%B9%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E7%9A%84%E6%80%9D%E8%80%83/" class="article-date">
+  <time datetime="2024-12-22T09:18:07.000Z" itemprop="datePublished">2024-12-22</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%9D%82%E8%AE%B0/">杂记</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>加入Spex接近两年，但是其实到今年七月份开始才真正做agent相关的工作，并且也是到最近才算是半只脚迈进对agent进行性能分析的部分；在做这一部分工作的时候，除了有“这一部分真有意思”的激动，同时也觉察出自己在网络编程方面知识和经验的欠缺，阻碍了对程序的优化 —— 而且这样的现象在组里其实比较普遍。</p>
+<p>Spex agent的代码基本是一个proxy server（IO-&gt;逻辑处理-&gt;IO，既接收连接又对外创建连接）， 服务端部分采用的是类似经典的reactor的事件处理模型。值得一提的是逻辑处理环节利用了Go的channel特性划分了几个阶段，这也给性能和代码逻辑分析带来了一定的挑战。</p>
+<p>萌生对网络编程进行更系统化学习的起因是最近一次失败的性能优化尝试。在现有Spex agent的代码中，客户端部分（即作为client向外创建连接并交换数据的部分，这包括client agent向server agent建立TCP连接 &amp; server agent向server instance建立UDS连接的部分）中是每个goroutine用一个for loop处理一个连接的序列化和I&#x2F;O，我怀疑这部分可能会造成队头阻塞，就用goroutine pool来调用序列化和I&#x2F;O。结果在和QA的简单验证下，发现延时P99并无法得到明显的改善，而与此同时系统的吞吐量下降了。</p>
+<p>但并不是说这一个思路不正确就说明这个尝试失败了，而是在验证的过程中其实很大程度是不严谨的 —— 使用的是最基础的性能测试场景以及凭借自己猜测增加了请求包大小的测例，并没有尝试构建复现队头阻塞的场景，对于应该关注哪些指标，怎么看系统是否达到了瓶颈也有些无头苍蝇的感觉……当然这些问题其实都可以逐一地去研究并解决，但就是如果有更系统化的知识体系，这些问题本来也应该是很常见思路比较明确的问题，没有必要一个劲地瞎闯，还是需要更系统地学习网络编程。</p>
+<p>之前也看了一些书，比如《UNP》、《Linux高性能服务器编程》，同时也有对Go HTTP的源码进行学习。但之前的学习没有领悟到一个比较重要的原则：抓大放小 —— 很容易就陷入到某一细分领域的某一个细节，但这往往在进行系统化学习的时候都是不重要且会分散注意力的。因此这些书的学习基本都虎头蛇尾，对于关键内容也没有清晰的认识和总结。</p>
+<p>这次我选的核心阅读书目是陈硕的《Linux多线程服务器编程》，也是在许久之后把C++重新捡回来，为后面envoy相关的项目打一下基础。既然遵循抓大放小的原则，就对一些觉得是重点的内容深入代码和示例去看去运行，但不要去纠结小的点。同时CSAPP也是要继续学习，但这属于长时间的打地基工作，没必要说一定把CSAPP学完了自底向上都明白了再去接触和实际工程更接近的内容。</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Networking/" rel="tag">Networking</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%9A%8F%E7%AC%94/" rel="tag">随笔</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+  
+</article>
+
+    
+    <article
   id="post-Essay/在工作中保持临在"
   class="article article-type-post"
   itemscope
@@ -192,7 +251,11 @@
     <div class="article-meta">
       <a href="/2023/11/02/Essay/%E5%9C%A8%E5%B7%A5%E4%BD%9C%E4%B8%AD%E4%BF%9D%E6%8C%81%E4%B8%B4%E5%9C%A8/" class="article-date">
   <time datetime="2023-11-01T17:21:18.000Z" itemprop="datePublished">2023-11-02</time>
-</a>    
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%9D%82%E8%AE%B0/">杂记</a>
+  </div>
+   
     </div>
       
     <div class="article-entry" itemprop="articleBody">
@@ -244,7 +307,11 @@
     <div class="article-meta">
       <a href="/2023/10/23/Essay/%E5%B9%B8%E7%A6%8F/" class="article-date">
   <time datetime="2023-10-22T16:52:25.000Z" itemprop="datePublished">2023-10-23</time>
-</a>    
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%9D%82%E8%AE%B0/">杂记</a>
+  </div>
+   
     </div>
       
     <div class="article-entry" itemprop="articleBody">
@@ -382,7 +449,11 @@
     <div class="article-meta">
       <a href="/2023/10/17/Essay/ad%E9%92%99%E5%A5%B6%E5%92%8C%E6%88%BF%E5%AD%90/" class="article-date">
   <time datetime="2023-10-16T16:22:54.000Z" itemprop="datePublished">2023-10-17</time>
-</a>    
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%9D%82%E8%AE%B0/">杂记</a>
+  </div>
+   
     </div>
       
     <div class="article-entry" itemprop="articleBody">
@@ -403,8 +474,6 @@
     
     <footer class="article-footer">
        
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%9A%8F%E7%AC%94/" rel="tag">随笔</a></li></ul>
-
     </footer>
   </div>
 
@@ -437,7 +506,11 @@
     <div class="article-meta">
       <a href="/2020/05/08/Reading/%E4%B9%A1%E5%9C%9F%E4%B8%AD%E5%9B%BD-%E4%BB%8E%E6%AC%B2%E6%9C%9B%E5%88%B0%E9%9C%80%E8%A6%81/" class="article-date">
   <time datetime="2020-05-08T00:54:47.000Z" itemprop="datePublished">2020-05-08</time>
-</a>    
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E9%98%85%E8%AF%BB/">阅读</a>
+  </div>
+   
     </div>
       
     <div class="article-entry" itemprop="articleBody">
@@ -459,8 +532,6 @@
     
     <footer class="article-footer">
        
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" rel="tag">阅读笔记</a></li></ul>
-
     </footer>
   </div>
 
@@ -493,7 +564,11 @@
     <div class="article-meta">
       <a href="/2020/05/07/Reading/%E4%B9%A1%E5%9C%9F%E4%B8%AD%E5%9B%BD-%E5%90%8D%E5%AE%9E%E5%88%86%E7%A6%BB/" class="article-date">
   <time datetime="2020-05-07T00:54:51.000Z" itemprop="datePublished">2020-05-07</time>
-</a>    
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E9%98%85%E8%AF%BB/">阅读</a>
+  </div>
+   
     </div>
       
     <div class="article-entry" itemprop="articleBody">
@@ -516,8 +591,6 @@
     
     <footer class="article-footer">
        
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" rel="tag">阅读笔记</a></li></ul>
-
     </footer>
   </div>
 
@@ -550,7 +623,11 @@
     <div class="article-meta">
       <a href="/2020/05/06/Reading/%E4%B9%A1%E5%9C%9F%E4%B8%AD%E5%9B%BD-%E8%A1%80%E7%BC%98%E4%B8%8E%E5%9C%B0%E7%BC%98/" class="article-date">
   <time datetime="2020-05-06T01:01:38.000Z" itemprop="datePublished">2020-05-06</time>
-</a>    
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E9%98%85%E8%AF%BB/">阅读</a>
+  </div>
+   
     </div>
       
     <div class="article-entry" itemprop="articleBody">
@@ -578,8 +655,6 @@
     
     <footer class="article-footer">
        
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" rel="tag">阅读笔记</a></li></ul>
-
     </footer>
   </div>
 
@@ -721,64 +796,6 @@
 </article>
 
     
-    <article
-  id="post-Algorithm/graph-scc"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2018/11/26/Algorithm/graph-scc/"
-    >强连通分量</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2018/11/26/Algorithm/graph-scc/" class="article-date">
-  <time datetime="2018-11-26T06:56:31.000Z" itemprop="datePublished">2018-11-26</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>Definition: A strongly connected component (SCC) of a directed graph G &#x3D; (V, E) is a maximal set of vertices C ⊆ V such that every pair of vertices u and v in C are reachable from each other.</p>
-<p>翻译过来就是，把一个有向图划分成<strong>尽可能大</strong>的几个集合，集合内的结点两两互相都可达，这样的每一个“集合”就是一个<strong>强连通分量</strong></p> 
-      <a class="article-more-link" href="/2018/11/26/Algorithm/graph-scc/"
-        >阅读更多...</a
-      >
-       
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%9B%BE%E8%AE%BA/" rel="tag">图论</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-   
-  
-</article>
-
-    
   </article>
   
 
@@ -796,7 +813,7 @@
     <ul>
       <li>
         Copyrights &copy;
-        2015-2023
+        2015-2024
         <i class="ri-heart-fill heart_icon"></i> Jeff
       </li>
     </ul>
