@@ -74,7 +74,11 @@
     <div class="article-meta">
       <a href="/2024/12/22/Mesh/Non-client-server%20mesh%20sidecar/" class="article-date">
   <time datetime="2024-12-22T12:18:59.000Z" itemprop="datePublished">2024-12-22</time>
-</a>   
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Mesh/">Mesh</a>
+  </div>
+  
 <div class="word_count">
     <span class="post-time">
         <span class="post-meta-item-icon">
@@ -103,14 +107,14 @@
     <div class="article-entry" itemprop="articleBody">
        
   <p>网络服务一般分为client和server端, server端负责监听一个地址, 等待client的连接</p>
-<p><img src="/2024-12-22-20-31-51.png"></p>
+<p><img src="/2024/12/22/Mesh/Non-client-server%20mesh%20sidecar/2024-12-22-20-31-51.png"></p>
 <p>在他们中间如果需要做七层的流量治理与转发, 通常会引入一个像下图的proxy(以envoy为例)</p>
-<p><img src="/2024-12-22-23-17-21.png"></p>
+<p><img src="/2024/12/22/Mesh/Non-client-server%20mesh%20sidecar/2024-12-22-23-17-21.png"></p>
 <p>proxy进程内包含两部分: Listeners负责监听来自client的连接, Upstream Clusters负责主动dial server, 并将数据转发给server</p>
 <p>这样的模式很容易拓展到多级的proxy</p>
-<p><img src="/2024-12-22-23-19-54.png"></p>
+<p><img src="/2024/12/22/Mesh/Non-client-server%20mesh%20sidecar/2024-12-22-23-19-54.png"></p>
 <p>但我司的Service mesh产品却是不一样的做法: 无论是client应用还是server应用, 都统一去dial proxy</p>
-<p><img src="/2024-12-22-23-41-13.png"></p>
+<p><img src="/2024/12/22/Mesh/Non-client-server%20mesh%20sidecar/2024-12-22-23-41-13.png"></p>
 <p>Listners:</p>
 <ul>
 <li>App Listener: 负责监听来自app(client&#x2F;server)的连接</li>
