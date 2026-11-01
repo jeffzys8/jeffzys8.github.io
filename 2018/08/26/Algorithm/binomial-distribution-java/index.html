@@ -2,31 +2,31 @@
 
 
 <html lang="zh-CN / en-US">
-
+  
 
     <head>
       <meta charset="utf-8" />
-
+        
       <meta
         name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1"
       />
       <title>二项式分布算法（Java实现） |  Jeff的博客</title>
   <meta name="generator" content="hexo-theme-ayer">
-
+      
       <link rel="shortcut icon" href="/favicon.ico" />
-
+       
 <link rel="stylesheet" href="/dist/main.css">
 
-
+      
 <link rel="stylesheet" href="/css/fonts/remixicon.css">
 
-
+      
 <link rel="stylesheet" href="/css/custom.css">
-
+ 
       <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
-
-
+       
+ 
 
       <link
         rel="stylesheet"
@@ -35,7 +35,7 @@
       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
 
       <!-- mermaid -->
-
+      
       <style>
         .swal2-styled.swal2-confirm {
           font-size: 1.6rem;
@@ -48,8 +48,8 @@
 
 <body>
   <div id="app">
-
-
+    
+      
     <main class="content on">
       <section class="outer">
   <article
@@ -60,31 +60,31 @@
   data-scroll-reveal
 >
   <div class="article-inner">
-
+    
     <header class="article-header">
-
+       
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
   二项式分布算法（Java实现）
 </h1>
+ 
 
-
-
+      
     </header>
-
+     
     <div class="article-meta">
       <a href="/2018/08/26/Algorithm/binomial-distribution-java/" class="article-date">
   <time datetime="2018-08-26T00:00:00.000Z" itemprop="datePublished">2018-08-26</time>
-</a>
+</a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a>
   </div>
-
+  
 <div class="word_count">
     <span class="post-time">
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">1638</span>
+            <span class="post-count">784</span>
         </span>
     </span>
 
@@ -93,135 +93,88 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">4 min</span>
+            <span class="post-count">3 min</span>
         </span>
     </span>
 </div>
-
+ 
     </div>
+      
+    <div class="tocbot"></div>
 
 
 
 
-
+  
     <div class="article-entry" itemprop="articleBody">
+       
+  <p>二项式分布算法（Java实现）：题目、思路与代码实现。</p>
+<span id="more"></span>
 
+<h1 id="二项式分布算法（Java实现）"><a href="#二项式分布算法（Java实现）" class="headerlink" title="二项式分布算法（Java实现）"></a>二项式分布算法（Java实现）</h1><p>最近开始看《算法(第四版)》，这是遇到的第一个算法题。题目要求的只是估计一下算法递归的次数，但我进一步研究了不同的计算二项式分布的算法。</p>
+<h2 id="二项式分布简介"><a href="#二项式分布简介" class="headerlink" title="二项式分布简介"></a>二项式分布简介</h2><p>这里就不过多展开，以自己的语言解释一下。  </p>
+<p>某一个实验出现事件<span class="math-inline">\(A\)</span>的概率为<span class="math-inline">\(p\)</span>, 且重复该实验结果不相互干扰（独立）  </p>
+<p>求重复<span class="math-inline">\(N\)</span>次该实验时，出现k次事件<span class="math-inline">\(A\)</span>的概率：  </p>
+<div class="math-display">\[P(X=k;N,p)\]</div>
 
-  <h1>二项式分布算法（Java实现）</h1>
-<p>最近开始看《算法(第四版)》，这是遇到的第一个算法题。题目要求的只是估计一下算法递归的次数，但我进一步研究了不同的计算二项式分布的算法。</p>
-<h2>二项式分布简介</h2>
-<p>这里就不过多展开，以自己的语言解释一下。<br><br>
-某一个实验出现事件<span class="math-inline">\(A\)</span>的概率为<span class="math-inline">\(p\)</span>, 且重复该实验结果不相互干扰（独立）<br><br>
-求重复<span class="math-inline">\(N\)</span>次该实验时，出现k次事件<span class="math-inline">\(A\)</span>的概率：<br>
-<div class="math-display">\[P(X=k;N,p)\]</div><br>
-上式即为本博客探讨的问题</p>
-<h2>利用二项式公式实现 V1.0</h2>
-<p>学数学时候比较熟悉的公式就是</p>
-<p><div class="math-display">\[P(X=k;N,p) = C_N^k \times p^k \times (1-p)^{N-k}\]</div></p>
-<pre><code class="Java">    public static double myBinomial(int N, int k, double p) {
-        long c = N;
-        for(int i = N-1; i &gt;= N-k+1; --i)
-            c*=i;
-        for(int i = 2; i &lt;= k; ++i)
-            c/=i;
-        double a1 = Math.pow(p, k);
-        double a2 = Math.pow(1-p, N-k);
-        return c*a1*a2;
-    }
-</code></pre>
-<h2>改进版 V1.1</h2>
-<p>改进版本聚焦V1.0中的一个问题：当计算 <span class="math-inline">\(C_N^k\)</span>的时候，有两个方式：</p>
+  
+<p>上式即为本博客探讨的问题</p>
+<h2 id="利用二项式公式实现-V1-0"><a href="#利用二项式公式实现-V1-0" class="headerlink" title="利用二项式公式实现 V1.0"></a>利用二项式公式实现 V1.0</h2><p>学数学时候比较熟悉的公式就是</p>
+<div class="math-display">\[P(X=k;N,p) = C_N^k \times p^k \times (1-p)^{N-k}\]</div>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public static double myBinomial(int N, int k, double p) &#123;</span><br><span class="line">    long c = N;</span><br><span class="line">    for(int i = N-1; i &gt;= N-k+1; --i)</span><br><span class="line">        c*=i;</span><br><span class="line">    for(int i = 2; i &lt;= k; ++i)</span><br><span class="line">        c/=i;</span><br><span class="line">    double a1 = Math.pow(p, k);</span><br><span class="line">    double a2 = Math.pow(1-p, N-k);</span><br><span class="line">    return c*a1*a2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="改进版-V1-1"><a href="#改进版-V1-1" class="headerlink" title="改进版 V1.1"></a>改进版 V1.1</h2><p>改进版本聚焦V1.0中的一个问题：当计算 <span class="math-inline">\(C_N^k\)</span>的时候，有两个方式：</p>
 <ol>
-<li>
-<span class="math-inline">\(\large{C_N^k = \frac{N!}{k!(N-k)!} = \frac{N(N-1)\cdots(k+1)}{(N-k)(N-k-1)\cdots2}}\)</span> <br><br>
+<li><span class="math-inline">\(\large{C_N^k = \frac{N!}{k!(N-k)!} = \frac{N(N-1)\cdots(k+1)}{(N-k)(N-k-1)\cdots2}}\)</span>  
 </li>
 <li><span class="math-inline">\(\large{C_N^k = \frac{N!}{k!(N-k)!} = \frac{N(N-1)\cdots(N-k+1)}{k(k-1)\cdots2}}\)</span></li>
 </ol>
 <p>这两个方式的运算量不相同，在具体运算时可以进行选择</p>
-<pre><code class="Java">    public static double myBinomial2(int N, int k, double p) {
-        long c = N;
-        if(k &lt; N-k) {
-            for(int i = N-1; i &gt;= N-k+1; --i)
-                c*=i;
-            for(int i = 2; i &lt;= k; ++i)
-                c/=i;
-        }
-        else {
-            for(int i = N-1; i &gt;= k+1; --i)
-                c*=i;
-            for(int i = 2; i &lt;= N-k; ++i)
-                c/=i;
-        }
-        double a1 = Math.pow(p, k);
-        double a2 = Math.pow(1-p, N-k);
-        return c*a1*a2;
-    }
-</code></pre>
-<h2>利用递归实现 V2.0</h2>
-<p>这是示例的代码，在<a href="https://algs4.cs.princeton.edu/11model/Binomial.java.html" target="_blank" rel="nofollow">官网</a>可以查看<br><br>
-其基本思想是：<br>
-<div class="math-display">\[P(X=k;N,p) = p\times P(X=k-1;N-1,p) + (1-p)\times P(X=k;N-1,p)\]</div><br>
-将大问题逐次拆分为小问题的递归思想</p>
-<pre><code class="Java">    public static double binomial1(int N, int k, double p) {
-        if (N == 0 &amp;&amp; k == 0) return 1.0;
-        if (N &lt; 0 || k &lt; 0) return 0.0;
-        return (1.0 - p) *binomial1(N-1, k, p) + p*binomial1(N-1, k-1, p);
-    }
-</code></pre>
-<h2>将递归改进为迭代 V2.1</h2>
-<p>这里的方法挺巧妙的！<br>
-将递归的步骤“逆”过来，变成了“填格子”——递归自上而下，该方法则化为自下而上的迭代法。</p>
-<pre><code class="Java">public static double binomial2(int N, int k, double p) {
-        double[][] b = new double[N+1][k+1];
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">public static double myBinomial2(int N, int k, double p) &#123;</span><br><span class="line">    long c = N;</span><br><span class="line">    if(k &lt; N-k) &#123;</span><br><span class="line">        for(int i = N-1; i &gt;= N-k+1; --i)</span><br><span class="line">            c*=i;</span><br><span class="line">        for(int i = 2; i &lt;= k; ++i)</span><br><span class="line">            c/=i;</span><br><span class="line">    &#125;</span><br><span class="line">    else &#123;</span><br><span class="line">        for(int i = N-1; i &gt;= k+1; --i)</span><br><span class="line">            c*=i;</span><br><span class="line">        for(int i = 2; i &lt;= N-k; ++i)</span><br><span class="line">            c/=i;</span><br><span class="line">    &#125;</span><br><span class="line">    double a1 = Math.pow(p, k);</span><br><span class="line">    double a2 = Math.pow(1-p, N-k);</span><br><span class="line">    return c*a1*a2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-        // base cases
-        for (int i = 0; i &lt;= N; i++)
-            b[i][0] = Math.pow(1.0 - p, i);
-        b[0][0] = 1.0;
+<h2 id="利用递归实现-V2-0"><a href="#利用递归实现-V2-0" class="headerlink" title="利用递归实现 V2.0"></a>利用递归实现 V2.0</h2><p>这是示例的代码，在<a target="_blank" rel="noopener" href="https://algs4.cs.princeton.edu/11model/Binomial.java.html">官网</a>可以查看  </p>
+<p>其基本思想是：  </p>
+<div class="math-display">\[P(X=k;N,p) = p\times P(X=k-1;N-1,p) + (1-p)\times P(X=k;N-1,p)\]</div>
 
-        // recursive formula
-        for (int i = 1; i &lt;= N; i++) {
-            for (int j = 1; j &lt;= k; j++) {
-                b[i][j] = p * b[i-1][j-1] + (1.0 - p) *b[i-1][j];
-                StdOut.printf("%f\t", b[i][j]);
-            }
-            StdOut.println();
-        }
-        return b[N][k];
-    }
-</code></pre>
+  
+<p>将大问题逐次拆分为小问题的递归思想</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public static double binomial1(int N, int k, double p) &#123;</span><br><span class="line">    if (N == 0 &amp;&amp; k == 0) return 1.0;</span><br><span class="line">    if (N &lt; 0 || k &lt; 0) return 0.0;</span><br><span class="line">    return (1.0 - p) *binomial1(N-1, k, p) + p*binomial1(N-1, k-1, p);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="将递归改进为迭代-V2-1"><a href="#将递归改进为迭代-V2-1" class="headerlink" title="将递归改进为迭代 V2.1"></a>将递归改进为迭代 V2.1</h2><p>这里的方法挺巧妙的！<br>将递归的步骤“逆”过来，变成了“填格子”——递归自上而下，该方法则化为自下而上的迭代法。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">public static double binomial2(int N, int k, double p) &#123;</span><br><span class="line">        double[][] b = new double[N+1][k+1];</span><br><span class="line"></span><br><span class="line">        // base cases</span><br><span class="line">        for (int i = 0; i &lt;= N; i++)</span><br><span class="line">            b[i][0] = Math.pow(1.0 - p, i);</span><br><span class="line">        b[0][0] = 1.0;</span><br><span class="line"></span><br><span class="line">        // recursive formula</span><br><span class="line">        for (int i = 1; i &lt;= N; i++) &#123;</span><br><span class="line">            for (int j = 1; j &lt;= k; j++) &#123;</span><br><span class="line">                b[i][j] = p * b[i-1][j-1] + (1.0 - p) *b[i-1][j];</span><br><span class="line">                StdOut.printf(&quot;%f\t&quot;, b[i][j]);</span><br><span class="line">            &#125;</span><br><span class="line">            StdOut.println();</span><br><span class="line">        &#125;</span><br><span class="line">        return b[N][k];</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
 <p>此方法虽然巧妙，但其实速度上比不过公式法(复杂度达到<span class="math-inline">\(O(N^2)\)</span>，而且有一部分计算是不需要的（有些“空”不需要填）</p>
 <hr>
-<p><small>本文最初发布于 <a href="https://www.jianshu.com/p/63c7dad75063" target="_blank" rel="noopener">简书</a>，现迁移至本站。</small></p>
-
-
+<p>本文最初发布于<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/63c7dad75063">简书</a>。</p>
+ 
       <!-- reward -->
-
+      
       <div id="reword-out">
         <div id="reward-btn">
           Donate
         </div>
       </div>
-
+      
     </div>
-
+    
 
     <!-- copyright -->
-
+    
     <div class="declare">
       <ul class="post-copyright">
         <li>
           <i class="ri-copyright-line"></i>
           <strong>Copyright： </strong>
-
+          
           Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
-
+          
         </li>
       </ul>
     </div>
-
+    
     <footer class="article-footer">
-
+       
 <div class="share-btn">
       <span class="share-sns share-outer">
         <i class="ri-share-forward-line"></i>
@@ -230,7 +183,7 @@
       <div class="share-wrap">
         <i class="arrow"></i>
         <div class="share-icons">
-
+          
           <a class="weibo share-sns" href="javascript:;" data-type="weibo">
             <i class="ri-weibo-fill"></i>
           </a>
@@ -246,7 +199,7 @@
           <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
             <i class="icon icon-qzone"></i>
           </a> -->
-
+          
           <a class="facebook share-sns" href="javascript:;" data-type="facebook">
             <i class="ri-facebook-circle-fill"></i>
           </a>
@@ -264,19 +217,38 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://jeffzys8.github.io/2018/08/26/Algorithm/binomial-distribution-java/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://jeffzys8.github.io/2018/08/26/Algorithm/binomial-distribution-java/" alt="微信分享二维码">
     </div>
 </div>
 
-<div id="share-mask"></div>
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
+
     </footer>
   </div>
 
+   
+  <nav class="article-nav">
+    
+      <a href="/2018/09/09/Algorithm/leetcode-11-container-with-most-water/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            LeetCode 11. Container With Most Water
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2018/08/10/Reading/%E4%B9%A1%E5%9C%9F%E4%B8%AD%E5%9B%BD/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">乡土中国</div>
+      </a>
+    
+  </nav>
 
-  <nav class="article-nav"><a href="/jianshu/" class="article-nav-link"><strong class="article-nav-caption">返回</strong><div class="article-nav-title">简书迁移文章目录</div></a></nav>
-
-
-
+  
+   
 <div class="gitalk" id="gitalk-container"></div>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
@@ -284,7 +256,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
 
-<!--
+<!-- 
 <script src="https://raw.githubusercontent.com/blueimp/JavaScript-MD5/refs/tags/v2.19.0/js/md5.min.js"></script>
  -->
 <script type="text/javascript">
@@ -306,8 +278,8 @@
   gitalk.render('gitalk-container')
 </script>
 
-
-
+  
+   
     <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
     <div id="twikoo" class="twikoo"></div>
     <script>
@@ -315,7 +287,7 @@
             envId: ""
         })
     </script>
-
+ 
 </article>
 
 </section>
@@ -324,43 +296,43 @@
     <ul>
       <li>
         Copyrights &copy;
-        2015-2024
+        2015-2026
         <i class="ri-heart-fill heart_icon"></i> Jeff
       </li>
     </ul>
     <ul>
       <li>
-
+        
       </li>
     </ul>
     <ul>
       <li>
-
-
+        
+        
         <span>
   <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></span>
   <span class="division">|</span>
   <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
 </span>
-
+        
       </li>
     </ul>
     <ul>
-
+      
     </ul>
     <ul>
-
+      
     </ul>
     <ul>
       <li>
         <!-- cnzz统计 -->
-
+        
         <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
-
+        
       </li>
     </ul>
   </div>
-</footer>
+</footer>    
     </main>
     <div class="float_btns">
       <div class="totop" id="totop">
@@ -375,48 +347,44 @@
     <aside class="sidebar on">
       <button class="navbar-toggle"></button>
 <nav class="navbar">
-
+  
   <div class="logo">
     <a href="/"><img src="/images/ayer-side.svg" alt="Jeff的博客"></a>
   </div>
-
+  
   <ul class="nav nav-main">
-
+    
     <li class="nav-item">
       <a class="nav-item-link" href="/">主页</a>
     </li>
-
+    
     <li class="nav-item">
       <a class="nav-item-link" href="/archives">归档</a>
     </li>
-
-    <li class="nav-item">
-      <a class="nav-item-link" href="/jianshu/">简书迁移</a>
-    </li>
-
+    
     <li class="nav-item">
       <a class="nav-item-link" href="/categories">分类</a>
     </li>
-
+    
     <li class="nav-item">
       <a class="nav-item-link" href="/tags">标签</a>
     </li>
-
+    
   </ul>
 </nav>
 <nav class="navbar navbar-bottom">
   <ul class="nav">
     <li class="nav-item">
-
+      
       <a class="nav-item-link nav-item-search"  title="Search">
         <i class="ri-search-line"></i>
       </a>
-
-
+      
+      
       <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
         <i class="ri-rss-line"></i>
       </a>
-
+      
     </li>
   </ul>
 </nav>
@@ -434,27 +402,27 @@
   <span class="close"><i class="ri-close-line"></i></span>
   <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
   <div class="reward-box">
-
+    
     <div class="reward-item">
       <img class="reward-img" src="/images/alipay.jpg">
       <span class="reward-type">支付宝</span>
     </div>
-
-
+    
+    
     <div class="reward-item">
       <img class="reward-img" src="/images/wechat.jpg">
       <span class="reward-type">微信</span>
     </div>
-
+    
   </div>
 </div>
-
+    
 <script src="/js/jquery-3.6.0.min.js"></script>
-
+ 
 <script src="/js/lazyload.min.js"></script>
 
 <!-- Tocbot -->
-
+ 
 <script src="/js/tocbot.min.js"></script>
 
 <script>
@@ -484,14 +452,14 @@
  <!-- Root element of PhotoSwipe. Must have class pswp. -->
 <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
 
-    <!-- Background of PhotoSwipe.
+    <!-- Background of PhotoSwipe. 
          It's a separate element as animating opacity is faster than rgba(). -->
     <div class="pswp__bg"></div>
 
     <!-- Slides wrapper with overflow:hidden. -->
     <div class="pswp__scroll-wrap">
 
-        <!-- Container that holds slides.
+        <!-- Container that holds slides. 
             PhotoSwipe keeps only 3 of them in the DOM to save memory.
             Don't modify these 3 pswp__item elements, data is added later on. -->
         <div class="pswp__container">
@@ -586,7 +554,7 @@
         })
     }
     viewer_init()
-</script>
+</script> 
 <!-- MathJax -->
  <script type="text/x-mathjax-config">
   MathJax.Hub.Config({
@@ -616,9 +584,9 @@
 <!-- Katex -->
 
 <!-- busuanzi  -->
-
+ 
 <script src="/js/busuanzi-2.3.pure.min.js"></script>
-
+ 
 <!-- ClickLove -->
 
 <!-- ClickBoom1 -->
@@ -626,7 +594,7 @@
 <!-- ClickBoom2 -->
 
 <!-- CodeCopy -->
-
+ 
 <link rel="stylesheet" href="/css/clipboard.css">
  <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
 <script>
@@ -655,7 +623,7 @@
         $icon.addClass('ri-checkbox-circle-line');
         let $span = $($btn.find('span'));
         $span[0].innerText = 'COPIED';
-
+        
         wait(function () { // 等待两秒钟后恢复
           $icon.removeClass('ri-checkbox-circle-line');
           $icon.addClass('ri-file-copy-2-line');
@@ -671,7 +639,7 @@
         $icon.addClass('ri-time-line');
         let $span = $($btn.find('span'));
         $span[0].innerText = 'COPY FAILED';
-
+        
         wait(function () { // 等待两秒钟后恢复
           $icon.removeClass('ri-time-line');
           $icon.addClass('ri-file-copy-2-line');
@@ -682,7 +650,7 @@
     initCopyCode();
   }(window, document);
 </script>
-
+ 
 <!-- CanvasBackground -->
 
 <script>
@@ -692,8 +660,8 @@
 </script>
 
 
-
-
+    
+    
 
   </div>
 </body>

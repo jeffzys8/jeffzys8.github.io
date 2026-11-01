@@ -154,6 +154,301 @@
     
     
     <article
+  id="post-Programming Languages/go-concurrency-same-binary-tree"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2019/03/02/Programming%20Languages/go-concurrency-same-binary-tree/"
+    >Go并发 - 二叉查找树是否相同</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2019/03/02/Programming%20Languages/go-concurrency-same-binary-tree/" class="article-date">
+  <time datetime="2019-03-02T00:00:00.000Z" itemprop="datePublished">2019-03-02</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>使用 Go 并发比较两棵二叉查找树。</p> 
+      <a class="article-more-link" href="/2019/03/02/Programming%20Languages/go-concurrency-same-binary-tree/"
+        >阅读更多...</a
+      >
+       
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" rel="tag">编程语言</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+  
+</article>
+
+    
+    <article
+  id="post-Algorithm/leetcode-42-trapping-rain-water"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2019/02/25/Algorithm/leetcode-42-trapping-rain-water/"
+    >LeetCode 42. Trapping Rain Water</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2019/02/25/Algorithm/leetcode-42-trapping-rain-water/" class="article-date">
+  <time datetime="2019-02-25T01:27:45.000Z" itemprop="datePublished">2019-02-25</time>
+</a>    
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="42-Trapping-Rain-Water"><a href="#42-Trapping-Rain-Water" class="headerlink" title="42. Trapping Rain Water"></a>42. Trapping Rain Water</h1><p>Given <em>n</em> non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it is able to trap after raining.</p>
+<p><img src="/2019/02/25/Algorithm/leetcode-42-trapping-rain-water/image.png" alt="Alt text"></p>
+<p>The above elevation map is represented by array [0,1,0,2,1,0,1,3,2,1,2,1]. In this case, 6 units of rain water (blue section) are being trapped. Thanks <strong>Marcos</strong> for contributing this image!</p>
+<p><strong>Example:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: [0,1,0,2,1,0,1,3,2,1,2,1]</span><br><span class="line">Output: 6</span><br></pre></td></tr></table></figure>
+
+<h1 id="我的解法"><a href="#我的解法" class="headerlink" title="我的解法"></a>我的解法</h1><blockquote>
+<p>一开始我有一个错误的解法，这个解法是通过有穷自动机分析出来的；虽然这这种解法最终无法实现，但我发现有穷自动机真的是个逻辑分析的好工具，也算增长了经验</p>
+</blockquote>
+<ul>
+<li>先遍历一遍找出最大值，并假设一开始每一列都有着<code>max</code>高度的水；这个是个 <code>O(N)</code>的操作；</li>
+<li>而后从上至下，逐行地减去头和尾溢出的部分，这是个<code>kO(N)</code>的操作，<code>k</code>取决于最大的高度能有多大</li>
+<li>总结来说这是一个<code>O(kN)</code>的操作</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">trap</span><span class="params">(height []<span class="type">int</span>)</span></span> <span class="type">int</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(height) == <span class="number">0</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// fill with the max;</span></span><br><span class="line">    max := height[<span class="number">0</span>]</span><br><span class="line">    <span class="keyword">for</span> _, val := <span class="keyword">range</span> height &#123;</span><br><span class="line">        <span class="keyword">if</span> max &lt; val &#123;</span><br><span class="line">            max = val</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    result := max * <span class="built_in">len</span>(height)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// delete the first 0 cols</span></span><br><span class="line">    sp := <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> ; sp &lt; <span class="built_in">len</span>(height) &amp;&amp; height[sp] == <span class="number">0</span>; sp++ &#123;</span><br><span class="line">        result -= max;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// delete the existing places</span></span><br><span class="line">    <span class="keyword">for</span> e:=sp; e&lt;<span class="built_in">len</span>(height); e++&#123;</span><br><span class="line">        result -= height[e];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// delete row by row</span></span><br><span class="line">    <span class="keyword">for</span> curH := max; curH &gt;= <span class="number">1</span>; curH-- &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// delete the head</span></span><br><span class="line">        <span class="keyword">for</span> e := sp;; e++ &#123;</span><br><span class="line">            <span class="keyword">if</span> height[e] &lt; curH &#123;</span><br><span class="line">                result--;</span><br><span class="line">            &#125; <span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// delete the tail</span></span><br><span class="line">        <span class="keyword">for</span> e := <span class="built_in">len</span>(height)<span class="number">-1</span>;;e--&#123;</span><br><span class="line">            <span class="keyword">if</span> height[e] &lt; curH&#123;</span><br><span class="line">                result--;</span><br><span class="line">            &#125; <span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="更巧妙的"><a href="#更巧妙的" class="headerlink" title="更巧妙的"></a>更巧妙的</h1><p>讨论区里利用双指针，可以有 <code>O(N)</code>（只遍历一遍）的算法。具体看<a target="_blank" rel="noopener" href="https://leetcode.com/problems/trapping-rain-water/discuss/17357/Sharing-my-simple-c%2B%2B-code%3A-O(n)-time-O(1)-space">这里</a>，这里不说详细的解析，简单来说就是左右同步扫描，并将水从低处往高处逐列填。这里只贴一下代码</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">trap</span><span class="params">(<span class="type">int</span> A[], <span class="type">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> left=<span class="number">0</span>; <span class="type">int</span> right=n<span class="number">-1</span>;</span><br><span class="line">        <span class="type">int</span> res=<span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> maxleft=<span class="number">0</span>, maxright=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(left&lt;=right)&#123;</span><br><span class="line">            <span class="keyword">if</span>(A[left]&lt;=A[right])&#123;</span><br><span class="line">                <span class="keyword">if</span>(A[left]&gt;=maxleft) maxleft=A[left];</span><br><span class="line">                <span class="keyword">else</span> res+=maxleft-A[left];</span><br><span class="line">                left++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">if</span>(A[right]&gt;=maxright) maxright= A[right];</span><br><span class="line">                <span class="keyword">else</span> res+=maxright-A[right];</span><br><span class="line">                right--;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h1 id="更多的解法"><a href="#更多的解法" class="headerlink" title="更多的解法"></a>更多的解法</h1><p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/trapping-rain-water/solution/">Solution</a>有更多的解法，还有一种动态规划的解法很有意思，将左边加起来，右边加起来，重叠部分就是所求。</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+    </footer>
+  </div>
+
+   
+   
+  
+</article>
+
+    
+    <article
+  id="post-Algorithm/leetcode-99-recover-binary-search-tree"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2018/12/12/Algorithm/leetcode-99-recover-binary-search-tree/"
+    >LeetCode 99. Recover Binary Search Tree</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2018/12/12/Algorithm/leetcode-99-recover-binary-search-tree/" class="article-date">
+  <time datetime="2018-12-12T00:00:00.000Z" itemprop="datePublished">2018-12-12</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>LeetCode 99. Recover Binary Search Tree：题目、思路与代码实现。</p> 
+      <a class="article-more-link" href="/2018/12/12/Algorithm/leetcode-99-recover-binary-search-tree/"
+        >阅读更多...</a
+      >
+       
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+  
+</article>
+
+    
+    <article
+  id="post-Algorithm/leetcode-regular-expression-matching"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2018/12/05/Algorithm/leetcode-regular-expression-matching/"
+    >LeetCode Regular Expression Matching</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2018/12/05/Algorithm/leetcode-regular-expression-matching/" class="article-date">
+  <time datetime="2018-12-05T00:00:00.000Z" itemprop="datePublished">2018-12-05</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>LeetCode Regular Expression Matching：题目、思路与代码实现。</p> 
+      <a class="article-more-link" href="/2018/12/05/Algorithm/leetcode-regular-expression-matching/"
+        >阅读更多...</a
+      >
+       
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+  
+</article>
+
+    
+    <article
+  id="post-Algorithm/leetcode-931-minimum-falling-path-sum"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2018/11/28/Algorithm/leetcode-931-minimum-falling-path-sum/"
+    >LeetCode 931. Minimum Falling Path Sum</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2018/11/28/Algorithm/leetcode-931-minimum-falling-path-sum/" class="article-date">
+  <time datetime="2018-11-28T00:00:00.000Z" itemprop="datePublished">2018-11-28</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>LeetCode 931. Minimum Falling Path Sum：题目、思路与代码实现。</p> 
+      <a class="article-more-link" href="/2018/11/28/Algorithm/leetcode-931-minimum-falling-path-sum/"
+        >阅读更多...</a
+      >
+       
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+  
+</article>
+
+    
+    <article
   id="post-Algorithm/graph-edge-type"
   class="article article-type-post"
   itemscope
@@ -472,119 +767,13 @@
 </article>
 
     
-    <article
-  id="post-Reading/乡土中国"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2018/08/10/Reading/%E4%B9%A1%E5%9C%9F%E4%B8%AD%E5%9B%BD/"
-    >乡土中国</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2018/08/10/Reading/%E4%B9%A1%E5%9C%9F%E4%B8%AD%E5%9B%BD/" class="article-date">
-  <time datetime="2018-08-10T06:38:19.000Z" itemprop="datePublished">2018-08-10</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E9%98%85%E8%AF%BB/">阅读</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <blockquote>
-<p>再拾起这本书，一晃已是五个月过去。</p>
-</blockquote>
-<h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><blockquote>
-<p>1947首版，1984年再版</p>
-</blockquote>
-<p>  费孝通先生声明了本书并不是完全严密的观点，更多是<strong>启发式的描述</strong>。这本书原本就是教书用的小册子。另外，本书不会深入到具体乡村社会的细节描写，而是<strong>概念的提炼(Ideal Type)</strong></p>
-<h1 id="乡土本色"><a href="#乡土本色" class="headerlink" title="乡土本色"></a>乡土本色</h1><p>土是中心词，对土地的依赖，对土地的依赖导致了：</p>
-<ul>
-<li>人与空间关系上——<strong>不流动</strong></li>
-<li>人在空间上不流动表现为人与人在空间的排列关系上——<strong>孤立和隔绝</strong>。</li>
-</ul>
-<p>这种人与人之间的隔绝不是指单个人与他人之间的，而是<strong>以一处住在一起的集团为单位</strong>(一个村落)。</p>
-<p>但这看起来有点奇怪，因为单就农业来说，并不需要群居合作。以家庭为单位足以维持生产，夫妇和孩子聚居于一处有者两性和抚养上的需要。</p>
-<p>群居的原因：</p>
-<ol>
-<li>小农经济，保证住处离农场近</li>
-<li>水利合作</li>
-<li>安全，共同防卫</li>
-<li>（我觉得这个最重要）土地平等继承，兄弟继承祖业并适当向周围拓展。（三家村-&gt;几千户的大村）</li>
-</ol>
-<p><em><strong>综上，乡土属性导致中国乡土社区的单位是村落，形成了“生于斯、死于斯”的社会，村落之间人口流动少，各地乡村生活则具有地方性</strong></em></p>
-<p>这种低流动性使得乡村形成一种<strong>熟悉</strong>的社会</p>
-<p>两种社会类型：</p>
-<table>
-<thead>
-<tr>
-<th>社会类型</th>
-<th>目的性</th>
-<th>德语</th>
-<th>又名</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>乡村</td>
-<td>无目的，一起生长而发生</td>
-<td>Gemeinschaft“有机的团结”</td>
-<td>礼俗社会</td>
-</tr>
-<tr>
-<td>城市</td>
-<td>有目的，完成任务而聚集</td>
-<td>Gesellschaft “机械的团结”</td>
-<td>法理社会</td>
-</tr>
-</tbody></table>
-<p>乡下人对人和物都是自然习得的，<strong>无需去抽象出普遍规则</strong>，只需在接触所及的范围之中知道从手段到目的间的个别关联。</p>
-<blockquote>
-<p>孔子言孝，没有抽象地加以说明，而是列举具体的行为，并归结于心安二字。</p>
-</blockquote>
-<p>熟悉则可随心所欲而不逾矩，人人都遵守从小习得的规矩，</p>
-<blockquote>
-<p>“大家都是熟人了，打个招呼就是了，还用得着多说吗？”</p>
-</blockquote>
-<p>这种乡村里自然习得的规矩在城里却往往行不通，这便是乡下人“土气”的来源之一 —— 他们不是落后的东西，只是在陌生人所组成的现代社会中无法用规矩去应付，于是“土气”成了骂人的词汇。</p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-    </footer>
-  </div>
-
-   
-   
-  
-</article>
-
-    
   </article>
   
 
   
   <nav class="page-nav">
     
-    <a class="extend prev" rel="prev" href="/">上一页</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    <a class="extend prev" rel="prev" href="/">上一页</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">下一页</a>
   </nav>
   
 </section>
@@ -595,7 +784,7 @@
     <ul>
       <li>
         Copyrights &copy;
-        2015-2024
+        2015-2026
         <i class="ri-heart-fill heart_icon"></i> Jeff
       </li>
     </ul>

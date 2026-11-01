@@ -1,1298 +1,1280 @@
 <?xml version="1.0" encoding="utf-8"?>
-<search> 
+<search>
+  <entry>
+    <title>面试经历-字节跳动后台开发(基础架构)实习岗</title>
+    <url>/2018/11/26/Essay/Interview-ByteDance/</url>
+    <content><![CDATA[昨天下午尝试了第一次视频面试，面试的岗位是字节跳动的[后台开发-基础架构]实习岗，由于我本身的技术的确是远远没有达到岗位的要求，所以这一次的面试也只是抱着试一试的态度，了解一下面试的流程，积累一些经验，同时通过面试进一步了解自己应该努力的方向。
+
+
+时间定在了周日下午的四点，直到面试前都没有加上HR的微信，所以在面试前心中还是有种“我要被鸽了”的感觉。点开通知邮件发给我的面试链接以后，点开展示的就是牛客网的面试系统界面:
+
+四点过了两分钟，面试官就上线了，是个很有亲和力的中年男子。此时我还是很紧张的，毕竟是第一次参加正经的面试，所以谈吐都有些不自然了。调整视频连接耽误了一小段时间。
+编程面试官看了看我的简历，上面有一项是“熟悉Go语言编程”；我听到他提起这个心里就凉了一半：其实自己对于Go语言也借由本学期的服务计算课进行了个入门而已，远算不上熟悉。然后他说有一道题特别适合用Go来编程，就出给我做了:
+
+
+先定义了一个read函数，这个函数就是一个Socket接口，每次会读数据入缓冲区；然后要我写一个readLine函数，按行输出Socket读的数据，他一开始先给了我两个提示：
+
+read是会阻塞的
+每次read得到的数据有可能有换行符\n，有可能没有，也有可能会有多个
+
+这是面试官给出的函数定义:
+// read: socket api // - fd: socket 的文件fd// - buf: 读入缓冲区// - N: 最大数据大小func read(fd int,  buf []byte, N int) int &#123;&#125;
+
+
+
+听完题后我整个人就很慌了，因为心里总有股声音觉得自己不会。而实际上我也的确对Go不熟悉，很多类似append, channel 这样的操作还需要查自己或别人的博客去写。
+虽然慌的一匹，但总归还是有一点思路（现在想来这也不过就是一道生产者、消费者的问题），中间面试官提示我用channel去做这一道题，但我并没有用过所以短暂思考后也放弃了这个思路。
+最后用一个循环调用read的方法完成了这道题，用last变量来存储上一次调用read所剩下的内容：
+type Read struct &#123;	fd int          // socket fd	N  int          // max size per line	last []byte     // last read remained&#125;func (r Read) readLine() string &#123;	var buf []byte	for read(r.fd, buf, r.N) != 0 &#123;		for i := 0; i &lt; buf.size(); i++ &#123;			if buf[i] == &#x27;\n&#x27; &#123;				temp := append(last, buf[:i]...)				r.last = buf[i+1:]				return temp			&#125;		&#125;	&#125;	return &quot;&quot;&#125;
+
+这中间有几个严重的逻辑错误，都是面试官提出来然后我才能反应过来并迅速修正：
+
+如果某次read得到了多行，那么last存储的数据就会是多行的，代码没有考虑这个问题。解决方案我也立马能想出来：在执行循环调用read之前先检查last是否为空，不为空就遍历一遍看看是否有一行存在，有则返回第一行并对last进行切割
+
+如果某次read没有换行，这份代码并没有将这次读取的数据保存。显然解决方案就是在每次循环的末尾增加一个append(last, buf...)
+
+
+这也体现出我的思维是很不严谨的，然后代码能力也偏弱。我在以往做算法题的时候就很依赖提交，通过提交去检查自己的代码有没有问题，这样在考试的时候就会体现出我这样效率其实很低，而且长期的依赖也导致了自己基本的Debug能力有所降低。
+在编程测试结束的时候，面试官告诉我简历不能给面试带来信息不对称，比如刚入门Go语言就不应该写成熟悉；也真是令人汗颜。自己的简历的确有着不少的水分，需要重新修改一番。
+后阶段面试后阶段面试就更加能显现我简历的水分了，面试官看到我在简历里写了我在做MIT的6.828的实验，他想要从这里展开。到这里我就不得不和盘托出其实我只做了这个系列实验的Lab1，然后考虑到学这个又要去学x86编程，耗费时间有点多然后就搁置了。听到这里其实面试官已经基本宣告面试fail了。他告诉我这个部门是负责存储的，所以对算法或者某一后台领域的知识会要求很高，所以希望我可以明确一个方向，回去好好修炼再去考虑面试的事情。他还推荐我可以去看CMU的存储课程。另外，他还说我可以考虑面试一下后台业务开发的岗位，链接在面试通知邮件里也可以找到。
+后记这次面试也就这样在不安中结束了。的确这次就是抱着来试试的态度进行面试，所以结果不如意倒也正常。面试时间虽然只有短短的一个多小时，但也还是了解到了自己很多的缺陷：代码能力亟待提高，需要专精一个后台的方向（目前我想做的是网络编程），另外基础课程的知识也非常重要，如果有时间得捡回6.828，再加一些存储的课程。
+]]></content>
+      <categories>
+        <category>杂记</category>
+      </categories>
+      <tags>
+        <tag>面试</tag>
+        <tag>Go</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>ad钙奶和房子</title>
+    <url>/2023/10/17/Essay/ad%E9%92%99%E5%A5%B6%E5%92%8C%E6%88%BF%E5%AD%90/</url>
+    <content><![CDATA[现在对贩卖焦虑的行为已经越来越敏感了。
+上班路上看到了一个这样的广告：一个小男孩一身汗地跑进家里向妈妈哭诉，“妈！我又被班里的高个子男生撞倒了”，妈妈一脸慈爱地拿出了一罐ad钙奶……我在想这种情况的真实版会是怎么样的？小孩的哭诉一直在发生，妈妈真实的话可能会是：“平时让你多喝牛奶你不喝，现在被撞了才知道在这里哭！”看完广告的区别，可能是把牛奶换成两倍的ad钙奶。
+其实我也在贩卖焦虑。最近一年来我们家发生了一件我不愿意发生的大事：在我妈的极力主张下，非常勉强地、左拼右凑地在南沙区买了一套小房子，比较鸡肋、没有什么上升空间，还让降低了爸妈的生活水平。
+所以最近沟通免不了和我妈沟通（吵架）。昨天出门前又聊到了这件事，起因是她现在不舍得打车了，因为还欠着钱想要先紧巴紧巴先还上。我想告诉她的是，小钱省不了多少，我们是应该关注和节省的是那些冲动下花出去的大钱。
+可想而知又是吵一顿，但随着房价真的在下跌，经济情况如当时预料的那样在变坏，我妈吵架的底气越来越弱。从结果来看我好像“赢了”，但我并不怎么开心，因为我妈开始说她后悔了，她也开始想这个决定是不是太冲动了，现在压力很大，然后想到我说的一些话又觉得很绝情，压力就更大了。
+我突然有点惊醒了，我说的话也是在贩卖焦虑；资本家贩卖焦虑能赚钱，我贩卖焦虑赚的是一种延迟复仇的快感；我相信两者最终都没法指向内心的平和与愉悦。
+]]></content>
+      <categories>
+        <category>杂记</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>在工作中保持临在</title>
+    <url>/2023/11/02/Essay/%E5%9C%A8%E5%B7%A5%E4%BD%9C%E4%B8%AD%E4%BF%9D%E6%8C%81%E4%B8%B4%E5%9C%A8/</url>
+    <content><![CDATA[我记得差不多是一年前和老板有一次对话，那时候公司在剧烈动荡，我说我要“不管公司整体舆论也好氛围也好，努力去专注于自己眼前的事”，但显然那个时候的我并没有怎么体会过临在，所以这句话也不过是某种虚伪的讨好。
+对于我而言在工作中保持临在很难，这是多年学生生涯一次次的态度选择积累的惯性思维：本能地去嫉妒能力强的和知道的多的，对自己的无知和无能会感到极度的恐慌，会急功近利地厌恶细节和琐碎的事情。
+但今天我意识到我好好地做了件“琐碎”的事：我花了一天的一大半时间去支持了一个稍微边缘的团队一个极度落后服务版本的需求，这需要我去翻读两年前的代码，梳理结构和权限，也要求助之前有过相关经验的同事。不知不觉就把这件事情支持好，并且还花时间去做了梳理和总结，把核心内容总结给同事们。
+当然是会收到同事们的小鼓励，但我很快回到当下。这确实也不是很大的事情，前面的支持和后面的总结分享都不过是单纯觉得“就这样去做这件事本身，而且会对他人有帮助”，并没有想着做的过程会多费劲、做完以后能有什么具体的反馈和影响。
+临在是需要可以练习的，这是我这一两个月来学习到的并在践行的事情，而且这股力量它不是间歇的，同时也不是很强大，但是是在持续地在每个当下发挥着作用。
+]]></content>
+      <categories>
+        <category>杂记</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>对网络编程的思考</title>
+    <url>/2022/10/30/Essay/%E5%AF%B9%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E7%9A%84%E6%80%9D%E8%80%83/</url>
+    <content><![CDATA[加入Spex接近两年，但是其实到今年七月份开始才真正做agent相关的工作，并且也是到最近才算是半只脚迈进对agent进行性能分析的部分；在做这一部分工作的时候，除了有“这一部分真有意思”的激动，同时也觉察出自己在网络编程方面知识和经验的欠缺，阻碍了对程序的优化 —— 而且这样的现象在组里其实比较普遍。
+Spex agent的代码基本是一个proxy server（IO-&gt;逻辑处理-&gt;IO，既接收连接又对外创建连接）， 服务端部分采用的是类似经典的reactor的事件处理模型。值得一提的是逻辑处理环节利用了Go的channel特性划分了几个阶段，这也给性能和代码逻辑分析带来了一定的挑战。
+萌生对网络编程进行更系统化学习的起因是最近一次失败的性能优化尝试。在现有Spex agent的代码中，客户端部分（即作为client向外创建连接并交换数据的部分，这包括client agent向server agent建立TCP连接 &amp; server agent向server instance建立UDS连接的部分）中是每个goroutine用一个for loop处理一个连接的序列化和I&#x2F;O，我怀疑这部分可能会造成队头阻塞，就用goroutine pool来调用序列化和I&#x2F;O。结果在和QA的简单验证下，发现延时P99并无法得到明显的改善，而与此同时系统的吞吐量下降了。
+但并不是说这一个思路不正确就说明这个尝试失败了，而是在验证的过程中其实很大程度是不严谨的 —— 使用的是最基础的性能测试场景以及凭借自己猜测增加了请求包大小的测例，并没有尝试构建复现队头阻塞的场景，对于应该关注哪些指标，怎么看系统是否达到了瓶颈也有些无头苍蝇的感觉……当然这些问题其实都可以逐一地去研究并解决，但就是如果有更系统化的知识体系，这些问题本来也应该是很常见思路比较明确的问题，没有必要一个劲地瞎闯，还是需要更系统地学习网络编程。
+之前也看了一些书，比如《UNP》、《Linux高性能服务器编程》，同时也有对Go HTTP的源码进行学习。但之前的学习没有领悟到一个比较重要的原则：抓大放小 —— 很容易就陷入到某一细分领域的某一个细节，但这往往在进行系统化学习的时候都是不重要且会分散注意力的。因此这些书的学习基本都虎头蛇尾，对于关键内容也没有清晰的认识和总结。
+这次我选的核心阅读书目是陈硕的《Linux多线程服务器编程》，也是在许久之后把C++重新捡回来，为后面envoy相关的项目打一下基础。既然遵循抓大放小的原则，就对一些觉得是重点的内容深入代码和示例去看去运行，但不要去纠结小的点。同时CSAPP也是要继续学习，但这属于长时间的打地基工作，没必要说一定把CSAPP学完了自底向上都明白了再去接触和实际工程更接近的内容。
+]]></content>
+      <categories>
+        <category>杂记</category>
+      </categories>
+      <tags>
+        <tag>随笔</tag>
+        <tag>Networking</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>践行幸福的哲学</title>
+    <url>/2023/10/23/Essay/%E5%B9%B8%E7%A6%8F/</url>
+    <content><![CDATA[
+近期其实一直都很想好好写一下，今晚又在亲近的人身上感受到了幸福的力量和勇气
+
+摊开我大学四年甚至更之前的日记本，写的满满的都是“挣扎” —— 我想要获得幸福，想要通过这样那样的方法改变我眼前的问题来找到答案或者平衡，却不断地被失败和焦虑袭击而放弃。这样的状态反应到了生活的方方面面上，当然也反应到了博客的经营上。
+于是我时常在挣扎中感到绝望：人是不是没有改变自己的能力。我当然不会允许自己沉浸在这样的思维里，于是会有许多自我安慰甚至是自我欺骗式的鼓励，内心的焦虑却在一次次的挫败中不断地放大。
+那么人到底有没有能力改变自己，并最终获得幸福，我现在开始从心底里相信是有的。但这种改变和相信和以往的认知并不一样。
+幸福不是一个状态，而是一个需要勇气和毅力去践行的哲学。《被讨厌的勇气》里说的是，“任何人都能随时获得幸福”，我开始慢慢理解这句话的含义：世界其实并没有美丑，世界只不过是世界罢了，那么认定自己幸福与否的，从来就只是自己。
+大家肉体最终都会消散（意识会不会我不知道，但我还是有些希望不会哈哈），有的也只是当下。但要是沉浸在“我本应该”、“世界对我不公”、“要是这样就好了”之中，那就离开了当下，也就离开了幸福。所以无论旅途最终会去到哪里，最重要的永远都是当下，此时此刻。
+随着一部分自己的觉醒，开始意识到身边被痛苦之身包围着的人们，同时也意识到自己被很大的痛苦之身包围着；甚至很有可能是因为自己的痛苦之身比一般人大得多，在倏然观察到它的时候才会如此惊讶。由它衍生出的受害者心理、焦虑、敌对感便得到了解释。
+践行幸福的哲学其实最早可以追溯到大三时的生日朋友圈，那可能是最早记录下来的自我接纳。旅程中有许许多多的反复，但是正如《新世界 灵性的觉醒》里说的：“觉醒一旦发生，就不会停下”。于是便更有了前进下去的勇气。
+]]></content>
+      <categories>
+        <category>杂记</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Non-client-server mesh sidecar</title>
+    <url>/2024/12/22/Mesh/Non-client-server%20mesh%20sidecar/</url>
+    <content><![CDATA[网络服务一般分为client和server端, server端负责监听一个地址, 等待client的连接
+
+在他们中间如果需要做七层的流量治理与转发, 通常会引入一个像下图的proxy(以envoy为例)
+
+proxy进程内包含两部分: Listeners负责监听来自client的连接, Upstream Clusters负责主动dial server, 并将数据转发给server
+这样的模式很容易拓展到多级的proxy
+
+但我司的Service mesh产品却是不一样的做法: 无论是client应用还是server应用, 都统一去dial proxy
+
+Listners:
+
+App Listener: 负责监听来自app(client&#x2F;server)的连接
+Proxy Listner: 负责监听来自client端proxy的连接
+
+Clusters:
+
+Proxy Clusters: 负责将来自client app的数据转发到server proxy
+Upstream Cluseters: 负责将来自client proxy的数据转发到server app, 其中server app是通过app listener注册到Upstream Clusters上来的
+
+这样有几个显而易见的坏处
+
+代码结构冗余, 需要存在两套不一样的Listener和upstream逻辑, 给代码理解和日常维护带来了一定的障碍
+多级的拓展变得非常费劲
+
+但其实也仔细挖掘也是有好处的
+
+app视角里模糊了client&#x2F;server的界限, 可以用同一个conn执行client和server的操作
+server连接是app主动连接注册到proxy, 所以proxy就不需要再执行类似连接预热的操作了
+mesh产品覆盖率直线上升, 传染法则 (LOL)
+
+]]></content>
+      <categories>
+        <category>Mesh</category>
+      </categories>
+      <tags>
+        <tag>Networking</tag>
+        <tag>Mesh</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>VirtualBox安装 WinXP+CentOS双系统</title>
+    <url>/2018/11/24/OS/VitualBox-Double-System/</url>
+    <content><![CDATA[建议在开始之前，先在这里学习分区和开机的知识，然后按照这个步骤把CentOS单系统安装成功之后，再来看这里。
+参考资料
+鸟哥Linux私房菜 - 多重开机安装流程与管理
+Grub2配置文件详解
+
+
+
+Let’s Go采用的是先装 CentOS, 再安装Windows的过程，体验一下 “救援” 被Windows覆盖的MBR的过程
+下载XP ISO 安装版，有些版本是所谓 装机版 是不能在Virtual Box跑的，它需要在Windows下打开来运行；我们需要的是ISO映像 这个就可以
+CentOS-7 minimal, 官网下载即可
+新建虚拟硬盘
+这一步很关键
+
+由于XP系统只能识别IDE硬盘，因此在新建系统时如果选择Ubuntu，Win10之类的都会自动分配一个SATA硬盘，这会导致WindowsXP无法识别，从而安装失败。
+选择Linux-&gt;其他Linux系统则会分配IDE接口的硬盘。另外，直接选择XP系统会导致CentOS中途无法安装，原因暂时不明
+
+还需继续研究
+
+使用CentOS分区并安装CentOS当然WindowsXP也能进行分区，只不过界面和功能来说还是CentOS更胜一筹；详细的步骤跟着 鸟哥的教程就行了。当然博主的分区规划和鸟哥的略有不同，如下所示：
+
+1M ~ 15G : 主要分区1，用于安装CentOS (sda1)
+15G ~ 30G : 主要分区2，用于安装WindowsXP (sda2)
+30G ~ 40G : 扩展分区 (sda3)
+30G ~ 38G ：逻辑分区1，用于windows和cent共享数据 (sda5) 
+注意到这里从5开始，因为如前所述1~4分给了primary和extended
+
+
+38G ~ 40G : 逻辑分区2，用于换页，增强内存功能 (sda6)
+
+
+
+安装WindowsXP重新设置一下启动的ISO镜像，选择WindowsXP镜像启动，然后安装，注意别安装错了（当然如果不小心点了CentOS的系统盘会有提示上面装了系统）
+安装完以后，虚拟硬盘的MBR就被WindowsXP的boot loader “霸道”地覆盖了，重启就只能进入WindowsXP系统
+救援MBR内的Boot Loader此时我们需要替换MBR的boot loader，不能再让XP占用下去了！网上很多建议装双系统是先装Windows再装Linux，是因为很多Linux版本自带了一个强大的 boot loader - grub2, 它可以实现多重引导（其实本质上就是引导到某个分区的booting section上而已）
+现在在MBR被覆盖的情况下，我们仍然能通过CentOS的安装程序进行“救援”：关机，切换CentOS的ISO镜像，然后按照鸟哥的教程进行救援
+Grub2设置鸟哥的教程里有一部分对Grub2的设置，乍一看还是蛮困扰的，幸亏看了这一片教程，我知道了set root=&#39;(hd0,3)&#39;指的是第一块硬盘内的第三个主要分区；而博主的分区规划是把Windows安装在第二个主要分区，因此改成set root=&#39;(hd0,2)即可，注意这里格式严格不能有多余空格哦！
+成功！然后重启，就会发现 Grub2 多了一个WindowsXP，截图留念：
+
+当然Windows也启动成功了：
+
+
+
+如有任何问题，可发邮件至 zys980808@126.com 告知我，感激不尽！
+]]></content>
+      <categories>
+        <category>操作系统</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Go Learning</title>
+    <url>/2018/11/24/Programming%20Languages/Go-Learning/</url>
+    <content><![CDATA[
+HelloWorld
+基础
+包
+函数
+变量
+控制语句
+指针
+结构体
+数组和切片
+映射
+函数值
+函数闭包
+
+
+方法和接口
+方法
+接口
+
+
+
+HelloWorldpackage main/*Every Go program is made up of packages.Programs start running in package main.*/import &quot;fmt&quot;func main() &#123;	fmt.Println(&quot;Hello, 世界&quot;)	&#125;
+
+
+
+基础包按照约定，包名与导入路径的最后一个元素一致。例如：”math&#x2F;rand”下的包源码均以 package rand 语句开始
+
+导入一个包
+import &quot;fmt&quot;
+
+导入多个包
+import (	&quot;fmt&quot;	&quot;math/rand&quot;)import &quot;fmt&quot;import &quot;math&quot;
+
+包中大写为“导出”
+fmt.Println(math.pi) //报错fmt.Println(math.Pi) //正确
+
+函数简单的例子：
+package mainimport &quot;fmt&quot;/*- variable type: after name- return value type : after parameters*/func add(x int, y int) int &#123;	return x + y&#125;func main() &#123;	fmt.Println(add(42, 13))&#125;
+
+相同类型形参可省略一个,例如上面
+x int, y int
+可写作
+x, y int
+
+返回值可为多个
+func swap(x, y string) (string, string) &#123;	return y, x&#125;func main() &#123;	a, b := swap(&quot;hello&quot;, &quot;world&quot;)  //简洁赋值，等价于var a, b string = swap(...)	fmt.Println(a, b)&#125;
+
+命名返回值，直接返回这些命名；长函数会影响可读性
+func split(sum int) (x, y int) &#123;	x = sum * 4 / 9	y = sum - x	return&#125;
+
+变量又是一个例子
+package mainimport &quot;fmt&quot;var c, python, java boolfunc main() &#123;	var i int	fmt.Println(i, c, python, java)&#125;/* 输出结果：0 false false false看来是有默认初始化的过程*/
+
+基本类型
+bool    //1 bytestring int  int8  int16  int32  int64uint uint8 uint16 uint32 uint64 uintptr/*其中，int, uint 和 uintptr（尚未知道用处）在32位系统上为32位(4bytes)宽，64-&gt;64。需要整数时尽量使用int*/byte // alias for uint8rune // alias for int32     // represents a Unicode code pointfloat32 float64//注意这里没有单纯的float了complex64 complex128
+
+
+多个变量同时赋值
+var i, j int = 1, 2var c, python, java = true, false, &quot;no!&quot; //省略类型，自动从值获取
+
+简洁赋值语句；不能在函数外使用（函数外每个语句必须以关键字开始，如var, func）
+k := 3//等价于var k = 3
+
+语法块变量声明
+var (	ToBe   bool       = true	MaxInt uint64     = 1&lt;&lt;64 - 1	z      complex128 = cmplx.Sqrt(-5 + 12i))
+
+默认初始化值
+func main() &#123;	var i int	var f float64	var b bool	var s string    fmt.Printf(&quot;%v %v %v %q\n&quot;, i, f, b, s)&#125;/* 输出结果0 0 false &quot;&quot;*/
+
+类型转换：和C++类似，但不存在隐式转换
+i := 42PPf := float64(i)u := uint(f)//下面会报错i := 42var f float64 = i
+
+常量const关键字，不能用:&#x3D;赋值
+const World = &quot;世界&quot;
+
+控制语句Go中循环结构只有 for; for无小括号，但一定要有大括号
+sum := 0for i := 0; i &lt; 10; i++ &#123;	sum += i&#125;fmt.Println(sum)
+
+for内三个语句都是optional（可作while语句）
+for ;sum&lt;1000;&#123;&#125;for sum&lt;1000 &#123;&#125; //分号再去掉，形如whilefor &#123;&#125;  //无限循环
+
+条件语句，也是无需小括号，必须大括号
+if x &lt; 0 &#123;&#125;
+
+if条件判断前可执行一个简单语句, 该语句声明的变量仅在if内
+if v := math.Pow(x, n); v &lt; lim &#123;	return v&#125;
+
+练习 - 利用牛顿法实现平方根函数
+package mainimport (    &quot;fmt&quot;    &quot;math&quot;)func Sqrt(x float64) float64&#123;    z := 1.0    for math.Abs(z*z - x) &gt; 1e-15&#123;        z -= (z*z - x) / (2*z)    &#125;    return z&#125;func main()&#123;    fmt.Println(Sqrt(2))    fmt.Println(math.Sqrt(2))&#125;
+
+switch 语句
+
+不需要break，只会运行选中的case
+可通过在结尾加 fallthrough 语句延续分支
+case无需为常量，取值不必为整数
+
+fmt.Print(&quot;Go runs on &quot;)switch os := runtime.GOOS; os &#123;case &quot;darwin&quot;:    fmt.Println(&quot;OS X.&quot;)case &quot;linux&quot;:    fmt.Println(&quot;Linux.&quot;)default:    // freebsd, openbsd,    // plan9, windows...    fmt.Printf(&quot;%s.&quot;, os)&#125;
+
+switch 可以不带条件（等价于switch(true))，可当做if then else结构，更加清晰
+t := time.Now()switch &#123;case t.Hour() &lt; 12:    fmt.Println(&quot;Good morning!&quot;)case t.Hour() &lt; 17:    fmt.Println(&quot;Good afternoon.&quot;)default:    fmt.Println(&quot;Good evening.&quot;)&#125;
+
+defer，在外层函数返回后执行，其实参会立即求值（压入栈中）
+func main() &#123;	fmt.Println(&quot;counting&quot;)	for i := 0; i &lt; 10; i++ &#123;		defer fmt.Println(i)	&#125;	fmt.Println(&quot;done&quot;)&#125;/* 输出结果：    counting    done    9    8    ...    0*/
+
+指针指针零值为nil,声明如下：
+var p *int
+
+&amp; * 操作和 C比较类似，但没有指针运算
+//&amp;操作i := 42var p *int = &amp;i//*操作fmt.Println(*p)*p = 21
+
+结构体简单例子
+type Vertex struct &#123;	X int	Y int&#125;func main() &#123;    fmt.Println(Vertex&#123;1, 2&#125;)    //注意其赋值使用大括号&#125;
+通过名字赋值
+v1 = Vertex&#123;1, 2&#125;v2 = Vertex&#123;X: 1&#125;   //v2.Y = 0
+点号访问成员
+v := Vertex&#123;1, 2&#125;v.X = 4fmt.Println(v.X)
+指针访问结构体，(*p).X 等价于 p.X
+v := Vertex&#123;1, 2&#125;p := &amp;v(*p).X = 1e9p.X = 1e9fmt.Println(v)
+
+数组和切片数组例子，大小需为常数
+func main() &#123;	var a [2]string	a[0] = &quot;Hello&quot;	a[1] = &quot;World&quot;	fmt.Println(a[0], a[1])	fmt.Println(a)	primes := [6]int&#123;2, 3, 5, 7, 11, 13&#125;	fmt.Println(primes)&#125;
+
+切片很常用
+
+左闭右开
+就像数组的局部引用，本身不存数据
+上下界可忽略（下界默认0，上界默认数组&#x2F;切片长度）func main() &#123;	primes := [6]int&#123;2, 3, 5, 7, 11, 13&#125;	var s []int = primes[1:4]	fmt.Println(s)&#125;/* 输出结果    [3, 5, 7]*/
+
+值得注意的是，这是一个数组：
+[3]bool&#123;true, true, false&#125;
+
+而这创建了同样的数组，再构建了它的切片
+[]bool&#123;true, true, false&#125;
+
+结构体和切片结合的例子
+s := []struct &#123;		i int		b bool	&#125;&#123;		&#123;2, true&#125;,		&#123;3, false&#125;,		&#123;5, true&#125;,		&#123;7, true&#125;,		&#123;11, false&#125;,		&#123;13, true&#125;,	&#125;
+
+切片的长度：包含的元素个数切片的容量：从它包含的第一个元素开始，到其底层数组末尾的个数（倒是暂时不懂有什么用）
+s := []int&#123;2, 3, 5, 7, 11, 13&#125;len(s)	//6cap(s)	//6
+
+切片空 - nil
+var s []intfmt.Println(s, len(s), cap(s))if s == nil &#123;	fmt.Println(&quot;nil!&quot;)&#125;
+
+用make创建切片 - 相当于动态创建数组，初始值都为0
+a := make([]int, 5)  // len(a)=5b := make([]int, 0, 5) // len(b)=0, cap(b)=5
+
+切片中的切片以及修改的例子
+// Create a tic-tac-toe board.board := [][]string&#123;	[]string&#123;&quot;_&quot;, &quot;_&quot;, &quot;_&quot;&#125;,	[]string&#123;&quot;_&quot;, &quot;_&quot;, &quot;_&quot;&#125;,	[]string&#123;&quot;_&quot;, &quot;_&quot;, &quot;_&quot;&#125;,&#125;// The players take turns.board[0][0] = &quot;X&quot;board[2][2] = &quot;O&quot;board[1][2] = &quot;X&quot;board[1][0] = &quot;O&quot;board[0][2] = &quot;X&quot;// modify the first line (by myself)board[0] = board[0][0:1]board[0] = board[0][:cap(board[0])]
+
+向切片追加元素，注意：这个操作会导致底层数组被挤占，如果cap不够，会分配一个更大的数组
+var k = [5]int&#123;1,2,3,4,5&#125;	//k: [1 2 3 4 5]m := k[:3]	//m: [1 2 3]m = append(m, 200)	//m: [1 2 3 200]; k: [1 2 3 200 5]m = append(m, 300)	//m/k: [1 2 3 200 300]m = append(m, 400)	//m: [1 2 3 200 300 400]; k: [1 2 3 200 300]
+
+var k = [5]int&#123;1,2,3,4,5&#125;	//k: [1 2 3 4 5]m := k[:3]	//m: [1 2 3]m = append(m, 200, 300, 400)	//m: [1 2 3 200 300 400]	//k: [1 2 3 4 5]
+
+Range遍历切片
+var pow = []int&#123;1, 2, 4, 8, 16, 32, 64, 128&#125;func main() &#123;	//index + value	for i, v := range pow &#123;		fmt.Printf(&quot;2**%d = %d\n&quot;, i, v)	&#125;	//只有index (i)	for i := range pow &#123;		pow[i] = 1 &lt;&lt; uint(i) // == 2**i	&#125;	//只有value(value), index用_省略掉	for _, value := range pow &#123;		fmt.Printf(&quot;%d\n&quot;, value)	&#125;&#125;
+
+Slice 练习 —— 构造给定长度的二维数组并绘图
+package mainimport &quot;golang.org/x/tour/pic&quot;func Pic(dx, dy int) [][]uint8 &#123;	result := [][]uint8&#123;&#125;	for y := 0; y &lt; dy; y++ &#123;		temp := []uint8&#123;&#125;		for x := 0; x &lt; dx; x++&#123;			temp = append(temp,uint8((x+y)/2))		&#125;		result = append(result, temp)	&#125;	return result&#125;func main() &#123;	pic.Show(Pic)&#125;
+
+映射一个例子 —— 基本类型
+k := make(map[string]int)k[&quot;hello&quot;] = 3fmt.Println(k[&quot;hello&quot;])
+
+另一个例子 —— 结构体
+type Vertex struct &#123;	Lat, Long float64	Short float64&#125;func main() &#123;	m := make(map[string]Vertex)	m[&quot;Bell Labs&quot;] = Vertex&#123;1,2,3&#125;	fmt.Println(m[&quot;Bell Labs&quot;])&#125;
+
+直接初始化
+type Vertex struct &#123;	Lat, Long float64&#125;var m = map[string]Vertex&#123;	&quot;Bell Labs&quot;: Vertex&#123;		40.68433, -74.39967,	&#125;,	&quot;Google&quot;: Vertex&#123;		37.42202, -122.08408,	&#125;,	//倒也诡异，这里的&quot;,&quot;不能省略&#125;//简化var m = map[string]Vertex&#123;	&quot;Bell Labs&quot;: &#123;40.68433, -74.39967&#125;,	&quot;Google&quot;:    &#123;37.42202, -122.08408&#125;,&#125;
+
+对映射的修改
+//在映射 m 中插入或修改元素：m[key] = elem//获取元素：/*		如元素不存在，则返回该元素类型的零值：	例如 int 返回 0, string 返回 &quot;&quot;*/elem := m[key]//获取并检测元素是否存在elem, ok := m[key]//只检测元素是否存在_, ok := m[key]//删除元素：delete(m, key)
+自创的和if复合使用
+if _,ok:=m[&quot;Answer&quot;];ok==true&#123;&#125;
+
+练习：单词检测
+package mainimport (	&quot;golang.org/x/tour/wc&quot;	&quot;strings&quot;)func WordCount(s string) map[string]int &#123;	aMap := map[string]int&#123;&#125;	aArray := strings.Fields(s)	for _,v := range aArray&#123;		aMap[v]++;	&#125;	return aMap&#125;func main() &#123;	wc.Test(WordCount)&#125;
+
+函数值package mainimport (	&quot;fmt&quot;	&quot;math&quot;)//作为形式参数func compute(fn func(float64, float64) float64) float64 &#123;	return fn(3, 4)&#125;func main() &#123;	hypot := func(x, y float64) float64 &#123;		return math.Sqrt(x*x + y*y)	&#125;	fmt.Println(hypot(5, 12))	//作为实际参数	fmt.Println(compute(hypot))	fmt.Println(compute(math.Pow))&#125;
+
+函数闭包函数闭包指的是这样的“函数值”：该函数值代表的函数使用了函数体外（非全局）的函数；这样就使得这个函数某种意义上来说“附于”这个&#x2F;这些变量（有种对象的感觉了，只不过这个对象只有一个方法）
+/*注意这里 adder 并不是一个函数闭包，adder()才是*/func adder() func(int) int &#123;	sum := 0	return func(x int) int &#123;		sum += x		return sum	&#125;&#125;func main() &#123;	pos:= adder()	fmt.Println(pos(1))	fmt.Println(pos(100))&#125;
+
+练习：斐波那契数列
+func fibonacci() func() int &#123;	former := 0	latter := 1	return func() int &#123;		temp := former		temp2 := latter		latter += former		former = temp2		return temp	&#125;&#125;func main() &#123;	f := fibonacci()	for i := 0; i &lt; 10; i++ &#123;		fmt.Println(f())	&#125;&#125;
+
+方法和接口方法Go 没有类。不过你可以为结构体类型定义方法。方法就是一类带特殊的 接收者 参数的函数。
+打个栗子
+import (	&quot;fmt&quot;	&quot;math&quot;)type Vertex struct &#123;	X, Y float64&#125;func (v Vertex) Abs() float64 &#123;	return math.Sqrt(v.X*v.X + v.Y*v.Y)&#125;func main() &#123;	v := Vertex&#123;3, 4&#125;	fmt.Println(v.Abs())&#125;
+
+为非结构体声明方法
+type MyFloat float64//直接为float64声明方法是非法的，因为它是包外的func (f MyFloat) Abs() float64 &#123;	if f &lt; 0 &#123;		return float64(-f)	&#125;	return float64(f)&#125;
+
+指针接收者：值得注意的是，如果用值接收者的话，方法是无法对这个接收者——天..还是叫对象吧——方法是无法对这个对象进行修改的，而指针接收者可以。
+因此显然是指针接收者更为常用（我认为，要保护数据的时候就最好不用指针）
+func (v *Vertex) Scale(f float64) &#123;	//如果不是*Vertex而是Vertex,这里修改对原对象无效	v.X = v.X * f	v.Y = v.Y * f&#125;func main() &#123;	v := Vertex&#123;3, 4&#125;	v.Scale(10)	fmt.Println(v.Abs())&#125;
+
+使用指针接收者时，实际参数无论是对象还是对象的指针，最终都会转化为指针传给函数(而单纯的函数是做不到这一点的，是否指针很严格)
+func (v *Vertex) Scale(f float64) &#123;	v.X = v.X * f	v.Y = v.Y * f&#125;func main() &#123;	v := Vertex&#123;3, 4&#125;	v.Scale(2)	p := &amp;Vertex&#123;3, 4&#125;	p.Scale(2)	fmt.Println(v, p)	//可以看到由于指针的重定向，两个方式调用方法起到了同样的效果&#125;
+
+同样地，在方法声明里这样
+func (v Vertex) Scale(f float64)
+实参也是既可以是指针也可以是值，当然其区别就在于这种声明无法修改对象的值；
+总而言之，方法是否能修改对象，要看函数声明的形参，和实参没有关系
+接口接口类型的变量可以保存任何实现了这些方法的值
+一个例子：
+type Abser interface &#123;	Abs() float64&#125;func main() &#123;	var a Abser	f := MyFloat(-math.Sqrt2)	v := Vertex&#123;3, 4&#125;	a = f  // a MyFloat 实现了 Abser	a = &amp;v // a *Vertex 实现了 Abser	// 下面一行，v 是一个 Vertex（而不是 *Vertex）	// 所以没有实现 Abser。	//a = v	fmt.Println(a.Abs())&#125;type MyFloat float64func (f MyFloat) Abs() float64 &#123;	if f &lt; 0 &#123;		return float64(-f)	&#125;	return float64(f)&#125;type Vertex struct &#123;	X, Y float64&#125;func (v *Vertex) Abs() float64 &#123;	return math.Sqrt(v.X*v.X + v.Y*v.Y)&#125;
+
+未赋值的接口值其对象值和类型都为```&lt;nil&gt;``````Gotype I interface &#123;	M()&#125;type T struct &#123;	S string&#125;func (t T) M() &#123;	fmt.Println(t.S)&#125;func main() &#123;	var i I	i = T&#123;&quot;Hello&quot;&#125;	describe(i)	i.M()	fmt.Printf(&quot;(%v, %T)\n&quot;, i, i)&#125;/*结果：(&#123;Hello&#125;, main.T)*/
+
+如果将某个类型的nil对象赋予某个接口，方法依然会被调用
+var t *Ti = tfmt.Printf(&quot;(%v, %T)\n&quot;, i, i)i.M()/*输出(&lt;nil&gt;, *main.T), 但M方法仍然会被调用*/
+
+对nil接口（注意不是和上面的nil对象值不同，这里是连类型都是nil）调用方法会panic
+var i Ii.M() //报错
+
+空接口的妙用：可以保存任意类型的值！（怎么有种Javascript的感觉了）
+var i interface&#123;&#125;i = 42i = &quot;hello&quot;
+
+类型断言：判断接口是不是某个类型，并且赋值
+var i interface&#123;&#125; = &quot;hello&quot;	//string 类型/* 若 i 保存了一个 T，那么 t 将会是其底层值，而 ok 为 true */s, ok := i.(string)	fmt.Println(s, ok)/* 若 i 保存的不是一个 T，ok 将为 false 而 t 将为 T 类型的零值 */f, ok := i.(float64)fmt.Println(f, ok)/* 不是T，又没有OK =&gt; panic */f = i.(float64) fmt.Println(f)
+
+接口类型选择(switch)
+switch v := i.(type) &#123;case int:	fmt.Printf(&quot;Twice %v is %v\n&quot;, v, v*2)case string:	fmt.Printf(&quot;%q is %v bytes long\n&quot;, v, len(v))default:	fmt.Printf(&quot;I don&#x27;t know about type %T!\n&quot;, v)&#125;
+
+Stringer类型，在fmt中的，是最普遍的接口之一。比如一个Print一个对象，默认会输出对象数据，但可以通过实现 String()方法改变输出
+type Person struct &#123;	Name string	Age  int&#125;func (p Person) String() string &#123;	return fmt.Sprintf(&quot;%v (%v years)&quot;, p.Name, p.Age)&#125;func main() &#123;	a := Person&#123;&quot;Arthur Dent&quot;, 42&#125;	fmt.Println(a)&#125;/*当前输出： Arthur Dent (42 years)如果不实现String()方法：&#123;Arthur Dent 42&#125;*/
+
+练习：输出IP地址。用到了fmt.Sprintf
+package mainimport &quot;fmt&quot;type IPAddr [4]byte// TODO: Add a &quot;String() string&quot; method to IPAddrfunc (i IPAddr) String() string&#123;	var result string	result = fmt.Sprintf(&quot;%v.%v.%v.%v&quot;,i[0],i[1],i[2],i[3])	return result&#125;func main() &#123;	hosts := map[string]IPAddr&#123;		&quot;loopback&quot;:  &#123;127, 0, 0, 1&#125;,		&quot;googleDNS&quot;: &#123;8, 8, 8, 8&#125;,	&#125;	for name, ip := range hosts &#123;		fmt.Printf(&quot;%v: %v\n&quot;, name, ip)	&#125;&#125;
+]]></content>
+      <categories>
+        <category>编程语言</category>
+      </categories>
+      <tags>
+        <tag>Go</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Go并发 - 二叉查找树是否相同</title>
+    <url>/2019/03/02/Programming%20Languages/go-concurrency-same-binary-tree/</url>
+    <content><![CDATA[使用 Go 并发比较两棵二叉查找树。
+
+
+在做A Tour of Go的时候遇到的并发的问题，具体问题看这里 (不过就是需要翻墙)。题目所生成的二叉树总是等长的，这就很好解决，这位CSDN博主就给出了很好的解决方案。但我想的是：如果树不等长呢? 我这里给出了一个解决方案
+package mainimport (    &quot;fmt&quot;    &quot;golang.org/x/tour/tree&quot;)// Walk 步进 tree t 将所有的值从 tree 发送到 channel ch。func Walk(t *tree.Tree, ch chan int, depth int) &#123;    // dfs, in-order    if t == nil &#123;        return    &#125;    Walk(t.Right, ch, depth+1)    ch &lt;- t.Value    Walk(t.Left, ch, depth+1)        if depth == 0 &#123;        close(ch)    &#125;&#125;// Same 检测树 t1 和 t2 是否含有相同的值。func Same(t1, t2 *tree.Tree) bool &#123;    c1 := make(chan int)    c2 := make(chan int)    go Walk(t1, c1, 0)    go Walk(t2, c2, 0)    for&#123;        x,o1 := &lt;-c1        y,o2 := &lt;-c2        if !o1 || !o2 &#123;            if o1 != o2 &#123;                //树结点数目不一                return false;            &#125; else&#123;                break;            &#125;        &#125;        if x != y &#123;            return false        &#125;    &#125;    return true&#125;func main() &#123;    t := tree.New(1)    m := tree.New(1)    fmt.Println(Same(t,m))&#125;
+
+
+本文最初发布于简书。
+]]></content>
+      <categories>
+        <category>编程语言</category>
+      </categories>
+      <tags>
+        <tag>编程语言</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>二项式分布算法（Java实现）</title>
+    <url>/2018/08/26/Algorithm/binomial-distribution-java/</url>
+    <content><![CDATA[二项式分布算法（Java实现）：题目、思路与代码实现。
+
+
+二项式分布算法（Java实现）最近开始看《算法(第四版)》，这是遇到的第一个算法题。题目要求的只是估计一下算法递归的次数，但我进一步研究了不同的计算二项式分布的算法。
+二项式分布简介这里就不过多展开，以自己的语言解释一下。  
+某一个实验出现事件\(A\)的概率为\(p\), 且重复该实验结果不相互干扰（独立）  
+求重复\(N\)次该实验时，出现k次事件\(A\)的概率：  
+\[P(X=k;N,p)\]
+
   
+上式即为本博客探讨的问题
+利用二项式公式实现 V1.0学数学时候比较熟悉的公式就是
+\[P(X=k;N,p) = C_N^k \times p^k \times (1-p)^{N-k}\]
+
+public static double myBinomial(int N, int k, double p) &#123;    long c = N;    for(int i = N-1; i &gt;= N-k+1; --i)        c*=i;    for(int i = 2; i &lt;= k; ++i)        c/=i;    double a1 = Math.pow(p, k);    double a2 = Math.pow(1-p, N-k);    return c*a1*a2;&#125;
+
+改进版 V1.1改进版本聚焦V1.0中的一个问题：当计算 \(C_N^k\)的时候，有两个方式：
+
+\(\large{C_N^k = \frac{N!}{k!(N-k)!} = \frac{N(N-1)\cdots(k+1)}{(N-k)(N-k-1)\cdots2}}\)  
+
+\(\large{C_N^k = \frac{N!}{k!(N-k)!} = \frac{N(N-1)\cdots(N-k+1)}{k(k-1)\cdots2}}\)
+
+这两个方式的运算量不相同，在具体运算时可以进行选择
+public static double myBinomial2(int N, int k, double p) &#123;    long c = N;    if(k &lt; N-k) &#123;        for(int i = N-1; i &gt;= N-k+1; --i)            c*=i;        for(int i = 2; i &lt;= k; ++i)            c/=i;    &#125;    else &#123;        for(int i = N-1; i &gt;= k+1; --i)            c*=i;        for(int i = 2; i &lt;= N-k; ++i)            c/=i;    &#125;    double a1 = Math.pow(p, k);    double a2 = Math.pow(1-p, N-k);    return c*a1*a2;&#125;
+
+利用递归实现 V2.0这是示例的代码，在官网可以查看  
+其基本思想是：  
+\[P(X=k;N,p) = p\times P(X=k-1;N-1,p) + (1-p)\times P(X=k;N-1,p)\]
+
   
-    
-    <entry>
-      <title>Linux目录树标准 - FHS</title>
-      <link href="/2020/04/25/Linux/linux-fhs/"/>
-      <url>/2020/04/25/Linux/linux-fhs/</url>
-      
-        <content type="html"><![CDATA[<h1 id="Linux目录树标准-FHS"><a href="#Linux目录树标准-FHS" class="headerlink" title="Linux目录树标准 - FHS"></a>Linux目录树标准 - FHS</h1><p>FHS 全称Filesystem Hierarchy Standard 文件系统层级结构标准。Linux内核在初始化时会生成根目录<code>/</code>为起点的文件目录树，而 FHS 作为Linux的工业标准规范了目录树的基本结构，当然各个发行版在这个基础上还有额外增加的内容。</p><p><a href="http://www.pathname.com/fhs/" target="_blank" rel="noopener">FHS官方文档</a></p><p>总分类：</p><ul><li><code>/</code> (root) 与开机系统有关；</li><li><code>/usr</code> (unix software resource) 与软件安装/执行有关；</li><li><code>/var</code> (variable) 与系统运作过程有关</li></ul><p>接下来介绍各个目录具体的作用和意义。</p><h2 id><a href="#" class="headerlink" title="/"></a><code>/</code></h2><p>FHS建议根目录越小越好，且安装内容最好不要与根目录放在同一个分区内，减少根目录的空间占用。原因是根目录最重要，和开机/还原/系统修复等动作密切相关。</p><ul><li>must: <code>/boot</code>, <code>/bin</code>, <code>/dev</code>, <code>/etc</code>, <code>/lib</code>, <code>/media</code>, <code>/mnt</code>, <code>/opt</code>, <code>/run</code>, <code>/sbin</code>, <code>/srv</code>, <code>/tmp</code>, <strong><code>/usr</code>, <code>/var</code></strong></li><li>recommended: <code>/home</code>, <code>/lib&lt;?&gt;</code>, <code>/root</code></li><li>not included: <code>/lost+found</code>, <code>/proc</code>, <code>/sys</code></li></ul><h3 id="boot"><a href="#boot" class="headerlink" title="/boot"></a><code>/boot</code></h3><p>主要存放：</p><ul><li>boot loader<ul><li>grub2则在 <code>/boot/grub2</code> 中</li></ul></li><li>内核相关(vmlinuz, initramfs) (之后开机流程会再碰到)<h3 id="bin"><a href="#bin" class="headerlink" title="/bin"></a><code>/bin</code></h3>放一些特殊的可执行文件 - 在<strong>单人维护模式</strong>下还能够被操作的指令。 </li></ul><p>在/bin底下的指令可以被root与一般帐号所使用，主要有：cat, chmod, chown, date, mv, mkdir, cp, bash等等常用的指令。</p><h3 id="dev"><a href="#dev" class="headerlink" title="/dev"></a><code>/dev</code></h3><p>存放各种设备(文件形式)</p><p>设备分类：</p><ul><li>字符设备（线性：键盘鼠标）</li><li>块设备（随机：磁盘）</li></ul><p>比要重要的设备：<code>/dev/null</code>, <code>/dev/zero</code>, <code>/dev/tty</code> , <code>/dev/loop*</code>, <code>/dev/sd*</code></p><h3 id="etc"><a href="#etc" class="headerlink" title="/etc"></a><code>/etc</code></h3><p>系统最主要的配置文件基本都在这里，不能放二进制文件。通常用户都可<code>read</code>，但一般只有<code>root</code>可以<code>write</code>。</p><h3 id="lib"><a href="#lib" class="headerlink" title="/lib"></a><code>/lib</code></h3><ul><li>开机时会用到的函数库</li><li>为/bin 和 /sin 提供函数库</li><li><code>/lib/modules</code> 存放可更换的驱动程序</li></ul><h3 id="media"><a href="#media" class="headerlink" title="/media"></a><code>/media</code></h3><p>挂载点：便携性设备（光盘软盘）</p><h3 id="mnt"><a href="#mnt" class="headerlink" title="/mnt"></a><code>/mnt</code></h3><p>临时挂载点</p><blockquote><p>但其实本质来说怎么挂载没有严格限制，哪里都可以挂，预设的文件夹只是作为参考。</p></blockquote><h3 id="opt"><a href="#opt" class="headerlink" title="/opt"></a><code>/opt</code></h3><p>附加的软件包，一般用来装一些第三方软件包，但其实现在很少软件包会往opt放了，主要都放到<code>/usr/local</code></p><h3 id="run"><a href="#run" class="headerlink" title="/run"></a><code>/run</code></h3><p>存放开机后产生的各种数据，包括PID。早期存在 <code>/var/run</code>，现在软连接到<code>/run</code>了。所存数据使用内存，不占用硬盘容量且性能较好。</p><ul><li>锁 <code>/run/lock</code></li></ul><h3 id="sbin"><a href="#sbin" class="headerlink" title="/sbin"></a><code>/sbin</code></h3><p>系统管理程序，<code>root</code>才能调用的开机、修复、还原指令。</p><h3 id="srv"><a href="#srv" class="headerlink" title="/srv"></a><code>/srv</code></h3><p>网络服务资料存放点，比如<code>/srv/www</code></p><h3 id="tmp"><a href="#tmp" class="headerlink" title="/tmp"></a><code>/tmp</code></h3><p>临时文件目录，程序两次启动间不能认为这里的数据有保存（断电可能被擦除）</p><h3 id="home"><a href="#home" class="headerlink" title="* /home"></a>* <code>/home</code></h3><p>普通用户的家目录</p><h3 id="lib-lt-gt"><a href="#lib-lt-gt" class="headerlink" title="* /lib&lt;?&gt;"></a>* <code>/lib&lt;?&gt;</code></h3><p>存放其他格式的函数库，通常是 <code>lib64</code>，支持64位的函数</p><h3 id="root"><a href="#root" class="headerlink" title="* /root"></a>* <code>/root</code></h3><p><code>root</code>用户的家目录</p><h3 id="lost-found"><a href="#lost-found" class="headerlink" title="!/lost+found"></a>!<code>/lost+found</code></h3><p>ext2/ext3/ext4才有，/xfs无。文件系统发生错误时会存储一些资料。</p><h3 id="proc"><a href="#proc" class="headerlink" title="!/proc"></a>!<code>/proc</code></h3><p>同样也是个虚拟文件系统（存在内存）。记录内核、进程、各种设备的状态、网络状态等。</p><p>例如 <code>net.ipv4.ip_forward --&gt; /proc/net/ipv4/ip_forward</code></p><p>系统调优的关键入口</p><h3 id="sys"><a href="#sys" class="headerlink" title="!/sys"></a>!<code>/sys</code></h3><p>同样也是个虚拟文件系统（存在内存）。也是记录内核、硬件相关信息。linux 2.6 才出现。</p><p>提供比proc更为理想的访问内存数据的接口。/sys 导出内核数据比 /proc 更合理、设计更好。主要是为管理Linux设备提供统一模型的接口</p><p>同样也是系统调优的关键入口</p><p><a href="https://www.ibm.com/developerworks/cn/linux/l-cn-sysfs/" target="_blank" rel="noopener">IBM参考</a></p><h2 id="usr"><a href="#usr" class="headerlink" title="/usr"></a><code>/usr</code></h2><p>放置的资料属于<strong>可分享的</strong>与<strong>不可变动的</strong>(shareable, static)，软件安装相关。</p><p>所有distribution所预置的软件都会放这里，因此有点像Windows的<code>C:\Windows\(当中的一部份) + C:\Program files\</code></p><ul><li>must: <code>./bin</code>, <code>./lib</code>, <code>./local</code>, <code>./sbin</code>, <code>./share</code></li><li>recommended: <code>./games</code>, <code>./include</code>, <code>./libexec</code>, <code>./lib&lt;?&gt;</code>,  <code>./src</code></li></ul><blockquote><p>这个文件夹内容和根目录中重名的即类似的，不再赘述</p></blockquote><h3 id="软链接"><a href="#软链接" class="headerlink" title="软链接"></a>软链接</h3><ul><li><code>/lib</code> –&gt; <code>/usr/lib</code></li><li><code>/lib64</code> –&gt; <code>/usr/lib64</code></li><li><code>/bin</code> –&gt; <code>/usr/bin</code></li><li><code>/sbin</code> –&gt; <code>/usr/sbin</code></li></ul><h3 id="usr-local"><a href="#usr-local" class="headerlink" title="!/usr/local"></a>!<code>/usr/local</code></h3><p>又是一个类似 <code>/usr</code> 的层级目录，但这里放置的是非distribution预置的软件（也就是用户自己下载的）。</p><h3 id="usr-share"><a href="#usr-share" class="headerlink" title="!/usr/share"></a>!<code>/usr/share</code></h3><p>只读的文字资料</p><h3 id="usr-src"><a href="#usr-src" class="headerlink" title="*/usr/src"></a>*<code>/usr/src</code></h3><p>存放源码，比如Linux源码在 <code>/usr/src/linux</code></p><blockquote><p>CentOS8怎么找不到这个文件夹</p></blockquote><h3 id="usr-libexec"><a href="#usr-libexec" class="headerlink" title="*/usr/libexec"></a>*<code>/usr/libexec</code></h3><p>不常用的可执行文件/脚本，比如XWindow, gnome的操作脚本</p><h3 id="usr-include"><a href="#usr-include" class="headerlink" title="*/usr/include"></a>*<code>/usr/include</code></h3><p>一些C/C++头文件，安装某些应用时会用到</p><h2 id="var"><a href="#var" class="headerlink" title="/var"></a><code>/var</code></h2><p>经常变动的文件目录，存放经常被修改的数据文件</p><p>must: <code>./cache</code>, <code>./lib</code>, <code>./lock</code>, <code>./log</code>, <code>./mail</code>, <code>./run</code>, <code>./spool</code></p><h3 id="var-cache"><a href="#var-cache" class="headerlink" title="/var/cache"></a><code>/var/cache</code></h3><p>应用程序运行过程中的缓存数据</p><h3 id="var-lib"><a href="#var-lib" class="headerlink" title="/var/lib"></a><code>/var/lib</code></h3><p>各个程序运行过程中需要时用到的数据。在此目录下各自软件应该要有独立的目录。举例来说，MySQL的数据放置到<code>/var/lib/mysql/</code></p><h3 id="var-lock"><a href="#var-lock" class="headerlink" title="/var/lock"></a><code>/var/lock</code></h3><p>设备锁，已软链接到 <code>/run/lock</code></p><h3 id="var-log"><a href="#var-log" class="headerlink" title="/var/log"></a><code>/var/log</code></h3><p>重要的日志文件目录</p><h3 id="var-mail"><a href="#var-mail" class="headerlink" title="/var/mail"></a><code>/var/mail</code></h3><p>邮件，软链接到 <code>/var/spool/mail</code></p><h3 id="var-run"><a href="#var-run" class="headerlink" title="/var/run"></a><code>/var/run</code></h3><p>运行中程序的PID，软链接到 <code>/run</code></p><h3 id="var-spool"><a href="#var-spool" class="headerlink" title="/var/spool"></a><code>/var/spool</code></h3><p>储存等待被使用的<strong>队列</strong>数据，这些数据被使用完以后通常会被删除掉。比如mail和crontab</p>]]></content>
-      
-      
+将大问题逐次拆分为小问题的递归思想
+public static double binomial1(int N, int k, double p) &#123;    if (N == 0 &amp;&amp; k == 0) return 1.0;    if (N &lt; 0 || k &lt; 0) return 0.0;    return (1.0 - p) *binomial1(N-1, k, p) + p*binomial1(N-1, k-1, p);&#125;
+
+将递归改进为迭代 V2.1这里的方法挺巧妙的！将递归的步骤“逆”过来，变成了“填格子”——递归自上而下，该方法则化为自下而上的迭代法。
+public static double binomial2(int N, int k, double p) &#123;        double[][] b = new double[N+1][k+1];        // base cases        for (int i = 0; i &lt;= N; i++)            b[i][0] = Math.pow(1.0 - p, i);        b[0][0] = 1.0;        // recursive formula        for (int i = 1; i &lt;= N; i++) &#123;            for (int j = 1; j &lt;= k; j++) &#123;                b[i][j] = p * b[i-1][j-1] + (1.0 - p) *b[i-1][j];                StdOut.printf(&quot;%f\t&quot;, b[i][j]);            &#125;            StdOut.println();        &#125;        return b[N][k];    &#125;
+
+此方法虽然巧妙，但其实速度上比不过公式法(复杂度达到\(O(N^2)\)，而且有一部分计算是不需要的（有些“空”不需要填）
+
+本文最初发布于简书。
+]]></content>
       <categories>
-          
-          <category> Linux </category>
-          
+        <category>算法</category>
       </categories>
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>Linux快速入门</title>
-      <link href="/2020/04/19/Linux/Linux-Quick-Start-md/"/>
-      <url>/2020/04/19/Linux/Linux-Quick-Start-md/</url>
-      
-        <content type="html"><![CDATA[<h1 id="Linux快速入门"><a href="#Linux快速入门" class="headerlink" title="Linux快速入门"></a>Linux快速入门</h1><p>个人食用的Linux快速入门小手册。</p><h2 id="资料"><a href="#资料" class="headerlink" title="资料"></a>资料</h2><ul><li><a href="https://www.linuxcool.com/" target="_blank" rel="noopener">Linux命令大全(手册)</a></li></ul><a id="more"></a><h2 id="Shell终端"><a href="#Shell终端" class="headerlink" title="Shell终端"></a>Shell终端</h2><p>Linux系统的内核负责完成对硬件资源的分配、调度等管理任务。Shell将用户的基于计算机的命令转述给内核执行。</p><ul><li>6个预设终端，使用快捷键<code>[Ctrl] + [Alt] + [F1]~[F6]</code>切换</li><li>↑ ↓ 历史指令</li><li>Tab补全</li><li>批处理脚本</li><li>环境变量</li><li>重定向</li><li>…</li></ul><blockquote><p>关于更多的内容会在后面的Bash特性讲到，这里简单带过</p></blockquote><h2 id="帮助"><a href="#帮助" class="headerlink" title="帮助"></a>帮助</h2><ul><li>在只记得部分命令关键字的场合，我们可通过<code>man -k</code>来搜索；</li><li>需要知道某个命令的简要说明，可以使用 <code>whatis</code>；而更详细的介绍，则可用info命令；</li><li>查看命令在哪个位置，我们需要使用<code>which</code>；</li><li>而对于命令的具体参数及使用方法，我们需要用到强大的<code>man</code>；</li></ul><blockquote><p>看用法，用<code>man</code>；更细致的说明和介绍要用<code>info</code></p></blockquote><h3 id="man"><a href="#man" class="headerlink" title="man"></a><code>man</code></h3><p>使用<code>man</code>查看手册是非常重要的学习技能，</p><ul><li><code>man # keyword</code> 可以指定对应的手册序号</li><li><code>man -f keyword</code> 浏览不同手册下的该条目信息</li><li><code>man -k keyword</code> 进行内容检索</li></ul><table><thead><tr><th>序号</th><th>代表内容</th></tr></thead><tbody><tr><td><strong>1</strong></td><td><strong>使用者在shell环境中可以执行的指令或可执行程序；比如<code>ls</code></strong></td></tr><tr><td>2</td><td>系统核心可调用的函数与工具等</td></tr><tr><td>3</td><td>一些常用的函数(function)与函数库(library)，大部分为C的函数库(<code>libc</code>)；比如<code>printf</code>函数</td></tr><tr><td>4</td><td>设备的说明，通常在/dev下的档案</td></tr><tr><td><strong>5</strong></td><td><strong>配置文件的格式；比如<code>/etc/passwd</code></strong></td></tr><tr><td>6</td><td>游戏(games)</td></tr><tr><td>7</td><td>惯例与协定等，例如Linux文件系统、网络协议、ASCII code等等的说明</td></tr><tr><td><strong>8</strong></td><td><strong>系统管理员可用的管理指令</strong></td></tr><tr><td>9</td><td>跟kernel有关的文件</td></tr></tbody></table><p>比如<code>man fork</code>会显示fork(2)；在前期的学习 1, 5, 8 相对重要一些；到后面学APUE估计就经常要查 2, 3, 9 了</p><p>查阅文档时可以进行的一些操作：</p><table><thead><tr><th>按键</th><th>进行工作</th></tr></thead><tbody><tr><td>空白键</td><td>向下翻一页</td><td></td></tr><tr><td>[Page Down]</td><td>向下翻一页</td><td></td></tr><tr><td>[Page Up]</td><td>向上翻一页</td><td></td></tr><tr><td>[Home]</td><td>去到第一页</td><td></td></tr><tr><td>[End]</td><td>去到最后一页</td><td></td></tr><tr><td>/string</td><td>向『下』搜寻string 这个字串</td><td></td></tr><tr><td>?string</td><td>向『上』搜寻string 这个字串</td><td></td></tr><tr><td>n, N</td><td>利用/ 或? 来搜寻字串时，可以用n 来继续下一个搜寻(不论是/ 或?) ，可以利用N 来进行『反向』搜寻</td><td></td></tr><tr><td>q</td><td>结束这次的man page</td><td></td></tr></tbody></table><h3 id="info"><a href="#info" class="headerlink" title="info"></a><code>info</code></h3><p>基本上，info与man的用途其实差不多，但info内容拆分成可跳转的节点，形成树状的结构。</p><ul><li><code>U</code> 返回上层父节点（目录）</li><li><code>N</code> 下一个节点</li><li><code>P</code> 上一个节点</li><li><code>Enter</code> 进入超链接</li><li><code>h</code> 求助</li></ul><h2 id="目录命令"><a href="#目录命令" class="headerlink" title="目录命令"></a>目录命令</h2><h3 id="cd"><a href="#cd" class="headerlink" title="cd"></a><code>cd</code></h3><p>切换目录</p><ul><li><code>cd -</code> = <code>cd ${OLDPWD}</code> 访问上一次所在目录</li></ul><h3 id="pwd"><a href="#pwd" class="headerlink" title="pwd"></a><code>pwd</code></h3><p>查看当前目录</p><ul><li>即 <code>echo ${PWD}</code></li></ul><h3 id="ls"><a href="#ls" class="headerlink" title="ls"></a><code>ls</code></h3><p>展示文件夹文件</p><ul><li><code>-R</code> 递归显示</li><li><code>-d</code> 仅查看目录自身（管道下好用）</li><li><code>-l</code> 长列表，详细信息</li><li><code>-h</code> 文件大小加单位</li></ul><h2 id="命令相关"><a href="#命令相关" class="headerlink" title="命令相关"></a>命令相关</h2><h3 id="which"><a href="#which" class="headerlink" title="which"></a><code>which</code></h3><p>定位指令/别名的位置</p><ul><li><code>--skip-alias</code> 可以跳过别名(??)</li></ul><h3 id="whereis"><a href="#whereis" class="headerlink" title="whereis"></a><code>whereis</code></h3><p>定位一个命令的 bin, src, man</p><ul><li><code>-b</code> 只看binary</li><li><code>-m</code> 只看manual</li><li><code>-s</code> 只看src</li></ul><h3 id="alias"><a href="#alias" class="headerlink" title="alias"></a><code>alias</code></h3><p>查看别名列表</p><ul><li>定义别名，<code>alias NAME=VALUE</code>，只对当前shell进程有效</li><li><code>unalias</code> 撤销别名</li></ul><h3 id="history"><a href="#history" class="headerlink" title="history"></a><code>history</code></h3><p>查看历史命令</p><ul><li>登出也会保存到文件中</li><li>可以通过设置环境变量定制history<ul><li><code>$HISTSIZE</code> 命令历史条数</li><li><code>$HISTFILE</code>: 持久保存命令历史的文件位置</li><li><code>$HISTFILESIZE</code>: 上述文件大小</li><li><code>$HISTCONTROL</code>: 控制命令历史的记录方式 <ul><li><code>ignoredups</code>: 忽略重复的命令</li><li><code>ignorespace</code>: 忽略空白字符开头的命令</li><li><code>ignoreboth</code>: 两者同时生效</li></ul></li></ul></li><li><code>!#</code>: 再一次执行 history 中的命令 </li><li><code>!STRING</code>: 执行最近的以<code>STRING</code>开头的命令</li><li><code>ESC + &#39;.&#39;</code> 或 <code>ALT+ &#39;.&#39;</code>: 上一条命令的最后一个参数，等同于 <code>!$</code></li></ul><h2 id="时间命令"><a href="#时间命令" class="headerlink" title="时间命令"></a>时间命令</h2><h3 id="date"><a href="#date" class="headerlink" title="date"></a><code>date</code></h3><p>显示或设置<strong>系统时钟</strong>；系统时钟是开机获取完硬件时间后由CPU自己跳的时间</p><ul><li>自定义显示格式: <code>date +&quot;%Y-%m-%d-%H-%M-%S&quot;</code>(更多的格式可以自行查帮助); </li><li><code>%j</code> 可看是一年中的第几天</li><li>设定日期时间: <code>date [MMDDhhmm[[CC]YY][.ss]]</code></li><li>另一个设置日期时间的方法: <code>date -s &quot;20170901 8:30:00&quot;</code></li></ul><h3 id="hwclock"><a href="#hwclock" class="headerlink" title="hwclock"></a><code>hwclock</code></h3><p>显示或设定<strong>硬件时钟</strong>；硬件时钟是BIOS供电维护的时间</p><ul><li><code>-s --hctosys</code>: 硬件时间写入到系统时间</li><li><code>-w --systohc</code>: 系统时间写入到硬件时间</li></ul><h3 id="cal"><a href="#cal" class="headerlink" title="cal"></a><code>cal</code></h3><p>日历 <code>cal [[month] year]</code></p><h2 id="其他常用指令"><a href="#其他常用指令" class="headerlink" title="其他常用指令"></a>其他常用指令</h2><h3 id="file"><a href="#file" class="headerlink" title="file"></a><code>file</code></h3><p>查看文件类型</p><h3 id="type"><a href="#type" class="headerlink" title="type"></a><code>type</code></h3><p>查看命令类型，内置or外部可执行文件</p><h3 id="cat"><a href="#cat" class="headerlink" title="cat"></a><code>cat</code></h3><p>输出文本文件内容</p><ul><li><code>-n</code> 加行数</li></ul><h3 id="echo"><a href="#echo" class="headerlink" title="echo"></a><code>echo</code></h3><p>输出指定字符串</p><ul><li><code>-e</code> 使转义符生效 (需要引号)</li><li>“” 弱引用，替换 <code>$</code> 变量; 例如<code>echo &quot;${PWD}&quot;</code></li><li>‘’ 强引用，不替换 <code>$</code> 变量</li></ul><h3 id="shutdown"><a href="#shutdown" class="headerlink" title="shutdown"></a><code>shutdown</code></h3><p>关机 <code>shutdown [OPTIONS…] [hh:mm/+m] [wall msg]</code></p><ul><li><code>shutdown now</code> = <code>shutdown +0</code></li><li><code>-r</code> = <code>reboot</code></li><li><code>-p</code> = <code>poweroff</code></li><li><code>-h</code> = <code>halt</code></li><li><code>-c</code> 取消</li></ul><h3 id="wall"><a href="#wall" class="headerlink" title="wall"></a><code>wall</code></h3><p>向所有用户发出信息</p><h3 id="sync"><a href="#sync" class="headerlink" title="sync"></a><code>sync</code></h3><p>将内存中暂存的信息写入硬盘，</p><ul><li>good practice: 定时和关机前<code>sync</code>一下</li></ul><h3 id="who"><a href="#who" class="headerlink" title="who"></a><code>who</code></h3><p>查看当前登录用户的信息</p><ul><li><code>-r</code> 运行级别？</li><li><code>w</code> 强化版 <code>who</code>，还显示运行状况</li></ul><h3 id="bc"><a href="#bc" class="headerlink" title="bc"></a><code>bc</code></h3><p>计算器、单位换算器(?)</p><ul><li><code>+,-,*,/,^,%</code></li><li><code>scale = #</code> 设置显示小数点，默认为0位</li></ul>]]></content>
-      
-      
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>edge type</title>
+    <url>/2018/11/26/Algorithm/graph-edge-type/</url>
+    <content><![CDATA[有向图边的类型有向图边有如下几个类型：
+
+tree edge 树边
+foward edge 前向边
+back edge 回边
+cross edge 横跨边
+
+一张图即可解释：
+
+
+
+判断有向图边的类型在DFS的过程中，可以直接用pre, post 值来判断；当然首先得知道如何计算 pre, post 值，这同样可以用一张图来解释（该图数对为 pre,post）：
+
+
+如果一个点pre和post值不存在，说明该点未被访问过，是一个 树边 （例如图中F-&gt;G)
+如果 pre(u) &lt; pre(v) &lt; post(v) &lt; post(u)，说明 u 肯定 v 的祖先
+若有 v-&gt;u， 则该边是一个 回边；（例如图中F-&gt;B)
+若有 u-&gt;v, 且显然此时pre(v)和post(v)都存在，不可能是树边，则该边是 前向边 （例如图中E-&gt;G)
+
+
+对于 横跨边，已经是分属两条不同的深搜路径，所以必然的，两个点的(pre,post)区间没有重叠（例如图中 D-&gt;H
+
+可以总结为下图：
+
+应用判断有向图是否有圈等价于判断图中是否有 回边
+进行拓扑排序首先要知道什么是拓扑排序：拓扑排序就是将结点依次排序，使得图内的边都是从该序列前面的点流向后面的点（显然前提是这个图不能有环）
+例：穿衣服问题，见下图。
+
+正如图中所示，只要按Post值倒序就可以了
+
+当然这题还有另外的解法：不断从图中删去in-degree为0的点（source）
+
+]]></content>
       <categories>
-          
-          <category> Linux </category>
-          
+        <category>算法</category>
       </categories>
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>有向图边的类型</title>
-      <link href="/2018/11/26/Algorithm/graph-edge-type/"/>
-      <url>/2018/11/26/Algorithm/graph-edge-type/</url>
-      
-        <content type="html"><![CDATA[<h1 id="有向图边的类型"><a href="#有向图边的类型" class="headerlink" title="有向图边的类型"></a>有向图边的类型</h1><p>有向图边有如下几个类型：</p><ul><li>tree edge 树边</li><li>foward edge 前向边</li><li>back edge 回边</li><li>cross edge 横跨边</li></ul><p>一张图即可解释：</p><p><img src="1.png" alt></p><a id="more"></a><h1 id="判断有向图边的类型"><a href="#判断有向图边的类型" class="headerlink" title="判断有向图边的类型"></a>判断有向图边的类型</h1><p>在DFS的过程中，可以直接用pre, post 值来判断；当然首先得知道如何计算 pre, post 值，这同样可以用一张图来解释（该图数对为 pre,post）：</p><p><img src="2.png" alt></p><ul><li>如果一个点pre和post值不存在，说明该点未被访问过，是一个 <strong>树边</strong> （例如图中<code>F-&gt;G</code>)</li><li>如果 <code>pre(u) &lt; pre(v) &lt; post(v) &lt; post(u)</code>，说明 u 肯定 v 的祖先<ul><li>若有 v-&gt;u， 则该边是一个 <strong>回边</strong>；（例如图中<code>F-&gt;B</code>)</li><li>若有 u-&gt;v, 且显然此时pre(v)和post(v)都存在，不可能是树边，则该边是 <strong>前向边</strong> （例如图中<code>E-&gt;G</code>)</li></ul></li><li>对于 <strong>横跨边</strong>，已经是分属两条不同的深搜路径，所以必然的，两个点的(pre,post)区间没有重叠（例如图中 <code>D-&gt;H</code></li></ul><p>可以总结为下图：</p><p><img src="3.png" alt></p><h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="判断有向图是否有圈"><a href="#判断有向图是否有圈" class="headerlink" title="判断有向图是否有圈"></a>判断有向图是否有圈</h2><p>等价于判断图中是否有 <strong>回边</strong></p><h2 id="进行拓扑排序"><a href="#进行拓扑排序" class="headerlink" title="进行拓扑排序"></a>进行拓扑排序</h2><p>首先要知道什么是拓扑排序：拓扑排序就是将结点依次排序，使得图内的边都是从该序列前面的点流向后面的点（显然前提是这个图不能有环）</p><p>例：穿衣服问题，见下图。</p><p><img src="4.png" alt></p><p><strong>正如图中所示，只要按Post值倒序就可以了</strong></p><blockquote><p>当然这题还有另外的解法：不断从图中删去in-degree为0的点（source）</p></blockquote>]]></content>
-      
-      
+      <tags>
+        <tag>算法</tag>
+        <tag>图论</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>强连通分量</title>
+    <url>/2018/11/26/Algorithm/graph-scc/</url>
+    <content><![CDATA[定义Definition: A strongly connected component (SCC) of a directed graph G &#x3D; (V, E) is a maximal set of vertices C ⊆ V such that every pair of vertices u and v in C are reachable from each other.
+翻译过来就是，把一个有向图划分成尽可能大的几个集合，集合内的结点两两互相都可达，这样的每一个“集合”就是一个强连通分量
+
+
+求解过程分析
+求解一个有向图的强连通分量的算法不是一蹴而就的，下面就叙述一下这个算法逐步形成的过程
+
+
+将强连通分量都“缩圈”缩成一个点，得到的图是DAG（有向无环图） —— 任何一个有向图都是其 强连通分量 组成的DAG
+
+
+
+一个DAG，一定会有Sink（入度为0的点）和Source（出度为0的点）
+
+如果能从Sink联通量里面任意一个点开始DFS，就可以求出这个Sink联通量，因为它跑不出去。
+
+然后删去这个联通量，DFS树仍有叶子——就是仍有Sink，重复上述操作
+
+
+可是问题就在于：并无法找到Sink联通量里的一个点。那该怎么办呢？
+
+虽然没法找到Sink联通量，但我们可以找得到Source：在完整DFS过程以后，Post值最大的就一定在Source联通量内：
+假设从Source内的点开始DFS，显然Post最大的就在Source内（Root）
+假设不从Source内的点开始DFS，Source是到不了的；后面必然又要从Source内的点再次DFS，导致Post值最大
+
+
+
+但找到Source也没有用啊，从Source内的一点开始DFS，肯定会跑出去，那有什么用呢？
+
+把边反向，Source就变成了Sink，而且联通的性质是不变的——强联通量还是那些强联通量
+
+
+
+这样就可以从Post最大的值开始DFS，找出第一个强联通量，并且从图中删去
+更棒的是，删去第一个强联通量以后，现在Post最大的就是删后图的Sink值，这样就可以不断重复前面的步骤
+
+求解步骤总结
+如果完整地看完了上面，下面的求解步骤可以直接忽略的啦
+
+
+进行DFS，求出每个结点的Post值，存入优先队列
+将有向图边反向 $G {\rightarrow} G^T$
+从Post值最高的点开始DFS，并将DFS所得的点存入一个集合，形成一个强连通分量；同时将这些点从图中删去
+重复第三步，直到所有联通量都形成
+
+复杂度分析
+第一次DFS求Post值并放入优先队列：$O(V+E) + O(log_2V) &#x3D; O(V+E)$
+将有向图边反向：$O(V+E)$
+求强联通量的过程，实际上加起来就是一次完整的DFS而已：$O(V+E)$
+
+总复杂度$O(V+E)$
+]]></content>
       <categories>
-          
-          <category> 算法 </category>
-          
+        <category>算法</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> 算法 </tag>
-            
-            <tag> 图论 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>强连通分量</title>
-      <link href="/2018/11/26/Algorithm/graph-scc/"/>
-      <url>/2018/11/26/Algorithm/graph-scc/</url>
-      
-        <content type="html"><![CDATA[<h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>Definition: A strongly connected component (SCC) of a directed graph G = (V, E) is a maximal set of vertices C ⊆ V such that every pair of vertices u and v in C are reachable from each other.</p><p>翻译过来就是，把一个有向图划分成<strong>尽可能大</strong>的几个集合，集合内的结点两两互相都可达，这样的每一个“集合”就是一个<strong>强连通分量</strong></p><a id="more"></a><h2 id="求解过程分析"><a href="#求解过程分析" class="headerlink" title="求解过程分析"></a>求解过程分析</h2><blockquote><p>求解一个有向图的强连通分量的算法不是一蹴而就的，下面就叙述一下这个算法逐步形成的过程</p></blockquote><ul><li>将强连通分量都“缩圈”缩成一个点，得到的图是<strong>DAG</strong>（有向无环图） —— 任何一个有向图都是其 强连通分量 组成的DAG</li></ul><p><img src="5.png" alt></p><ul><li><p>一个DAG，一定会有Sink（入度为0的点）和Source（出度为0的点）</p></li><li><p>如果能从Sink联通量里面任意一个点开始DFS，就可以求出这个Sink联通量，因为它<strong>跑不出去</strong>。</p></li><li><p>然后删去这个联通量，DFS树仍有叶子——就是仍有Sink，<strong>重复上述操作</strong></p></li></ul><p>可是问题就在于：并无法找到Sink联通量里的一个点。那该怎么办呢？</p><ul><li>虽然没法找到Sink联通量，但我们可以找得到<strong>Source</strong>：在完整DFS过程以后，Post值最大的就一定在Source联通量内：<ul><li>假设从Source内的点开始DFS，显然Post最大的就在Source内（Root）</li><li>假设不从Source内的点开始DFS，Source是到不了的；后面必然又要从Source内的点再次DFS，导致Post值最大</li></ul></li></ul><p>但找到Source也没有用啊，从Source内的一点开始DFS，肯定会<strong>跑出去</strong>，那有什么用呢？</p><ul><li><strong>把边反向，Source就变成了Sink</strong>，而且联通的性质是不变的——强联通量还是那些强联通量</li></ul><p><img src="6.png" alt></p><ul><li>这样就可以从Post最大的值开始DFS，找出第一个强联通量，并且从图中删去</li><li>更棒的是，删去第一个强联通量以后，<strong>现在Post最大的就是删后图的Sink值</strong>，这样就可以不断重复前面的步骤</li></ul><h2 id="求解步骤总结"><a href="#求解步骤总结" class="headerlink" title="求解步骤总结"></a>求解步骤总结</h2><blockquote><p>如果完整地看完了上面，下面的求解步骤可以直接忽略的啦</p></blockquote><ol><li>进行DFS，求出每个结点的Post值，存入优先队列</li><li>将有向图边反向 $G {\rightarrow} G^T$</li><li>从Post值最高的点开始DFS，并将DFS所得的点存入一个集合，形成一个强连通分量；同时将这些点从图中删去</li><li>重复第三步，直到所有联通量都形成</li></ol><h2 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h2><ul><li>第一次DFS求Post值并放入优先队列：<br><br>$O(V+E) + O(log_2V) = O(V+E)$</li><li>将有向图边反向：<br><br>$O(V+E)$</li><li>求强联通量的过程，实际上加起来就是一次完整的DFS而已：<br><br>$O(V+E)$</li></ul><h3 id="总复杂度"><a href="#总复杂度" class="headerlink" title="总复杂度"></a>总复杂度</h3><p>$O(V+E)$</p>]]></content>
-      
-      
+      <tags>
+        <tag>算法</tag>
+        <tag>图论</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>LeetCode 11. Container With Most Water</title>
+    <url>/2018/09/09/Algorithm/leetcode-11-container-with-most-water/</url>
+    <content><![CDATA[LeetCode 11. Container With Most Water：题目、思路与代码实现。
+
+
+题目描述Given n non-negative integers a1, a2, …, an , where each represents a point at coordinate (i, ai). n vertical lines are drawn such that the two endpoints of line i is at (i, ai) and (i, 0). Find two lines, which together with x-axis forms a container, such that the container contains the most water.
+Note: You may not slant（倾斜） the container and n is at least 2.
+题解class Solution&#123;  public:    int maxArea(vector&lt;int&gt; &amp;height)    &#123;        int size = height.size();        int max = 0;        for (int i = 0; i &lt; (size - 1); ++i)        &#123;            for (int e = i + 1; e &lt; size; ++e)            &#123;                int temp = (height[i] &gt; height[e]) ? height[e] : height[i];                // cout &lt;&lt; &quot;\t&quot; &lt;&lt; i &lt;&lt; &quot;\t&quot; &lt;&lt; e &lt;&lt; &quot;\t&quot; &lt;&lt; temp &lt;&lt; &quot;\t&quot; &lt;&lt; (e - i) * temp &lt;&lt; endl;                if ((e - i) * temp &gt; max)                    max = (e - i) * temp;            &#125;        &#125;        return max;    &#125;&#125;;
+
+
+本文最初发布于简书。
+]]></content>
       <categories>
-          
-          <category> 算法 </category>
-          
+        <category>算法</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> 算法 </tag>
-            
-            <tag> 图论 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>面试经历-字节跳动后台开发(基础架构)实习岗</title>
-      <link href="/2018/11/26/Interview-ByteDance/"/>
-      <url>/2018/11/26/Interview-ByteDance/</url>
-      
-        <content type="html"><![CDATA[<p>昨天下午尝试了第一次视频面试，面试的岗位是字节跳动的[后台开发-基础架构]实习岗，由于我本身的技术的确是远远没有达到岗位的要求，所以这一次的面试也只是抱着试一试的态度，了解一下面试的流程，积累一些经验，同时通过面试进一步了解自己应该努力的方向。</p><a id="more"></a><p>时间定在了周日下午的四点，直到面试前都没有加上HR的微信，所以在面试前心中还是有种“我要被鸽了”的感觉。点开通知邮件发给我的面试链接以后，点开展示的就是牛客网的面试系统界面:</p><p><img src="interface.png" alt></p><p>四点过了两分钟，面试官就上线了，是个很有亲和力的中年男子。此时我还是很紧张的，毕竟是第一次参加正经的面试，所以谈吐都有些不自然了。调整视频连接耽误了一小段时间。</p><h2 id="编程"><a href="#编程" class="headerlink" title="编程"></a>编程</h2><p>面试官看了看我的简历，上面有一项是“熟悉Go语言编程”；我听到他提起这个心里就凉了一半：其实自己对于Go语言也借由本学期的服务计算课进行了个入门而已，远算不上熟悉。然后他说有一道题特别适合用Go来编程，就出给我做了:</p><hr><p>先定义了一个<code>read</code>函数，这个函数就是一个Socket接口，每次会读数据入缓冲区；然后要我写一个<code>readLine</code>函数，按行输出Socket读的数据，他一开始先给了我两个提示：</p><ul><li><code>read</code>是会阻塞的</li><li>每次<code>read</code>得到的数据有可能有换行符<code>\n</code>，有可能没有，也有可能会有多个</li></ul><p>这是面试官给出的函数定义:</p><pre><code class="go">// read: socket api // - fd: socket 的文件fd// - buf: 读入缓冲区// - N: 最大数据大小func read(fd int,  buf []byte, N int) int {}</code></pre><hr><p>听完题后我整个人就很慌了，因为心里总有股声音觉得自己不会。而实际上我也的确对Go不熟悉，很多类似<code>append</code>, <code>channel</code> 这样的操作还需要查自己或别人的博客去写。</p><p>虽然慌的一匹，但总归还是有一点思路（现在想来这也不过就是一道生产者、消费者的问题），中间面试官提示我用<code>channel</code>去做这一道题，但我并没有用过所以短暂思考后也放弃了这个思路。</p><p>最后用一个循环调用<code>read</code>的方法完成了这道题，用<code>last</code>变量来存储上一次调用<code>read</code>所剩下的内容：</p><pre><code class="Go">type Read struct {    fd int          // socket fd    N  int          // max size per line    last []byte     // last read remained}func (r Read) readLine() string {    var buf []byte    for read(r.fd, buf, r.N) != 0 {        for i := 0; i &lt; buf.size(); i++ {            if buf[i] == &#39;\n&#39; {                temp := append(last, buf[:i]...)                r.last = buf[i+1:]                return temp            }        }    }    return &quot;&quot;}</code></pre><p>这中间有几个严重的逻辑错误，都是面试官提出来然后我才能反应过来并迅速修正：</p><ul><li><p>如果某次<code>read</code>得到了多行，那么<code>last</code>存储的数据就会是多行的，代码没有考虑这个问题。解决方案我也立马能想出来：在执行循环调用<code>read</code>之前先检查<code>last</code>是否为空，不为空就遍历一遍看看是否有一行存在，有则返回第一行并对<code>last</code>进行切割</p></li><li><p>如果某次<code>read</code>没有换行，这份代码并没有将这次读取的数据保存。显然解决方案就是在每次循环的末尾增加一个<code>append(last, buf...)</code></p></li></ul><p>这也体现出我的思维是很不严谨的，然后代码能力也偏弱。我在以往做算法题的时候就很依赖提交，通过提交去检查自己的代码有没有问题，这样在考试的时候就会体现出我这样效率其实很低，而且长期的依赖也导致了自己基本的Debug能力有所降低。</p><p>在编程测试结束的时候，面试官告诉我简历不能给面试带来信息不对称，比如刚入门Go语言就不应该写成熟悉；也真是令人汗颜。自己的简历的确有着不少的水分，需要重新修改一番。</p><h2 id="后阶段面试"><a href="#后阶段面试" class="headerlink" title="后阶段面试"></a>后阶段面试</h2><p>后阶段面试就更加能显现我简历的水分了，面试官看到我在简历里写了我在做MIT的6.828的实验，他想要从这里展开。到这里我就不得不和盘托出其实我只做了这个系列实验的Lab1，然后考虑到学这个又要去学x86编程，耗费时间有点多然后就搁置了。听到这里其实面试官已经基本宣告面试fail了。他告诉我这个部门是负责存储的，所以对算法或者某一后台领域的知识会要求很高，所以希望我可以明确一个方向，回去好好修炼再去考虑面试的事情。他还推荐我可以去看CMU的存储课程。另外，他还说我可以考虑面试一下后台业务开发的岗位，链接在面试通知邮件里也可以找到。</p><h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>这次面试也就这样在不安中结束了。的确这次就是抱着来试试的态度进行面试，所以结果不如意倒也正常。面试时间虽然只有短短的一个多小时，但也还是了解到了自己很多的缺陷：代码能力亟待提高，需要专精一个后台的方向（目前我想做的是网络编程），另外基础课程的知识也非常重要，如果有时间得捡回6.828，再加一些存储的课程。</p>]]></content>
-      
-      
-      <categories>
-          
-          <category> 其他 </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> 面试 </tag>
-            
-            <tag> Go </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>VirtualBox安装 WinXP+CentOS双系统</title>
-      <link href="/2018/11/24/Linux/VitualBox-Double-System/"/>
-      <url>/2018/11/24/Linux/VitualBox-Double-System/</url>
-      
-        <content type="html"><![CDATA[<p>建议在开始之前，先在<a href="http://linux.vbird.org/linux_basic/0130designlinux.php" target="_blank" rel="noopener">这里</a>学习分区和开机的知识，然后按照<a href="http://linux.vbird.org/linux_basic/0157installcentos7.php" target="_blank" rel="noopener">这个</a>步骤把CentOS单系统安装成功之后，再来看这里。</p><h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul><li><a href="http://linux.vbird.org/linux_basic/0157installcentos7.php#multiboot" target="_blank" rel="noopener">鸟哥Linux私房菜 - 多重开机安装流程与管理</a></li><li><a href="http://www.jinbuguo.com/linux/grub.cfg.html" target="_blank" rel="noopener">Grub2配置文件详解</a></li></ul><a id="more"></a><h1 id="Let’s-Go"><a href="#Let’s-Go" class="headerlink" title="Let’s Go"></a>Let’s Go</h1><p>采用的是先装 CentOS, 再安装Windows的过程，体验一下 “救援” 被Windows覆盖的MBR的过程</p><h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><p>XP ISO 安装版，有些版本是所谓 装机版 是不能在Virtual Box跑的，它需要在Windows下打开来运行；我们需要的是ISO映像 <a href="http://www.2013xp.com/xp/3057.html" target="_blank" rel="noopener">这个</a>就可以</p><p>CentOS-7 minimal, 官网下载即可</p><h2 id="新建虚拟硬盘"><a href="#新建虚拟硬盘" class="headerlink" title="新建虚拟硬盘"></a>新建虚拟硬盘</h2><blockquote><p>这一步很关键</p></blockquote><p>由于XP系统只能识别IDE硬盘，因此在新建系统时如果选择Ubuntu，Win10之类的都会自动分配一个SATA硬盘，这会导致WindowsXP无法识别，从而安装失败。</p><p>选择Linux-&gt;其他Linux系统则会分配IDE接口的硬盘。另外，直接选择XP系统会导致CentOS中途无法安装，原因暂时不明</p><blockquote><p>还需继续研究</p></blockquote><h2 id="使用CentOS分区并安装CentOS"><a href="#使用CentOS分区并安装CentOS" class="headerlink" title="使用CentOS分区并安装CentOS"></a>使用CentOS分区并安装CentOS</h2><p>当然WindowsXP也能进行分区，只不过界面和功能来说还是CentOS更胜一筹；详细的步骤跟着 <a href="http://linux.vbird.org/linux_basic/0157installcentos7.php#multiboot_design" target="_blank" rel="noopener">鸟哥的教程</a>就行了。当然博主的分区规划和鸟哥的略有不同，如下所示：</p><ul><li>1M ~ 15G : 主要分区1，用于安装CentOS (<code>sda1</code>)</li><li>15G ~ 30G : 主要分区2，用于安装WindowsXP (<code>sda2</code>)</li><li>30G ~ 40G : 扩展分区 (<code>sda3</code>)<ul><li>30G ~ 38G ：逻辑分区1，用于windows和cent共享数据 (<code>sda5</code>) <blockquote><p>注意到这里从5开始，因为如前所述1~4分给了primary和extended</p></blockquote></li><li>38G ~ 40G : 逻辑分区2，用于换页，增强内存功能 (<code>sda6</code>)</li></ul></li></ul><h2 id="安装WindowsXP"><a href="#安装WindowsXP" class="headerlink" title="安装WindowsXP"></a>安装WindowsXP</h2><p>重新设置一下启动的ISO镜像，选择WindowsXP镜像启动，然后安装，注意别安装错了（当然如果不小心点了CentOS的系统盘会有提示上面装了系统）</p><p>安装完以后，虚拟硬盘的MBR就被WindowsXP的boot loader “霸道”地覆盖了，重启就只能进入WindowsXP系统</p><h2 id="救援MBR内的Boot-Loader"><a href="#救援MBR内的Boot-Loader" class="headerlink" title="救援MBR内的Boot Loader"></a>救援MBR内的Boot Loader</h2><p>此时我们需要替换MBR的boot loader，不能再让XP占用下去了！网上很多建议装双系统是先装Windows再装Linux，是因为很多Linux版本自带了一个强大的 boot loader - grub2, 它可以实现多重引导（其实本质上就是引导到某个分区的booting section上而已）</p><p>现在在MBR被覆盖的情况下，我们仍然能通过CentOS的安装程序进行“救援”：关机，切换CentOS的ISO镜像，然后按照<a href="http://linux.vbird.org/linux_basic/0157installcentos7.php#multiboot_rescue" target="_blank" rel="noopener">鸟哥的教程</a>进行救援</p><h2 id="Grub2设置"><a href="#Grub2设置" class="headerlink" title="Grub2设置"></a>Grub2设置</h2><p>鸟哥的教程里有一部分对Grub2的设置，乍一看还是蛮困扰的，幸亏看了这一片<a href="http://www.jinbuguo.com/linux/grub.cfg.html" target="_blank" rel="noopener">教程</a>，我知道了<code>set root=&#39;(hd0,3)&#39;</code>指的是第一块硬盘内的第三个主要分区；而博主的分区规划是把Windows安装在第二个主要分区，因此改成<code>set root=&#39;(hd0,2)</code>即可，<strong>注意这里格式严格不能有多余空格哦！</strong></p><h2 id="成功！"><a href="#成功！" class="headerlink" title="成功！"></a>成功！</h2><p>然后重启，就会发现 Grub2 多了一个WindowsXP，截图留念：</p><p><img src="dsys_grub2.jpg" alt></p><p>当然Windows也启动成功了：</p><p><img src="dsys_xp.jpg" alt></p>]]></content>
-      
-      
-      <categories>
-          
-          <category> Linux </category>
-          
-      </categories>
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>Go基础语法</title>
-      <link href="/2018/11/24/Go-Learning/"/>
-      <url>/2018/11/24/Go-Learning/</url>
-      
-        <content type="html"><![CDATA[<ul><li><a href="#helloworld">HelloWorld</a></li><li><a href="#%e5%9f%ba%e7%a1%80">基础</a><ul><li><a href="#%e5%8c%85">包</a></li><li><a href="#%e5%87%bd%e6%95%b0">函数</a></li><li><a href="#%e5%8f%98%e9%87%8f">变量</a></li><li><a href="#%e6%8e%a7%e5%88%b6%e8%af%ad%e5%8f%a5">控制语句</a></li><li><a href="#%e6%8c%87%e9%92%88">指针</a></li><li><a href="#%e7%bb%93%e6%9e%84%e4%bd%93">结构体</a></li><li><a href="#%e6%95%b0%e7%bb%84%e5%92%8c%e5%88%87%e7%89%87">数组和切片</a></li><li><a href="#%e6%98%a0%e5%b0%84">映射</a></li><li><a href="#%e5%87%bd%e6%95%b0%e5%80%bc">函数值</a></li><li><a href="#%e5%87%bd%e6%95%b0%e9%97%ad%e5%8c%85">函数闭包</a></li></ul></li><li><a href="#%e6%96%b9%e6%b3%95%e5%92%8c%e6%8e%a5%e5%8f%a3">方法和接口</a><ul><li><a href="#%e6%96%b9%e6%b3%95">方法</a></li><li><a href="#%e6%8e%a5%e5%8f%a3">接口</a></li></ul></li></ul><h1 id="HelloWorld"><a href="#HelloWorld" class="headerlink" title="HelloWorld"></a>HelloWorld</h1><pre><code class="Go">package main/*Every Go program is made up of packages.Programs start running in package main.*/import &quot;fmt&quot;func main() {    fmt.Println(&quot;Hello, 世界&quot;)}</code></pre><a id="more"></a><h1 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h1><h2 id="包"><a href="#包" class="headerlink" title="包"></a>包</h2><p>按照约定，包名与导入路径的最后一个元素一致。例如：”math/rand”下的包源码均以 <code>package rand</code> 语句开始</p><ul><li>导入一个包</li></ul><pre><code class="Go">import &quot;fmt&quot;</code></pre><ul><li>导入多个包</li></ul><pre><code class="Go">import (    &quot;fmt&quot;    &quot;math/rand&quot;)import &quot;fmt&quot;import &quot;math&quot;</code></pre><p>包中大写为“导出”</p><pre><code class="Go">fmt.Println(math.pi) //报错fmt.Println(math.Pi) //正确</code></pre><h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><p>简单的例子：</p><pre><code class="Go">package mainimport &quot;fmt&quot;/*- variable type: after name- return value type : after parameters*/func add(x int, y int) int {    return x + y}func main() {    fmt.Println(add(42, 13))}</code></pre><p>相同类型形参可省略一个,例如上面</p><pre><code class="Go">x int, y int</code></pre><p>可写作</p><pre><code class="Go">x, y int</code></pre><p>返回值可为多个</p><pre><code class="Go">func swap(x, y string) (string, string) {    return y, x}func main() {    a, b := swap(&quot;hello&quot;, &quot;world&quot;)  //简洁赋值，等价于var a, b string = swap(...)    fmt.Println(a, b)}</code></pre><p>命名返回值，直接返回这些命名；长函数会影响可读性</p><pre><code class="Go">func split(sum int) (x, y int) {    x = sum * 4 / 9    y = sum - x    return}</code></pre><h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><p>又是一个例子</p><pre><code class="Go">package mainimport &quot;fmt&quot;var c, python, java boolfunc main() {    var i int    fmt.Println(i, c, python, java)}/* 输出结果：0 false false false看来是有默认初始化的过程*/</code></pre><p>基本类型</p><pre><code class="Go">bool    //1 bytestring int  int8  int16  int32  int64uint uint8 uint16 uint32 uint64 uintptr/*其中，int, uint 和 uintptr（尚未知道用处）在32位系统上为32位(4bytes)宽，64-&gt;64。需要整数时尽量使用int*/byte // alias for uint8rune // alias for int32     // represents a Unicode code pointfloat32 float64//注意这里没有单纯的float了complex64 complex128</code></pre><p>多个变量同时赋值</p><pre><code class="Go">var i, j int = 1, 2var c, python, java = true, false, &quot;no!&quot; //省略类型，自动从值获取</code></pre><p>简洁赋值语句；不能在函数外使用（函数外每个语句必须以关键字开始，如var, func）</p><pre><code class="Go">k := 3//等价于var k = 3</code></pre><p>语法块变量声明</p><pre><code class="Go">var (    ToBe   bool       = true    MaxInt uint64     = 1&lt;&lt;64 - 1    z      complex128 = cmplx.Sqrt(-5 + 12i))</code></pre><p>默认初始化值</p><pre><code class="Go">func main() {    var i int    var f float64    var b bool    var s string    fmt.Printf(&quot;%v %v %v %q\n&quot;, i, f, b, s)}/* 输出结果0 0 false &quot;&quot;*/</code></pre><p>类型转换：和C++类似，但不存在隐式转换</p><pre><code class="Go">i := 42PPf := float64(i)u := uint(f)//下面会报错i := 42var f float64 = i</code></pre><p>常量const关键字，不能用:=赋值</p><pre><code class="Go">const World = &quot;世界&quot;</code></pre><h2 id="控制语句"><a href="#控制语句" class="headerlink" title="控制语句"></a>控制语句</h2><p>Go中循环结构只有 for; for无小括号，但一定要有大括号</p><pre><code class="Go">sum := 0for i := 0; i &lt; 10; i++ {    sum += i}fmt.Println(sum)</code></pre><p>for内三个语句都是optional（可作while语句）</p><pre><code class="Go">for ;sum&lt;1000;{}for sum&lt;1000 {} //分号再去掉，形如whilefor {}  //无限循环</code></pre><p>条件语句，也是无需小括号，必须大括号</p><pre><code class="Go">if x &lt; 0 {}</code></pre><p>if条件判断前可执行一个简单语句, 该语句声明的变量仅在if内</p><pre><code class="Go">if v := math.Pow(x, n); v &lt; lim {    return v}</code></pre><p>练习 - 利用牛顿法实现平方根函数</p><pre><code class="Go">package mainimport (    &quot;fmt&quot;    &quot;math&quot;)func Sqrt(x float64) float64{    z := 1.0    for math.Abs(z*z - x) &gt; 1e-15{        z -= (z*z - x) / (2*z)    }    return z}func main(){    fmt.Println(Sqrt(2))    fmt.Println(math.Sqrt(2))}</code></pre><p>switch 语句</p><ul><li>不需要break，只会运行选中的case</li><li>可通过在结尾加 fallthrough 语句延续分支</li><li>case无需为常量，取值不必为整数</li></ul><pre><code class="Go">fmt.Print(&quot;Go runs on &quot;)switch os := runtime.GOOS; os {case &quot;darwin&quot;:    fmt.Println(&quot;OS X.&quot;)case &quot;linux&quot;:    fmt.Println(&quot;Linux.&quot;)default:    // freebsd, openbsd,    // plan9, windows...    fmt.Printf(&quot;%s.&quot;, os)}</code></pre><p>switch 可以不带条件（等价于switch(true))，可当做if then else结构，更加清晰</p><pre><code class="Go">t := time.Now()switch {case t.Hour() &lt; 12:    fmt.Println(&quot;Good morning!&quot;)case t.Hour() &lt; 17:    fmt.Println(&quot;Good afternoon.&quot;)default:    fmt.Println(&quot;Good evening.&quot;)}</code></pre><p>defer，在外层函数返回后执行，其实参会立即求值（压入栈中）</p><pre><code class="Go">func main() {    fmt.Println(&quot;counting&quot;)    for i := 0; i &lt; 10; i++ {        defer fmt.Println(i)    }    fmt.Println(&quot;done&quot;)}/* 输出结果：    counting    done    9    8    ...    0*/</code></pre><h2 id="指针"><a href="#指针" class="headerlink" title="指针"></a>指针</h2><p>指针零值为<code>nil</code>,声明如下：</p><pre><code class="Go">var p *int</code></pre><p>&amp; * 操作和 C比较类似，但没有指针运算</p><pre><code class="Go">//&amp;操作i := 42var p *int = &amp;i//*操作fmt.Println(*p)*p = 21</code></pre><h2 id="结构体"><a href="#结构体" class="headerlink" title="结构体"></a>结构体</h2><p>简单例子</p><pre><code class="Go">type Vertex struct {    X int    Y int}func main() {    fmt.Println(Vertex{1, 2})    //注意其赋值使用大括号}</code></pre><p>通过名字赋值</p><pre><code class="Go">v1 = Vertex{1, 2}v2 = Vertex{X: 1}   //v2.Y = 0</code></pre><p>点号访问成员</p><pre><code class="Go">v := Vertex{1, 2}v.X = 4fmt.Println(v.X)</code></pre><p>指针访问结构体，<code>(*p).X</code> 等价于 <code>p.X</code></p><pre><code class="Go">v := Vertex{1, 2}p := &amp;v(*p).X = 1e9p.X = 1e9fmt.Println(v)</code></pre><h2 id="数组和切片"><a href="#数组和切片" class="headerlink" title="数组和切片"></a>数组和切片</h2><p>数组例子，大小需为常数</p><pre><code class="Go">func main() {    var a [2]string    a[0] = &quot;Hello&quot;    a[1] = &quot;World&quot;    fmt.Println(a[0], a[1])    fmt.Println(a)    primes := [6]int{2, 3, 5, 7, 11, 13}    fmt.Println(primes)}</code></pre><p>切片很常用</p><ul><li>左闭右开</li><li>就像数组的局部引用，本身不存数据</li><li><p>上下界可忽略（下界默认0，上界默认数组/切片长度）</p><pre><code class="Go">func main() {  primes := [6]int{2, 3, 5, 7, 11, 13}  var s []int = primes[1:4]  fmt.Println(s)}/* 输出结果  [3, 5, 7]*/</code></pre></li></ul><p>值得注意的是，这是一个数组：</p><pre><code class="Go">[3]bool{true, true, false}</code></pre><p>而这创建了同样的数组，再构建了它的切片</p><pre><code class="Go">[]bool{true, true, false}</code></pre><p>结构体和切片结合的例子</p><pre><code class="Go">s := []struct {        i int        b bool    }{        {2, true},        {3, false},        {5, true},        {7, true},        {11, false},        {13, true},    }</code></pre><p>切片的长度：包含的元素个数<br>切片的容量：从它包含的第一个元素开始，到其底层数组末尾的个数（倒是暂时不懂有什么用）</p><pre><code class="Go">s := []int{2, 3, 5, 7, 11, 13}len(s)    //6cap(s)    //6</code></pre><p>切片空 - nil</p><pre><code class="Go">var s []intfmt.Println(s, len(s), cap(s))if s == nil {    fmt.Println(&quot;nil!&quot;)}</code></pre><p>用make创建切片 - 相当于动态创建数组，初始值都为0</p><pre><code class="Go">a := make([]int, 5)  // len(a)=5b := make([]int, 0, 5) // len(b)=0, cap(b)=5</code></pre><p>切片中的切片以及修改的例子</p><pre><code class="Go">// Create a tic-tac-toe board.board := [][]string{    []string{&quot;_&quot;, &quot;_&quot;, &quot;_&quot;},    []string{&quot;_&quot;, &quot;_&quot;, &quot;_&quot;},    []string{&quot;_&quot;, &quot;_&quot;, &quot;_&quot;},}// The players take turns.board[0][0] = &quot;X&quot;board[2][2] = &quot;O&quot;board[1][2] = &quot;X&quot;board[1][0] = &quot;O&quot;board[0][2] = &quot;X&quot;// modify the first line (by myself)board[0] = board[0][0:1]board[0] = board[0][:cap(board[0])]</code></pre><p>向切片追加元素，注意：这个操作会导致底层数组被挤占，如果cap不够，会分配一个更大的数组</p><pre><code class="Go">var k = [5]int{1,2,3,4,5}    //k: [1 2 3 4 5]m := k[:3]    //m: [1 2 3]m = append(m, 200)    //m: [1 2 3 200]; k: [1 2 3 200 5]m = append(m, 300)    //m/k: [1 2 3 200 300]m = append(m, 400)    //m: [1 2 3 200 300 400]; k: [1 2 3 200 300]</code></pre><pre><code class="Go">var k = [5]int{1,2,3,4,5}    //k: [1 2 3 4 5]m := k[:3]    //m: [1 2 3]m = append(m, 200, 300, 400)    //m: [1 2 3 200 300 400]    //k: [1 2 3 4 5]</code></pre><p>Range遍历切片</p><pre><code class="Go">var pow = []int{1, 2, 4, 8, 16, 32, 64, 128}func main() {    //index + value    for i, v := range pow {        fmt.Printf(&quot;2**%d = %d\n&quot;, i, v)    }    //只有index (i)    for i := range pow {        pow[i] = 1 &lt;&lt; uint(i) // == 2**i    }    //只有value(value), index用_省略掉    for _, value := range pow {        fmt.Printf(&quot;%d\n&quot;, value)    }}</code></pre><p>Slice 练习 —— 构造给定长度的二维数组并绘图</p><pre><code class="Go">package mainimport &quot;golang.org/x/tour/pic&quot;func Pic(dx, dy int) [][]uint8 {    result := [][]uint8{}    for y := 0; y &lt; dy; y++ {        temp := []uint8{}        for x := 0; x &lt; dx; x++{            temp = append(temp,uint8((x+y)/2))        }        result = append(result, temp)    }    return result}func main() {    pic.Show(Pic)}</code></pre><h2 id="映射"><a href="#映射" class="headerlink" title="映射"></a>映射</h2><p>一个例子 —— 基本类型</p><pre><code class="Go">k := make(map[string]int)k[&quot;hello&quot;] = 3fmt.Println(k[&quot;hello&quot;])</code></pre><p>另一个例子 —— 结构体</p><pre><code class="Go">type Vertex struct {    Lat, Long float64    Short float64}func main() {    m := make(map[string]Vertex)    m[&quot;Bell Labs&quot;] = Vertex{1,2,3}    fmt.Println(m[&quot;Bell Labs&quot;])}</code></pre><p>直接初始化</p><pre><code class="Go">type Vertex struct {    Lat, Long float64}var m = map[string]Vertex{    &quot;Bell Labs&quot;: Vertex{        40.68433, -74.39967,    },    &quot;Google&quot;: Vertex{        37.42202, -122.08408,    },    //倒也诡异，这里的&quot;,&quot;不能省略}//简化var m = map[string]Vertex{    &quot;Bell Labs&quot;: {40.68433, -74.39967},    &quot;Google&quot;:    {37.42202, -122.08408},}</code></pre><p>对映射的修改</p><pre><code class="Go">//在映射 m 中插入或修改元素：m[key] = elem//获取元素：/*        如元素不存在，则返回该元素类型的零值：    例如 int 返回 0, string 返回 &quot;&quot;*/elem := m[key]//获取并检测元素是否存在elem, ok := m[key]//只检测元素是否存在_, ok := m[key]//删除元素：delete(m, key)</code></pre><p>自创的和if复合使用</p><pre><code class="Go">if _,ok:=m[&quot;Answer&quot;];ok==true{}</code></pre><p>练习：单词检测</p><pre><code class="Go">package mainimport (    &quot;golang.org/x/tour/wc&quot;    &quot;strings&quot;)func WordCount(s string) map[string]int {    aMap := map[string]int{}    aArray := strings.Fields(s)    for _,v := range aArray{        aMap[v]++;    }    return aMap}func main() {    wc.Test(WordCount)}</code></pre><h2 id="函数值"><a href="#函数值" class="headerlink" title="函数值"></a>函数值</h2><pre><code class="Go">package mainimport (    &quot;fmt&quot;    &quot;math&quot;)//作为形式参数func compute(fn func(float64, float64) float64) float64 {    return fn(3, 4)}func main() {    hypot := func(x, y float64) float64 {        return math.Sqrt(x*x + y*y)    }    fmt.Println(hypot(5, 12))    //作为实际参数    fmt.Println(compute(hypot))    fmt.Println(compute(math.Pow))}</code></pre><h2 id="函数闭包"><a href="#函数闭包" class="headerlink" title="函数闭包"></a>函数闭包</h2><p>函数闭包指的是这样的“<strong>函数值</strong>”：该函数值代表的函数使用了函数体外（非全局）的函数；这样就使得这个函数某种意义上来说“附于”这个/这些变量（有种对象的感觉了，只不过这个对象只有一个方法）</p><pre><code class="Go">/*注意这里 adder 并不是一个函数闭包，adder()才是*/func adder() func(int) int {    sum := 0    return func(x int) int {        sum += x        return sum    }}func main() {    pos:= adder()    fmt.Println(pos(1))    fmt.Println(pos(100))}</code></pre><p>练习：斐波那契数列</p><pre><code class="Go">func fibonacci() func() int {    former := 0    latter := 1    return func() int {        temp := former        temp2 := latter        latter += former        former = temp2        return temp    }}func main() {    f := fibonacci()    for i := 0; i &lt; 10; i++ {        fmt.Println(f())    }}</code></pre><h1 id="方法和接口"><a href="#方法和接口" class="headerlink" title="方法和接口"></a>方法和接口</h1><h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><p>Go 没有类。不过你可以为结构体类型定义方法。方法就是一类带特殊的 接收者 参数的函数。</p><p>打个栗子</p><pre><code class="Go">import (    &quot;fmt&quot;    &quot;math&quot;)type Vertex struct {    X, Y float64}func (v Vertex) Abs() float64 {    return math.Sqrt(v.X*v.X + v.Y*v.Y)}func main() {    v := Vertex{3, 4}    fmt.Println(v.Abs())}</code></pre><p>为非结构体声明方法</p><pre><code class="Go">type MyFloat float64//直接为float64声明方法是非法的，因为它是包外的func (f MyFloat) Abs() float64 {    if f &lt; 0 {        return float64(-f)    }    return float64(f)}</code></pre><p>指针接收者：值得注意的是，如果用值接收者的话，方法是无法对这个接收者——天..还是叫对象吧——方法是无法对这个对象进行修改的，而指针接收者可以。</p><p>因此显然是指针接收者更为常用（我认为，要保护数据的时候就最好不用指针）</p><pre><code class="Go">func (v *Vertex) Scale(f float64) {    //如果不是*Vertex而是Vertex,这里修改对原对象无效    v.X = v.X * f    v.Y = v.Y * f}func main() {    v := Vertex{3, 4}    v.Scale(10)    fmt.Println(v.Abs())}</code></pre><p>使用指针接收者时，实际参数无论是对象还是对象的指针，最终都会转化为指针传给函数(而单纯的函数是做不到这一点的，是否指针很严格)</p><pre><code class="Go">func (v *Vertex) Scale(f float64) {    v.X = v.X * f    v.Y = v.Y * f}func main() {    v := Vertex{3, 4}    v.Scale(2)    p := &amp;Vertex{3, 4}    p.Scale(2)    fmt.Println(v, p)    //可以看到由于指针的重定向，两个方式调用方法起到了同样的效果}</code></pre><p>同样地，在方法声明里这样</p><pre><code class="Go">func (v Vertex) Scale(f float64)</code></pre><p>实参也是既可以是指针也可以是值，当然其区别就在于这种声明无法修改对象的值；</p><p><strong>总而言之，方法是否能修改对象，要看函数声明的形参，和实参没有关系</strong></p><h2 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h2><p>接口类型的变量可以保存任何实现了这些方法的值</p><p>一个例子：</p><pre><code class="Go">type Abser interface {    Abs() float64}func main() {    var a Abser    f := MyFloat(-math.Sqrt2)    v := Vertex{3, 4}    a = f  // a MyFloat 实现了 Abser    a = &amp;v // a *Vertex 实现了 Abser    // 下面一行，v 是一个 Vertex（而不是 *Vertex）    // 所以没有实现 Abser。    //a = v    fmt.Println(a.Abs())}type MyFloat float64func (f MyFloat) Abs() float64 {    if f &lt; 0 {        return float64(-f)    }    return float64(f)}type Vertex struct {    X, Y float64}func (v *Vertex) Abs() float64 {    return math.Sqrt(v.X*v.X + v.Y*v.Y)}</code></pre><p><code>接口值</code>也是一个对象，包含了具体对象的值以及它的类型，可以用printf输出；<br><br>未赋值的接口值其对象值和类型都为<code>&lt;nil&gt;</code></p><pre><code class="Go">type I interface {    M()}type T struct {    S string}func (t T) M() {    fmt.Println(t.S)}func main() {    var i I    i = T{&quot;Hello&quot;}    describe(i)    i.M()    fmt.Printf(&quot;(%v, %T)\n&quot;, i, i)}/*结果：({Hello}, main.T)*/</code></pre><p>如果将某个类型的<code>nil</code>对象赋予某个接口，方法依然会被调用</p><pre><code class="Go">var t *Ti = tfmt.Printf(&quot;(%v, %T)\n&quot;, i, i)i.M()/*输出(&lt;nil&gt;, *main.T), 但M方法仍然会被调用*/</code></pre><p>对<code>nil</code>接口（注意不是和上面的<code>nil</code>对象值不同，这里是连类型都是<code>nil</code>）调用方法会panic</p><pre><code class="Go">var i Ii.M() //报错</code></pre><p>空接口的妙用：可以保存任意类型的值！（怎么有种Javascript的感觉了）</p><pre><code class="Go">var i interface{}i = 42i = &quot;hello&quot;</code></pre><p>类型断言：判断接口是不是某个类型，并且赋值</p><pre><code class="Go">var i interface{} = &quot;hello&quot;    //string 类型/* 若 i 保存了一个 T，那么 t 将会是其底层值，而 ok 为 true */s, ok := i.(string)    fmt.Println(s, ok)/* 若 i 保存的不是一个 T，ok 将为 false 而 t 将为 T 类型的零值 */f, ok := i.(float64)fmt.Println(f, ok)/* 不是T，又没有OK =&gt; panic */f = i.(float64) fmt.Println(f)</code></pre><p>接口类型选择(switch)</p><pre><code class="Go">switch v := i.(type) {case int:    fmt.Printf(&quot;Twice %v is %v\n&quot;, v, v*2)case string:    fmt.Printf(&quot;%q is %v bytes long\n&quot;, v, len(v))default:    fmt.Printf(&quot;I don&#39;t know about type %T!\n&quot;, v)}</code></pre><p><strong>Stringer</strong>类型，在<code>fmt</code>中的，是最普遍的接口之一。比如一个Print一个对象，默认会输出对象数据，但可以通过实现 <code>String()</code>方法改变输出</p><pre><code class="Go">type Person struct {    Name string    Age  int}func (p Person) String() string {    return fmt.Sprintf(&quot;%v (%v years)&quot;, p.Name, p.Age)}func main() {    a := Person{&quot;Arthur Dent&quot;, 42}    fmt.Println(a)}/*当前输出： Arthur Dent (42 years)如果不实现String()方法：{Arthur Dent 42}*/</code></pre><p>练习：输出IP地址。用到了fmt.Sprintf</p><pre><code class="Go">package mainimport &quot;fmt&quot;type IPAddr [4]byte// TODO: Add a &quot;String() string&quot; method to IPAddrfunc (i IPAddr) String() string{    var result string    result = fmt.Sprintf(&quot;%v.%v.%v.%v&quot;,i[0],i[1],i[2],i[3])    return result}func main() {    hosts := map[string]IPAddr{        &quot;loopback&quot;:  {127, 0, 0, 1},        &quot;googleDNS&quot;: {8, 8, 8, 8},    }    for name, ip := range hosts {        fmt.Printf(&quot;%v: %v\n&quot;, name, ip)    }}</code></pre>]]></content>
-      
-      
-      <categories>
-          
-          <category> 编程语言 </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> Go </tag>
-            
-            <tag> 编程语言 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-  
-  
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>LeetCode 207. Course Schedule</title>
+    <url>/2018/09/23/Algorithm/leetcode-207-course-schedule/</url>
+    <content><![CDATA[LeetCode 207. Course Schedule：题目、思路与代码实现。
 
-  <!-- jianshu-imports:start -->
-    <entry>
-      <title>《自控力》</title>
-      <link href="/2020/05/09/Reading/self-control/"/>
-      <url>/2020/05/09/Reading/self-control/</url>
-      <content type="html"><![CDATA[<blockquote>
-<p>开始读这一本久负盛名的关于自控和意志的书。书其实比较通俗易懂，包含了许多可以简短概括的理论、针对自身的分析、行动准则（实验），因此这里就统一用一个帖子逐条记录，帮助回忆。</p>
-</blockquote>
-<h2>01 我要做，我不要，我想要：什么是意志力？为什么意志力至关重要？</h2>
-<ul>
-<li>自知之明是自控的基础，认识到自己意志力存在的问题是自控的关键</li>
-<li>【分析】什么是自己的“我要做”、“我不要”、“我想要”</li>
-<li>大脑的前额皮质是自控的关键，在原有的冲动、本能之上，进化出了自控系统</li>
-<li>【分析】认清在面临挑战时的两个自我：冲动的自我、自控的自我。都很重要，没有谁对谁错。</li>
-<li>【实验】选一天在结束时尽量地回忆自己所做的决定，观察自己在什么时候如何屈服于冲动。</li>
-<li>通过训练大脑能增强意志力：简单的自控训练、冥想</li>
-<li>冥想时感觉糟糕反而更有效果</li>
-<li>【实验】五分钟<strong>冥想训练</strong>，关注呼吸</li>
-</ul>
-<blockquote>
-<p>这一章讲了自控的原理</p>
-</blockquote>
-<h2>02 意志力的本能 - 人生来就能抵制奶酪蛋糕的诱惑</h2>
-<ul>
-<li>自控力是心理和生理的综合</li>
-<li>应激反应：面对实际威胁时全身“激灵”并选择“战斗或逃跑”是原始本能</li>
-<li>干扰目标的欲望并不是外在的实际威胁，威胁其实来自自己的内心</li>
-<li>【实验】在受到诱惑时，观察一下自己在想什么</li>
-<li>意志力也是本能，在面对诱惑时大脑会本能地犹豫和思考，因此最好可以<strong>放慢速度</strong>，增加大脑思考的时间来提升自控力</li>
-<li>应激反应→心率加快；成功自控→心率降低；心率降低→心率变异度增高→自控能力增强</li>
-<li>简单的长呼吸（冥想）就能降低心率，提高心率变异度，从而增强自控力；这也是前面说的“放慢速度”</li>
-<li>体育锻炼也能提高意志力</li>
-<li>【实验】五分钟“绿色”锻炼</li>
-<li>睡眠不足会降低前额皮质对大脑的控制，副交感神经变弱，交感神经变强，就会对压力反应过度</li>
-<li>【实验】<strong>睡个好觉</strong>
-</li>
-<li>明知早睡有益，却总是无法实现，那就不要想睡觉这件事，想一想你到底对什么说了“我想要”（什么拖延了睡觉），换个角度实现目标。</li>
-<li>
-<strong>自控过多不是好事</strong>，自控力和压力一样会消耗能量，会让下一次需要自控的时候失去力量。</li>
-<li><strong>再次强调！！睡眠很重要！！</strong></li>
-</ul>
-<blockquote>
-<p>这一章主要就是讲生理，如何让自己调整到利于自控的生理状态：冥想、睡眠、锻炼</p>
-</blockquote>
-<h2>03 累到无力抵抗：为什么自控力和肌肉一样有极限？</h2>
-<ul>
-<li>自控力就像肌肉一样有极限，如果你的大脑和身体需要停下来思考一下再作决定，你就是在拉伸像肌肉一样有极限的自控力</li>
-<li>【实验】观察自己一天之内的意志力强弱波动，特别是有什么活动会让自己恢复本来已经觉得空乏的意志力。</li>
-<li>最想做的事情别在一天劳累以后做，在早上一天意志力最强的时候做（早起学习警告）</li>
-<li>自控力会消耗实际的能量，但没有想象中多（远没有运动多），但在支出过多时脑细胞就会倾向于减少供应，储存能量（自私的细胞）</li>
-<li>吃点小零食实际上是对自控力有用的（除非你本身就是要减肥），饥饿会使冲动自我更加活跃</li>
-<li>高血糖的食物虽然短期有效，但其实会出现血糖高而能量不足的情况，更好的做法是保持食物的供应，维持血糖的稳定（低血糖食物）</li>
-<li>【实验】吃低血糖食物！低血糖食品包括瘦肉蛋白、坚果和豆类、粗纤维谷类和麦片、大多数的水果和蔬菜。</li>
-<li>【实验】控制自己以前不会去控制的小事，以此来训练自控力肌肉；增加自我监控记录</li>
-<li>意志力像体力一样，会在真正耗尽时就感觉疲惫，事实上我们只是需要积攒使用意志力的动力罢了</li>
-<li>【实验】下次再触碰到意志力的“墙”时，试着像长跑时一样寻找动力：挖掘“我想要”的力量。考虑：自己的收获、身边人的收获、下次做同样事会更容易。</li>
-<li><strong>增强自控力要考虑如何支撑住最疲惫的自己，而不是期待理想的状态出现</strong></li>
-</ul>
-<blockquote>
-<p>这一章把意志力和体力做类比，讨论了它的有限性和可锻炼性，以及意志力减少时身体所给出的疲惫信号。</p>
-</blockquote>
-<h2>04 容忍罪恶：为何善行之后会有恶行</h2>
-<ul>
-<li>觉得自己品德高尚反而是通往罪恶的快速通道；当你做善事的时候，你会感觉良好。这就意味着，你更可能相信自己的冲动。而冲动常常会允许你做坏事（<strong>“道德许可效应”</strong>）。</li>
-<li>在完成了小阶段目标的时候，我们更倾向于纵容自己，忘记真正的目标，向诱惑屈服。</li>
-<li>我们通常相信这种感觉：我一直是善良的，一直是个好人。但我们很少为我们的行为进行符合逻辑的解释。</li>
-<li>
-<strong>如果你自控的唯一动力就是成为一个足够好的人，那么每当你自我感觉良好的时候，你就会放弃自控。</strong>如果戒烟只是因为这样是对的，而不是为了达成某个目标，那就很容易放弃。</li>
-<li>【分析】分析自己近段时间成功或失败自控时自己的想法和评价，是否有因为自己的“良好表现”而出现纵容自己的行为？</li>
-<li><strong>不要把支持目标实现的行为误认为是目标本身。</strong></li>
-<li>【实验】回忆自己如何成功自控，会让自己产生满足感而选择放纵；回忆当时是为了什么自控，更能抵制接下来的诱惑。在面对诱惑时思考<strong>上一次抵制它是因为什么</strong>。</li>
-<li>“道德许可”并不只计算过去的善行，我们同样可能看到<strong>未来</strong>，认为我们计划要做的善行也值得称赞。大脑会对能完成目标的可能性感到兴奋，它错把可能性当成真正完成了目标。</li>
-<li>**我们不断期望明天能作出和今天不同的选择，但这种期望是错误的。</li>
-<li>【实验】为了克服对未来的“道德许可效应”，可以在心里减少行为的变化性，意思是<strong>把你今天作的每个决定都看成是对今后每天的承诺</strong>，如果今天这样做了，那明天也肯定会这样做。</li>
-<li>光环效应：我们会为我们的放纵找“美德”，特别是使你放纵的东西和使你觉得品德高尚的东西同时出现时。光环效应下我们对目标是矛盾的（理智的自己想要实现目标，冲动的自己更希望通过“高尚行为”获得快乐）。</li>
-<li>【分析】自己是否有因为某事物的某种品质或“神奇词语”而自我放纵？</li>
-<li>道德许可的本质，是对自我认知的偏离：认为需要奖励、冲动和放纵的才是内心深处真实的自己，因此自控行为实际上是种强迫和惩罚；但实际上，只要在内心更认同想变好的自己，把它视为真实的自己，就会轻松很多。</li>
-</ul>
-<blockquote>
-<p>这一章主要讲道德许可效应，当我们对自控行为赋予“对”和“错”的概念，而不是关注目标本身，我们实际上更容易失去自控。学习的时候不要认为“这个时候就应该学习”，这么想的话学完就浪了；而是关注自己学习是想要获取什么知识，实现什么价值。</p>
-</blockquote>
-<h2>05 大脑的弥天大谎：为什么我们误把渴望当幸福？</h2>
-<ul>
-<li>刺激小白鼠脑电极使它们产生的是渴望（对奖励的承诺）而不是快乐（奖励本身）。</li>
-<li>在追寻快乐的过程中，我们不能全信大脑所指引的方向。</li>
-<li>大量的多巴胺并不能产生快乐的感觉，那种感觉更像是一种激励。2001年，斯坦福神经科学家布莱恩·克努森（Brian Knutson）发表了一份具有决定意义的实验报告，证明了<strong>多巴胺会促使人们期待得到奖励，但不能感觉到获得奖励时的快乐</strong>。</li>
-<li>现代科技“及时行乐”的特点，加上原始的激励系统，就让我们成了多巴胺的奴隶。</li>
-<li>【分析】什么在刺激你的多巴胺，吸引你的注意力，给你奖励的承诺，强迫你去追求满足感？</li>
-<li>如果奖励迟迟没有到来的话，奖励的承诺（和一想到要停下来就不断增长的<strong>焦虑</strong>）足以让我们一直上瘾。</li>
-<li>【分析】观察一下，零售商和营销人员究竟是如何刺激奖励承诺的。</li>
-<li>【实验】尝试把拖延的任务和能促使多巴胺的事情联系在一起（“鱼缸抽奖法”）（不想工作时可以放点背景乐）。</li>
-<li>【分析】观察分析渴望引起的压力和焦虑，并且当自己最终屈服于诱惑时，分析自己是为了满足欲望还是缓解焦虑，哪个比重更高？</li>
-<li>【实验】选取一次放纵的过程来观察。在放纵前观察大脑和身体的感觉，内心的期望；然后在放纵时观察是否有之前内心期望的事情发生，这种渴望有没有随着满足而消失，时间长了会产生什么别的感觉？</li>
-</ul>
-<blockquote>
-<p>这一章主要就是讲现代社会多巴胺给人们造成的困境，因为多巴胺会给予人奖励的承诺但不是奖励本身，在无法实现时会重复导致上瘾。认识到这一点是更好自觉自控的开始。</p>
-</blockquote>
-<h2>06 那又如何：情绪低落为何会使人屈服于诱惑</h2>
-<ul>
-<li>情绪低落、有压力时我们会去追寻“奖励的承诺”，但通常我们缓解压力的办法反而会让我们更有压力。</li>
-<li>当我们有压力时，大脑为了自我保护会带来欲望，应激反应中释放的压力荷尔蒙会提高多巴胺神经元的兴奋程度</li>
-<li>【分析】观察自己情绪低落、有压力、生气时的做法，会不会更容易受到诱惑？是不是会更难集中注意力，或更容易拖延呢？（确实，特别是有压力的时候）</li>
-<li>虽然很多流行的解压方法没什么用，但有些策略的确管用。美国心理学家协会的调查发现，<strong>最有效的解压方法包括：锻炼或参加体育活动、祈祷或参加宗教活动、阅读、听音乐、与家人朋友相处、按摩、外出散步、冥想或做瑜伽，以及培养有创意的爱好。最没效果的缓解压力的方法则包括：赌博、购物、抽烟、喝酒、暴饮暴食、玩游戏、上网、花两小时以上看电视或电影。</strong>
-</li>
-<li>真正能缓解压力的不是释放多巴胺或依赖奖励的承诺，而是增加大脑中改善情绪的化学物质，如血清素、γ-氨基丁酸和让人感觉良好的催产素。</li>
-<li>【实验】面对压力时使用更有效的解压方式。可以使用一些简单的提醒机制（录音之类的）</li>
-<li>有时候，“恐惧管理”带来的不是诱惑，而是拖延。</li>
-<li>【分析】请注意观察什么事情会引发你大脑里的“恐惧管理”。</li>
-<li><strong>“那又如何”效应：放纵行为引起的罪恶感和内疚感反而会更容易让人继续选择放纵</strong></li>
-<li>【分析】留意自己在意志力失效时的反应，会责备自己，认为自己永远好不了吗？更重要的是，会因为挫折的关系，更加地放纵自己吗？</li>
-<li>
-<strong>自我谅解是打破“那又如何”循环的最好办法</strong>。众多研究显示，自我批评会降低积极性和自控力，而且也是最容易导致抑郁的因素；相反，自我同情则会提升积极性和自控力，比如，在压力和挫折面前支持自己、对自己好一些。</li>
-<li>【实验】失败的时候，尝试原谅自己。尝试以下角度：描述一下你的实际感觉；告诉自己只是个凡人，挫折并不意味着你本身有问题；假如你的朋友遇到了这样的事，你会怎么安慰TA？</li>
-<li><strong>“虚假希望综合征”：下定决心改变自己会让我们立刻有了放松感和控制感，以为自己自控了，但这是典型的即时满足感——在我们做真正任何事之前就已经自我感觉良好，因此很少向我们希望的方向发展。</strong></li>
-<li>【分析】请花一点时间，仔细想一想你改变自己的动力和期望。你只有在情绪低落时才会有动力改变吗？想象成功改变生活时的快乐，是不是你作出改变的唯一动力？你会通过幻想未来的自己来改善现在的心情，而不是采取实际行动改善自己的行为吗？</li>
-<li>【实验】做一个乐观的悲观主义者，在面对意志力挑战的时候，悲观而客观地预测自己什么情况下会向诱惑屈服，由此来制定对抗意志力屈服的对策。</li>
-</ul>
-<blockquote>
-<p>这一章主要讲低落情绪对于自控的陷阱，如果一直自责会持续地失去自控，自我谅解是恢复自控的起点。同时缓解压力的方法也有好坏之分，有些行为确实解压，有些却会让人上瘾而无用。最后，不要沉迷于”下定决心改变“，那是意志力的陷阱。</p>
-</blockquote>
-<h2>07 出售未来：及时享乐的经济学</h2>
-<ul>
-<li>“延迟折扣”：我们会倾向于把未来的奖励打个折扣，认为没那么好，从而屈服于眼前的诱惑。</li>
-<li>【分析】探索自己给未来奖励打折的情形</li>
-<li><strong>延迟折扣产生的原因就是，大脑处理眼前的诱惑时会刺激多巴胺兴奋，但处理未来的奖励时，因为过于抽象，所以很难刺激到多巴胺。</strong></li>
-<li>【实验】在所有诱惑面前安排十分钟的等待时间，让眼前的诱惑和未来的奖励得以比较。</li>
-<li>你对未来打的折是多是少，很大程度上决定了你长期的健康状况和你获得的成功。</li>
-<li>【实验】降低你的折扣率，在抉择时首先去想象未来的奖励，并努力想象得到它和因为屈服眼前诱惑而失去它的感觉。</li>
-<li><strong>受诱惑的自我是个无法预料的敌人，更好的做法是在未受诱惑之前就限制好自己。</strong></li>
-<li>【实验】在清醒时给自己的意志力“加个保证”（像早起打卡罚钱制度），stickk.com</li>
-<li>我们经常会把未来的自己想象成完全不一样的人，因此给他增加各种负担。但当我们到了未来，我们“理想的自己”却不见了。</li>
-<li>【分析】你是否在拖延和推迟，等待未来的自己来改变现状？（差点如此，这一章的笔记差点就想拖到明天，但明天一样是会困的）</li>
-<li>【实验】接近和认识“未来的自己”：想象未来某个场景中的自己、给未来的自己发信息、设想未来的自己。</li>
-<li>偶尔也还是需要及时行乐！不然负担会太重！（而且这样活也没意思不是吗）</li>
-</ul>
-<blockquote>
-<p>这一章对我来说相当重要，因为我就是这样一个把自己和未来严重割裂开的人，一方面给未来自己所获得的奖励打折扣（不给萝卜），另一方面还要不断拖延现在的任务给未来的自己增加压力（给大棒子）。很高兴现在已经慢慢从行动上有了改变。</p>
-</blockquote>
-<h3>08 传染：为什么意志力会传染？</h3>
-<ul>
-<li>我们个人的选择在很大程度上会受他人想法、意愿和行为的影响，意志力薄弱会传染；坏习惯和积极的改变都能像细菌一样在人群中传播，而且没有人能完全不受其影响。</li>
-<li>【分析】回忆自己的意志力挑战，有没有受到身边的人影响，变得更简单或者更困难？有没有被身边的人感染某种良好或不良的习惯？</li>
-<li>镜像神经元会让我们去观察和模仿他人的行为，会无意识地模仿他人行为，或者被他人的情绪所传染。<strong>当我们的镜像神经元获取了别人奖励承诺的信息时，我们自己也会渴望得到奖励</strong>。</li>
-<li>当我们看到别人忽视规则、受欲望支配的时候，我们更可能在任何冲动面前选择屈服。</li>
-<li>【分析】我在模仿谁的坏习惯吗？</li>
-<li>目标也能传染，我们很容易感染别人的目标，从而改变自己的行为。当然这仅限于我们已经拥有的目标（可能自己也没意识到），这回使我们在目标的冲突中倾向于一边。</li>
-<li>【实验】增强自控的“免疫系统”，在每天刚开始的时候花几分钟想想自己的目标，想想你会怎么受到诱惑，想要改变自己的目标。</li>
-<li>【实验】找到一个意志力榜样，想想TA会怎么做？</li>
-<li>【分析】亲密的人更容易感染，分析你身上的行为和习惯哪些和亲密的人有关。</li>
-<li>基于社会认同，群体里的其他人都在做某件事时，我们很容易认为这件事是应该做的聪明事。</li>
-<li>【分析】是否意识到，自己认识的所有人都有同样的不良习惯？如果是这样，你可能会质疑这种看法。质疑它的最好方法就是找到一群人，他们正在做你渴望做到的事。（support group）</li>
-<li>预想自己实现目标（比如戒烟或献血）后会非常自豪的人，更有可能坚持到底并获得成功，预想自己的行为会受到谴责也很有效。</li>
-<li><strong>与讨论长期成本和收益的理性论证比起来，自豪、羞愧等社会情感能更迅速、更直接地影响我们的选择。</strong></li>
-<li>羞愧要有限度，过于羞愧会让我们感到糟糕，糟糕的感觉会将意志力消耗光而让人放弃抵抗。</li>
-<li>自豪感可以增强意志力，为了让自豪感发挥作用，我们必须认为别人都在监视自己。<strong>让自己坚定决心的有效策略是——公开你的意志力挑战。</strong>
-</li>
-<li>【实验】想象一下你在意志力挑战中取得成功后会多么自豪。想象自己可以炫耀的场景（当然也要警惕虚假的自控感，想象过后的自豪感不意味着自己已经实现了自控，自己还什么都没做呢！）</li>
-<li>但我们最该警觉的行为，是避开那些不能按我们喜欢的方式自控的人。这不仅是一种对待别人的残酷做法，还是一种激励自己改变的糟糕策略。</li>
-<li>【实验】与他人一起完成“意志力竞争”而实现社会认同和支持，你无须单独面对你的意志力挑战。</li>
-</ul>
-<blockquote>
-<p>这一章讲的是自控和身边人、社会的关系，自控是非常受环境影响的。但我们最应该做的不是先在心里排斥它（这反而让我们陷进去），我们先意识到它的存在，增强自己的免疫力，然后向意志力强的、具有符合自己目标习惯的人靠拢。</p>
-</blockquote>
-<h2>09 别读这章：“我不要”力量的局限性</h2>
-<ul>
-<li>对焦虑、沮丧、节食、上瘾的最新调查证实，把“我不要”的力量用在涉及思想、情感的内心世界，它就会失效。（“别想白熊”效应/讽刺性反弹），越尝试摆脱某种想法和情绪，它反而会越根深蒂固。</li>
-<li>大脑有负责“操控”和“监督”两部分，当疲惫的“操作”和精力充沛的“监控”造成了大脑的不平衡时，就会产生讽刺性反弹的情况。</li>
-<li>认知失调：我们相信，我们的思想是信息的重要来源。当一个想法频繁出现、难以摆脱时，人们会很自然地认为它是需要关注的重要消息。</li>
-<li>【分析】你是否想忘记某些东西？如果是，请检验一下讽刺性反弹理论。压抑有用吗？试图忘记某些东西是否让它回来时变得更强烈？</li>
-<li><strong>放弃控制内心感受，反而能让我们更好地控制外在行为。放弃自控，以此对抗讽刺性反弹</strong></li>
-<li>感受身体里的焦虑，然后把注意力转移到呼吸上。如果焦虑仍然存在，去想象那些想法和焦虑随着呼吸消散。不和焦虑对抗，焦虑就会自然离去。</li>
-<li>【实验】意志力实验：忠于你的感受，但别相信你所有的想法。感受情绪和思绪的存在，控制自己的行为而不是思想。让意识和想法自由地来来去去。</li>
-<li>越想通过抑制想法来抵抗诱惑，受到的不良影响就越大。</li>
-<li>使用压抑自己的办法进行自控时，如果我们控制思想和行为失败了，我们会认为是自己压抑得不够，而不会认为压抑思想的方法根本行不通。</li>
-<li>【分析】深入剖析：你最渴望什么？当你抑制它的时候，能坚持多久？</li>
-<li>【实验】直面自身欲望，但不要付诸行动（和上面的实验比较像啊）</li>
-<li>【实验】<strong>把“我不要”变成“我想要”。除了“我不要”，你还能做什么来满足同样的需求？你可以关注这些需求，用有同样效果的健康的新习惯来戒掉坏习惯。如果没有了坏习惯，你还能做些什么？你可以做其他有趣的事来代替坏习惯。</strong>
-</li>
-<li>【实验】感受和驾驭冲动。无论你对什么上瘾，“驾驭冲动”的技巧都能帮你抵抗诱惑，而不是屈服于它。<strong>当冲动占据你的头脑时，花至少一分钟去感觉自己的身体。</strong>
-</li>
-</ul>
-<blockquote>
-<p>这一章“批评”了“我不要”的自控方法，通过压抑自己的思想和情绪（“不要去想那件事！！”）来完成自控是非常不靠谱的。试着控制自己的思想和感受，反而会对我们原先的目标产生反面效果。接受思想和感受的存在，呼吸，感受身体的感觉，然后慢慢rang</p>
-</blockquote>]]></content>
-      <categories><category> 阅读 </category></categories>
-    </entry>
-    <entry>
-      <title>Go并发 - 二叉查找树是否相同</title>
-      <link href="/2019/03/02/Programming%20Languages/go-concurrency-same-binary-tree/"/>
-      <url>/2019/03/02/Programming%20Languages/go-concurrency-same-binary-tree/</url>
-      <content type="html"><![CDATA[<p>在做<code>A Tour of Go</code>的时候遇到的并发的问题，具体问题看<a href="https://tour.go-zh.org/concurrency/7" target="_blank" rel="nofollow">这里</a> (不过就是需要翻墙)。题目所生成的二叉树总是等长的，这就很好解决，<a href="https://blog.csdn.net/tmt123421/article/details/79580599" target="_blank" rel="nofollow">这位CSDN博主</a>就给出了很好的解决方案。但我想的是：如果树不等长呢? 我这里给出了一个解决方案</p>
-<pre><code class="Go">package main
 
-import (
-    "fmt"
-    "golang.org/x/tour/tree"
-)
 
-// Walk 步进 tree t 将所有的值从 tree 发送到 channel ch。
-func Walk(t *tree.Tree, ch chan int, depth int) {
-    // dfs, in-order
-    if t == nil {
-        return
-    }
-    Walk(t.Right, ch, depth+1)
-    ch &lt;- t.Value
-    Walk(t.Left, ch, depth+1)
+这周学了图，来做一下这题
 
-    if depth == 0 {
-        close(ch)
-    }
-}
+题目描述There are a total of n courses you have to take, labeled from 0 to n-1.  
+Some courses may have prerequisites, for example to take course 0 you have to first take course 1, which is expressed as a pair: [0,1]  
+Given the total number of courses and a list of prerequisite pairs, is it possible for you to finish all courses?  
+Example 1:
+Input: 2, [[1,0]] Output: trueExplanation: There are a total of 2 courses to take.              To take course 1 you should have finished course 0. So it is possible.
 
-// Same 检测树 t1 和 t2 是否含有相同的值。
-func Same(t1, t2 *tree.Tree) bool {
-    c1 := make(chan int)
-    c2 := make(chan int)
-    go Walk(t1, c1, 0)
-    go Walk(t2, c2, 0)
-    for{
-        x,o1 := &lt;-c1
-        y,o2 := &lt;-c2
-        if !o1 || !o2 {
-            if o1 != o2 {
-                //树结点数目不一
-                return false;
-            } else{
-                break;
-            }
-        }
-        if x != y {
-            return false
-        }
-    }
-    return true
-}
-
-func main() {
-    t := tree.New(1)
-    m := tree.New(1)
-    fmt.Println(Same(t,m))
-}
-
-</code></pre>]]></content>
-      <categories><category> 编程语言 </category></categories>
-    </entry>
-    <entry>
-      <title>LeetCode 99. Recover Binary Search Tree</title>
-      <link href="/2018/12/12/Algorithm/leetcode-99-recover-binary-search-tree/"/>
-      <url>/2018/12/12/Algorithm/leetcode-99-recover-binary-search-tree/</url>
-      <content type="html"><![CDATA[<h1>题目</h1>
-<p>Two elements of a binary search tree (BST) are swapped by mistake.</p>
-<p>Recover the tree without changing its structure.</p>
-<pre><code>Example 1:
-
-Input: [1,3,null,null,2]
-
-   1
-  /
- 3
-  \
-   2
-
-Output: [3,1,null,null,2]
-
-   3
-  /
- 1
-  \
-   2
 Example 2:
+Input: 2, [[1,0],[0,1]]Output: falseExplanation: There are a total of 2 courses to take.              To take course 1 you should have finished course 0, and to take course 0 you should             also have finished course 1. So it is impossible.
 
-Input: [3,1,4,null,null,2]
+Note:
 
-  3
- / \
-1   4
-   /
-  2
+The input prerequisites is a graph represented by a list of edges, not adjacency matrices. Read more about how a graph is represented.
+You may assume that there are no duplicate edges in the input prerequisites.
 
-Output: [2,1,4,null,null,3]
+题目分析一开始的思路：访问时pre未访问过？哪个方向建图解析为：判断图中有无环别忘了内存题解#include &lt;iostream&gt;#include &lt;vector&gt;using namespace std;class Solution &#123;public:    bool canFinish(int numCourses, vector&lt;pair&lt;int, int&gt;&gt;&amp; prerequisites) &#123;        vector&lt;int&gt;* table = new vector&lt;int&gt;[numCourses];        int* inDegree = new int[numCourses];        for(int i = 0; i &lt; numCourses; ++i)            inDegree[i] = 0;                for(vector&lt;pair&lt;int, int&gt;&gt;::iterator iter = prerequisites.begin(); iter != prerequisites.end(); iter++)&#123;            inDegree[iter-&gt;second]++;            table[iter-&gt;first].push_back(iter-&gt;second);        &#125;        for(int i = 0; i &lt; numCourses; ++i)&#123;            if(inDegree[i] == 0)&#123;                //decrease the inDegree of children                for(vector&lt;int&gt;::iterator iter = table[i].begin(); iter != table[i].end(); iter++)&#123;                    inDegree[*iter] --;                &#125;                //remove : set inDegree to -1                inDegree[i] = -1;                i = -1; //back from top to scan            &#125;        &#125;        //check for unremoved(inDegree != -1)        for(int i = 0; i &lt; numCourses; ++i)&#123;            if(inDegree[i] != -1)                return false;        &#125;        //memory?!!        return true;    &#125;&#125;;
 
-  2
- / \
-1   4
-   /
-  3
-</code></pre>
-<p>Follow up:</p>
-<p>A solution using O(n) space is pretty straight forward. Could you devise a constant space solution?</p>
-<h1>题解</h1>
-<h2>第一版本</h2>
-<p>这一个版本超出内存限制了</p>
-<pre><code class="go">func recoverTree(root *TreeNode)  {
-    if root != nil {
-        dfs(root)
-    }
 
-}
-
-func dfs(root *TreeNode) bool{
-
-    // bfs to move nextNode, swap with firstNode(root) and check
-    // if succeed, return true and skip
-    if root == nil {
-        return false;
-    }
-    var queue []*TreeNode
-    queue = append(queue, root)
+本文最初发布于简书。
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>LeetCode 23. Merge k Sorted Lists</title>
+    <url>/2018/09/16/Algorithm/leetcode-23-merge-k-sorted-lists/</url>
+    <content><![CDATA[LeetCode 23. Merge k Sorted Lists：题目、思路与代码实现。
 
 
 
-    for len(queue) != 0 {
+这周课是讲分治法，那就来做一题分治类型的Hard题目
 
-        headNode := queue[0]
-        if headNode.Left != nil {queue =  append(queue, headNode.Left) }
-        if headNode.Right != nil {queue =  append(queue, headNode.Right)}
+题目描述Merge k sorted linked lists and return it as one sorted list. Analyze and describe its complexity.
+Example:
+Input:
+[  1-&gt;4-&gt;5,  1-&gt;3-&gt;4,  2-&gt;6]
 
-        headNode.Left, headNode.Right = headNode.Right, headNode.Left
-        if check(root) {
-            return true
-        }
-        headNode.Left, headNode.Right = headNode.Right, headNode.Left
-    }
-
-    // firstNode move to next, pre-order dfs
-    var flag bool
-    if root.Left != nil{
-        flag = dfs(root.Left)
-    }
-
-    if !flag &amp;&amp; root.Right != nil{
-        flag = dfs(root.Right)
-    }
-
-    return flag
-}
-
-
-func check(root *TreeNode) bool{
-    if root == nil {
-        return true
-    }
-
-    checkLeft := (root.Left == nil || root.Left.Val &lt; root.Val) &amp;&amp; check(root.Left)
-    checkRight := (root.Right == nil || root.Right.Val &gt; root.Val) &amp;&amp; check(root.Right)
-
-    return (checkLeft &amp;&amp; checkRight);
-}
-</code></pre>
-<h2>第二版本</h2>
-<p>“冒泡”思路。</p>
-<pre><code class="Go">func recoverTree2(root *TreeNode)  {
-    help(root)
-    first.Val, second.Val = second.Val, first.Val
-}
-
-func help(root *TreeNode) {
-    if root == nil { return }
-    help(root.Left)
-    if(first == nil &amp;&amp; prev.Val &gt;= root.Val){
-        first = prev
-    }
-    if(first != nil &amp;&amp; prev.Val &gt;= root.Val){
-        second = root
-    }
-    prev = root
-    help(root.Right)
-}
-
-</code></pre>
-<p>令人诧异的是：同一份TestCase在Run和Submit居然有不同的结果！这属于编译器本地错误了，不管它</p>
-<h2>第三版本</h2>
-<p>要利用好Go的语言特性，使用<code>channel</code> 进行并发；且仅占O(1)内存空间</p>
-<pre><code class="Go">func Swap(x, y *TreeNode) {
-    x.Val, y.Val = y.Val, x.Val
-}
-
-func Inorder(c chan *TreeNode, root *TreeNode) {
-    if root == nil {
-        return
-    }
-    Inorder(c, root.Left)
-    c &lt;- root
-    Inorder(c, root.Right)
-}
-
-func recoverTree(root *TreeNode) {
-    c := make(chan *TreeNode)
-    go func() {
-        Inorder(c, root)
-        close(c)
-    }()
-
-    var first, second *TreeNode
-    prev := &lt;-c
-    for x := range c {
-        if x.Val &lt; prev.Val {
-            if first == nil {
-                first = prev
-            }
-            if first != nil {
-                second = x
-            }
-        }
-        prev = x
-    }
-    Swap(first, second)
-}
-</code></pre>]]></content>
-      <categories><category> 算法 </category></categories>
-    </entry>
-    <entry>
-      <title>LeetCode Regular Expression Matching</title>
-      <link href="/2018/12/05/Algorithm/leetcode-regular-expression-matching/"/>
-      <url>/2018/12/05/Algorithm/leetcode-regular-expression-matching/</url>
-      <content type="html"><![CDATA[<blockquote>
-<p>今天尝试做一道正则表达式判断的String题目, 同时温习一下C语言的使用</p>
-</blockquote>
-<h1>题目</h1>
-<p>Given an input string (s) and a pattern (p), implement regular expression matching with support for '.' and '*'.</p>
-<ul>
-<li>'.' Matches any single character.</li>
-<li>'*' Matches zero or more of the preceding element.</li>
-<li>The matching should cover the entire input string (not partial).</li>
-</ul>
-<p>Note:</p>
-<ul>
-<li>s could be empty and contains only lowercase letters a-z.</li>
-<li>p could be empty and contains only lowercase letters a-z, and characters like . or *.</li>
-</ul>
-<h1>题解</h1>
-<p>这是一段错误的代码, 其思维是线性的; 而在编译原理学正则表达式的时候,我们往往需要构建分析树, 这说明一个语言(这里当然不是指编程语言)在做正则化判断时候不能单纯线性地去考虑, 而且树的形状也应该很容易想到递归才是.</p>
-<pre><code class="C">bool isMatch(char* s, char* p) {
-    char last = 0;
-    while(*p != 0){
-        if(*p == '*'){
-            if(*s == last || last == '.')
-                p--;
-            else
-                s--;
-        }
-        else if(*(p+1) == '*'){
-            last = *p;
-            s--;
-        }
-        else if(*p != '.' &amp;&amp; *p != *s){
-            break;
-        }
-        p++;
-        s++;
-
-    }
-
-    return (*p == 0 &amp;&amp; *s == 0);
-}
-</code></pre>
-<p>第二版本的代码如下, 采用了递归, 通过了(在几次试错之下)</p>
-<pre><code class="c">bool isMatch(char* s, char* p) {
-
-    // printf("test: [%s] [%s]\n", s, p);
-
-    if(*p == 0 &amp;&amp; *s == 0) return true;
-
-    else if(*(p+1) == '*'){
-        if(isMatch(s, p+2)) return true;
-        while(*s == *p || (*p == '.' &amp;&amp; *s != 0)){
-            if(isMatch(++s,p+2)) return true;
-        }
-    }
-    else if(*s == *p || (*p == '.' &amp;&amp; *s != 0)){
-        return isMatch(s+1, p+1);
-    }
-
-    return false;
-}
-</code></pre>
-<p>万万没想到: 这题也是可以用动态规划来做,而且效率很高:</p>
-<p><a href="https://leetcode.com/problems/regular-expression-matching/discuss/191830/Java-DP-solution-beats-100-with-explanation" target="_blank" rel="nofollow">解析</a> (这个思路真的挺有深度的,值得多次回顾)</p>]]></content>
-      <categories><category> 算法 </category></categories>
-    </entry>
-    <entry>
-      <title>LeetCode 931. Minimum Falling Path Sum</title>
-      <link href="/2018/11/28/Algorithm/leetcode-931-minimum-falling-path-sum/"/>
-      <url>/2018/11/28/Algorithm/leetcode-931-minimum-falling-path-sum/</url>
-      <content type="html"><![CDATA[<blockquote>
-<p>对动态规划仍然不熟，而且最近想掌握一下Go语言，所以用它来做一下算法题</p>
-</blockquote>
-<h1>题目</h1>
-<p>Given a square array of integers A, we want the minimum sum of a falling path through A.</p>
-<p>A falling path starts at any element in the first row, and chooses one element from each row.  The next row's choice must be in a column that is different from the previous row's column by at most one.</p>
-<p>Example 1:</p>
-<pre><code>Input: [[1,2,3],[4,5,6],[7,8,9]]
-Output: 12
-Explanation:
-The possible falling paths are:
-[1,4,7], [1,4,8], [1,5,7], [1,5,8], [1,5,9]
-[2,4,7], [2,4,8], [2,5,7], [2,5,8], [2,5,9], [2,6,8], [2,6,9]
-[3,5,7], [3,5,8], [3,5,9], [3,6,8], [3,6,9]
-The falling path with the smallest sum is [1,4,7], so the answer is 12.
-</code></pre>
-<p>Note:</p>
-<ul>
-<li>1 &lt;= A.length == A[0].length &lt;= 100</li>
-<li>-100 &lt;= A[i][j] &lt;= 100</li>
-</ul>
-<h2>题解</h2>
-<p>这道题是很简单的动态规划题，题目解析在注释里已经有了。</p>
-<pre><code class="Go">func minFallingPathSum(A [][]int) int{
-    //题目：二维数组，像水流一样降落（降落时不能隔开超过一列），求降落总和最大
-    //状态：当以 A[row][col] 结尾时的最大总和
-    rowNum := len(A)
-    colNum := len(A[0])
-    //构建二维数组
-    min := make([][]int, rowNum)
-    for i:=0; i&lt;rowNum; i++{
-        min[i] = make([]int, colNum)
-    }
-
-
-    //计算min值
-    min[0] = A[0]
-    for row:=1; row&lt;rowNum; row++{
-        for col:= 0; col&lt;colNum; col++{
-            if col == 0{
-                switch{
-                case min[row-1][col] &lt; min[row-1][col+1]:
-                    min[row][col] = A[row][col] + min[row-1][col]
-                default:
-                    min[row][col] = A[row][col] + min[row-1][col+1]
-                }
-            } else if col == colNum-1{
-                switch{
-                case min[row-1][col] &lt; min[row-1][col-1]:
-                    min[row][col] = A[row][col] + min[row-1][col]
-                default:
-                    min[row][col] = A[row][col] + min[row-1][col-1]
-                }
-            } else{
-                switch{
-                case min[row-1][col-1] &lt; min[row-1][col] &amp;&amp; min[row-1][col-1] &lt; min[row-1][col+1]:
-                    min[row][col] = A[row][col] + min[row-1][col-1]
-                case min[row-1][col] &lt; min[row-1][col+1]:
-                    min[row][col] = A[row][col] + min[row-1][col]
-                default:
-                    min[row][col] = A[row][col] + min[row-1][col+1]
-                }
-            }
-        }
-    }
-    result := min[rowNum-1][0]
-    for i:=1; i&lt;colNum; i++{
-        if min[rowNum-1][i] &lt; result{
-            result = min[rowNum-1][i]
-        }
-    }
-    return result
-}
-</code></pre>]]></content>
-      <categories><category> 算法 </category></categories>
-    </entry>
-    <entry>
-      <title>LeetCode 145. Binary Tree Postorder Traversal</title>
-      <link href="/2018/10/14/Algorithm/leetcode-145-binary-tree-postorder-traversal/"/>
-      <url>/2018/10/14/Algorithm/leetcode-145-binary-tree-postorder-traversal/</url>
-      <content type="html"><![CDATA[<blockquote>
-<p>对树的内容有点遗忘了，做一道常见的后序遍历的题目来温习一下</p>
-</blockquote>
-<h1>题目</h1>
-<p>Given a binary tree, return the postorder traversal of its nodes' values.</p>
-<pre><code class="C++">/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     TreeNode *left;
- *     TreeNode *right;
- *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
- * };
- */
-</code></pre>
-<h1>题解</h1>
-<p>这题用递归解法很简单，但做这题主要的目的就是为了复习循环实现的后序遍历</p>
-<h2>递归实现</h2>
-<pre><code class="C++">    vector&lt;int&gt; postorderTraversal(TreeNode* root) {
-        vector&lt;int&gt; result;
-        if(root == NULL) return result; // special case
-
-        recurse(root, result);
-        return result;
-    }
-
-    void recurse(TreeNode* node, vector&lt;int&gt; &amp;result){
-        if(node == NULL) return;
-        recurse(node-&gt;left, result);
-        recurse(node-&gt;right, result);
-        result.push_back(node-&gt;val);
-    }
-</code></pre>
-<h2>循环实现</h2>
-<p>这一种实现方法其实是 “逆后序遍历” 的感觉，回头再尝试有没办法正儿八经地模拟函数递归进行正向迭代。</p>
-<pre><code class="C++">    vector&lt;int&gt; postorderTraversal(TreeNode* root) {
-        vector&lt;int&gt; result;
-        if(root == NULL) return result; // special case
-
-        interate(root, result);
-        return result;
-    }
-    void iterate(TreeNode* root, vector&lt;int&gt; &amp;result){
-        stack&lt;TreeNode*&gt; s;
-        s.push(root);
-        while(!s.empty()) {
-            TreeNode* ele = s.top();
-            s.pop();
-            if(ele-&gt;left != NULL)
-                s.push(ele-&gt;left);
-            if(ele-&gt;right != NULL)
-                s.push(ele-&gt;right);
-            result.insert(result.begin(), ele-&gt;val);
-        }
-    }
-</code></pre>]]></content>
-      <categories><category> 算法 </category></categories>
-    </entry>
-    <entry>
-      <title>LeetCode 315. Count of Smaller Numbers After Self</title>
-      <link href="/2018/10/08/Algorithm/leetcode-315-count-smaller-numbers-after-self/"/>
-      <url>/2018/10/08/Algorithm/leetcode-315-count-smaller-numbers-after-self/</url>
-      <content type="html"><![CDATA[<h1>315. Count of Smaller Numbers After Self</h1>
-<h2>题目</h2>
-<p>You are given an integer array nums and you have to return a new counts array. The counts array has the property where counts[i] is the number of smaller elements to the right of nums[i].</p>
-<p>Example:</p>
-<pre><code class="Go">Input: [5,2,6,1]
-Output: [2,1,1,0]
-Explanation:
-To the right of 5 there are 2 smaller elements (2 and 1).
-To the right of 2 there is only 1 smaller element (1).
-To the right of 6 there is 1 smaller element (1).
-To the right of 1 there is 0 smaller element.
-</code></pre>
-<h2>题目解析与作答</h2>
-<p>这个题目很简短，而且很清楚，可以先用最简单的穷举法写出一个解法：</p>
-<h3>V1 穷举法</h3>
-<pre><code class="C++">class Solution {
-public:
-    vector&lt;int&gt; countSmaller(vector&lt;int&gt;&amp; nums) {
-        vector&lt;int&gt; result;
-        for(int i = 0; i &lt; nums.size(); ++i){
-            int count = 0;
-            for(int e = i+1; e &lt; nums.size(); ++e){
-                if(nums[e] &lt; nums[i])
-                    count++;
-            }
-            result.push_back(count);
-        }
-        return result;
-    }
-};
-</code></pre>
-<p>这个解法竟然可以被Leetcode通过，实在是诧异。但也不妨来分析一下这个穷举法的复杂度：很显然，两层循环<br>
-<div class="math-display">\[O(N^2)\]</div></p>]]></content>
-      <categories><category> 算法 </category></categories>
-    </entry>
-    <entry>
-      <title>LeetCode 778. Swim in Rising Water</title>
-      <link href="/2018/09/30/Algorithm/leetcode-778-swim-in-rising-water/"/>
-      <url>/2018/09/30/Algorithm/leetcode-778-swim-in-rising-water/</url>
-      <content type="html"><![CDATA[<h1>778. Swim in Rising Water</h1>
-<h2>题目</h2>
-<p>On an N x N <code>grid</code>, each square <code>grid[i][j]</code> represents the elevation at that point (<code>i,j)</code>.</p>
-<p>Now rain starts to fall. At time <code>t</code>, the depth of the water everywhere is <code>t</code>. You can swim from a square to another 4-directionally adjacent square if and only if the elevation of both squares individually are at most <code>t</code>. You can swim infinite distance in zero time. Of course, you must stay within the boundaries of the grid during your swim.</p>
-<p>You start at the top left square <code>(0, 0)</code>. What is the least time until you can reach the bottom right square <code>(N-1, N-1)</code>?</p>
-<h3>Example</h3>
-<pre><code>Input: [[0,1,2,3,4],[24,23,22,21,5],[12,13,14,15,16],[11,17,18,19,20],[10,9,8,7,6]]
-Output: 16
-Explanation:
- 0  1  2  3  4
-24 23 22 21  5
-12 13 14 15 16
-11 17 18 19 20
-10  9  8  7  6
-
-The final route is marked in bold.
-We need to wait until time 16 so that (0, 0) and (4, 4) are connected.
-</code></pre>
-<h2>算法分析及题解</h2>
-<p>对题目进行分析后发现，海平面不断上升的过程，其实就是一个以<code>(0,0)</code>为起点的无向图不断扩充的过程。而当<code>(N-1,N-1)</code>也在该图内时，此时的海平面即为所求结果。再经过简单的分析，问题 “求点<code>(N-1, N-1)</code>可达时海平面的高度”可被分解为以下步骤解决：</p>
-<ol>
-<li>给定海平面高度（初始为0），点 <code>(N-1, N-1)</code> 是否可达</li>
-<li>若1判断不可达，海平面+1，回到1判断</li>
-<li>若1判断可达，返回当前海平面高度，程序结束</li>
-</ol>
-<p>23步很好表达：</p>
-<pre><code class="C++">int swimInWater(vector&lt;vector&lt;int&gt;&gt;&amp; grid) {
-        int elevation = 0;
-        while(!update(grid, elevation)){
-            elevation ++;
-        }
-        return elevation;
-    }
-//elevation: 海平面高度
-//update(): 给定海平面，判断(N-1, N-1) 是否可达
-</code></pre>
-<p>关键的问题就在于第一个步骤，怎么在给定的海平面高度里判断 <code>(N-1, N-1)</code> 是否可达，也即 <code>update()</code>函数该怎么写</p>
-<h3>Update函数</h3>
-<p><code>update()</code>函数要解决的问题就是：给定正方形地图数据、当前海平面高度，判断 <code>(N-1, N-1)</code>是否可达。这里的图其实是一个<strong>类隐式图</strong>，正方形地图内点是否在图内是需要在搜索过程中进行判断的。那为什么说它是类隐式图呢？因为这个无向图里的点的域是确认的：从 <code>(0,0)</code> 到 <code>(N-1, N-1)</code>，因此如果不考虑性能，可以先遍历两次构造出无向图，然后再从<code>(0,0)</code>去遍历，也是可行的。当然这里为了性能不考虑这种算法。</p>
-<pre><code class="C++">bool update(vector&lt;vector&lt;int&gt;&gt;&amp; grid, int elevation){
-            //N:正方形地图边长
-        int N = grid.size();
-            //mark：图结点访问标记
-        bool** mark = new bool*[N];
-        for(int i = 0; i &lt; N; ++i){
-            mark[i] = new bool[N];
-            for(int e = 0; e &lt; N; ++e)
-                mark[i][e] = false;
-        }
-
-        //搜索
-
-        //清理内存
-        bool result = mark[N-1][N-1];
-        for(int i = 0; i &lt; N; ++i){
-            delete[] mark[i];
-        }
-        delete[] mark;
-        return result;
-    }
-</code></pre>
-<p>注意到<code>update()</code>函数中 <strong>搜索</strong> 部分还是空缺的，这里有两种解法，DFS和BFS</p>
-<h3>DFS实现搜索</h3>
-<pre><code class="C++">void DFS(vector&lt;vector&lt;int&gt;&gt;&amp; grid, int elevation, bool** mark, int x, int y){
-        int N = grid.size();
-        if(mark[x][y]) return;
-
-        if(grid[x][y] &lt;= elevation){
-            mark[x][y] = true;
-            if(x+1 &lt; N) DFS(grid,elevation,mark,x+1,y);
-            if(x-1 &gt;= 0) DFS(grid,elevation,mark,x-1,y);
-            if(y+1 &lt; N) DFS(grid,elevation,mark,x,y+1);
-            if(y-1 &gt;= 0) DFS(grid,elevation,mark,x,y-1);
-        }
-    }
-</code></pre>
-<p>对应在<code>update()</code>函数内的搜索语句：</p>
-<pre><code class="C++">//搜索
-DFS(grid, elevation, mark, 0, 0);
-</code></pre>
-<h3>BFS实现搜索</h3>
-<pre><code class="C++">void BFS(vector&lt;vector&lt;int&gt;&gt;&amp; grid, int elevation, bool** mark, int sx, int sy){
-        if(grid[sx][sy] &gt; elevation) return;
-
-        int N = grid.size();
-        pair&lt;int, int&gt; source = make_pair(sx,sy);
-        queue&lt; pair&lt;int, int&gt; &gt; q;
-        q.push(source);
-        while(!q.empty()){
-            pair&lt;int, int&gt; now = q.front();
-            q.pop();
-            int x = now.first, y = now.second;
-            mark[x][y] = true;
-
-            if(x-1 &gt;= 0 &amp;&amp; !mark[x-1][y] &amp;&amp; grid[x-1][y] &lt;= elevation)
-                q.push(make_pair(x-1,y));
-            if(x+1 &lt; N &amp;&amp; !mark[x+1][y] &amp;&amp; grid[x+1][y] &lt;= elevation)
-                q.push(make_pair(x+1,y));
-            if(y-1 &gt;= 0 &amp;&amp; !mark[x][y-1] &amp;&amp; grid[x][y-1] &lt;= elevation)
-                q.push(make_pair(x,y-1));
-            if(y+1 &lt; N &amp;&amp; !mark[x][y+1] &amp;&amp; grid[x][y+1] &lt;= elevation)
-                q.push(make_pair(x,y+1));
-        }
-    }
-</code></pre>
-<p>对应在<code>update()</code>函数内的搜索语句：</p>
-<pre><code class="C++">//搜索
-BFS(grid, elevation, mark, 0, 0);
-</code></pre>
-<p>这时候问题出现了：某一些测例出现了超时。</p>
-<h3>BFS 优化</h3>
-<p>考虑可能pair和queue占用了一些时间，因此优化了一下代码</p>
-<pre><code class="C++">void BFS(vector&lt;vector&lt;int&gt;&gt;&amp; grid, int elevation, bool** mark, int sx, int sy){
-        if(grid[sx][sy] &gt; elevation) return;
-
-        int N = grid.size();
-        queue&lt;int&gt; q;
-        q.push(sx*N+sy);
-        while(!q.empty()){
-            int now = q.front();
-            q.pop();
-            int x = now/N, y = now%N;
-            mark[x][y] = true;
-
-            if(x-1 &gt;= 0 &amp;&amp; !mark[x-1][y] &amp;&amp; grid[x-1][y] &lt;= elevation)
-                q.push((x-1)*N+y);
-            if(x+1 &lt; N &amp;&amp; !mark[x+1][y] &amp;&amp; grid[x+1][y] &lt;= elevation)
-                q.push((x+1)*N+y);
-            if(y-1 &gt;= 0 &amp;&amp; !mark[x][y-1] &amp;&amp; grid[x][y-1] &lt;= elevation)
-                q.push(x*N+y-1);
-            if(y+1 &lt; N &amp;&amp; !mark[x][y+1] &amp;&amp; grid[x][y+1] &lt;= elevation)
-                q.push(x*N+y+1);
-        }
-    }
-</code></pre>
-<p>但是问题仍然存在。经过测试研究发现，BFS所经历的update次数要大于DFS，说明求路径存在而不是求最短路的时候采用DFS是更好的算法。</p>]]></content>
-      <categories><category> 算法 </category></categories>
-    </entry>
-    <entry>
-      <title>LeetCode 207. Course Schedule</title>
-      <link href="/2018/09/23/Algorithm/leetcode-207-course-schedule/"/>
-      <url>/2018/09/23/Algorithm/leetcode-207-course-schedule/</url>
-      <content type="html"><![CDATA[<blockquote>
-<p>这周学了图，来做一下这题</p>
-</blockquote>
-<h2>题目描述</h2>
-<p>There are a total of n courses you have to take, labeled from 0 to n-1.<br><br>
-Some courses may have prerequisites, for example to take course 0 you have to first take course 1, which is expressed as a pair: [0,1] <br><br>
-Given the total number of courses and a list of prerequisite pairs, is it possible for you to finish all courses?<br></p>
-<p><strong>Example 1:</strong></p>
-<pre><code class="markdown">Input: 2, [[1,0]]
-Output: true
-Explanation: There are a total of 2 courses to take.
-             To take course 1 you should have finished course 0. So it is possible.
-</code></pre>
-<p><strong>Example 2:</strong></p>
-<pre><code class="markdown">Input: 2, [[1,0],[0,1]]
-Output: false
-Explanation: There are a total of 2 courses to take.
-             To take course 1 you should have finished course 0, and to take course 0 you should
-             also have finished course 1. So it is impossible.
-</code></pre>
-<p><strong>Note:</strong></p>
-<ol>
-<li>The input prerequisites is a graph represented by <strong>a list of edges</strong>, not adjacency matrices. Read more about <a href="https://www.khanacademy.org/computing/computer-science/algorithms/graph-representation/a/representing-graphs" target="_blank" rel="nofollow">how a graph is represented</a>.</li>
-<li>You may assume that there are no duplicate edges in the input prerequisites.</li>
-</ol>
-<h2>题目分析</h2>
-<h3>一开始的思路：访问时pre未访问过？</h3>
-<h3>哪个方向建图</h3>
-<h3>解析为：判断图中有无环</h3>
-<h3>别忘了内存</h3>
-<h2>题解</h2>
-<pre><code class="C++">#include &lt;iostream&gt;
-#include &lt;vector&gt;
-
-using namespace std;
-class Solution {
-public:
-    bool canFinish(int numCourses, vector&lt;pair&lt;int, int&gt;&gt;&amp; prerequisites) {
-
-        vector&lt;int&gt;* table = new vector&lt;int&gt;[numCourses];
-        int* inDegree = new int[numCourses];
-        for(int i = 0; i &lt; numCourses; ++i)
-            inDegree[i] = 0;
-
-        for(vector&lt;pair&lt;int, int&gt;&gt;::iterator iter = prerequisites.begin(); iter != prerequisites.end(); iter++){
-            inDegree[iter-&gt;second]++;
-            table[iter-&gt;first].push_back(iter-&gt;second);
-        }
-
-        for(int i = 0; i &lt; numCourses; ++i){
-            if(inDegree[i] == 0){
-                //decrease the inDegree of children
-                for(vector&lt;int&gt;::iterator iter = table[i].begin(); iter != table[i].end(); iter++){
-                    inDegree[*iter] --;
-                }
-                //remove : set inDegree to -1
-                inDegree[i] = -1;
-                i = -1; //back from top to scan
-            }
-        }
-
-        //check for unremoved(inDegree != -1)
-        for(int i = 0; i &lt; numCourses; ++i){
-            if(inDegree[i] != -1)
-                return false;
-        }
-        //memory?!!
-        return true;
-
-    }
-};
-</code></pre>]]></content>
-      <categories><category> 算法 </category></categories>
-    </entry>
-    <entry>
-      <title>LeetCode 23. Merge k Sorted Lists</title>
-      <link href="/2018/09/16/Algorithm/leetcode-23-merge-k-sorted-lists/"/>
-      <url>/2018/09/16/Algorithm/leetcode-23-merge-k-sorted-lists/</url>
-      <content type="html"><![CDATA[<blockquote>
-<p>这周课是讲分治法，那就来做一题分治类型的Hard题目</p>
-</blockquote>
-<h1>题目描述</h1>
-<p>Merge k sorted linked lists and return it as one sorted list. Analyze and describe its complexity.</p>
-<p>Example:</p>
-<p>Input:</p>
-<pre><code>[
-  1-&gt;4-&gt;5,
-  1-&gt;3-&gt;4,
-  2-&gt;6
-]
-</code></pre>
-<p>Output:</p>
-<pre><code>1-&gt;1-&gt;2-&gt;3-&gt;4-&gt;4-&gt;5-&gt;6
-</code></pre>
-<h1>题目分析</h1>
-<p>一开始除了砍半想过其他的砍法(比如三分），但用Master Theorem思考了一下发现复杂度是一样的：<br>
-T(n) = 3T(n/3) + O(n)<br>
-T(n) = 2T(n/2) + O(n)<br>
-复杂度都是 <span class="math-inline">\(O(n^{log_{b}{a}}) = O(n)\)</span></p>
-<h1>错误分析</h1>
-<h2>0</h2>
-<p>head 和 result</p>
-<h2>1</h2>
-<pre><code>Input:
-[[],[1]]
 Output:
-[]
-Expected:
-[1]
-</code></pre>
-<p>弱智错误</p>
-<h1>代码</h1>
-<pre><code class="C++">#include &lt;iostream&gt;
-#include &lt;vector&gt;
+1-&gt;1-&gt;2-&gt;3-&gt;4-&gt;4-&gt;5-&gt;6
 
-struct ListNode {
-    int val;
-    ListNode *next;
-    ListNode(int x) : val(x), next(NULL) {}
-};
+题目分析一开始除了砍半想过其他的砍法(比如三分），但用Master Theorem思考了一下发现复杂度是一样的：T(n) &#x3D; 3T(n&#x2F;3) + O(n)T(n) &#x3D; 2T(n&#x2F;2) + O(n)复杂度都是 \(O(n^{log_{b}{a}}) = O(n)\)
+错误分析0head 和 result
+1Input:[[],[1]]Output:[]Expected:[1]
 
-class Solution {
-public:
-    ListNode* mergeKLists(vector&lt;ListNode*&gt;&amp; lists) {
-        if(lists.size() == 0){
-            return NULL;
-        }
-        else if(lists.size() == 1){
-            return lists[0];
-        }
-        else if(lists.size() == 2){
-            return mergeTwoLists(lists[0], lists[1]);
-        }
-        else if(lists.size() &gt; 2){
-            vector&lt;ListNode*&gt; temp1;
-            int i;
-            for(i = 0; i &lt; lists.size()/2; ++i){
-                temp1.push_back(lists[i]);
-            }
-            vector&lt;ListNode*&gt; temp2;
-            for(i; i&lt; lists.size(); ++i){
-                temp2.push_back(lists[i]);
-            }
-            return mergeTwoLists(mergeKLists(temp1), mergeKLists(temp2));
-        }
+弱智错误
+代码#include &lt;iostream&gt;#include &lt;vector&gt;struct ListNode &#123;    int val;    ListNode *next;    ListNode(int x) : val(x), next(NULL) &#123;&#125;&#125;;class Solution &#123;public:    ListNode* mergeKLists(vector&lt;ListNode*&gt;&amp; lists) &#123;        if(lists.size() == 0)&#123;            return NULL;        &#125;        else if(lists.size() == 1)&#123;            return lists[0];        &#125;        else if(lists.size() == 2)&#123;            return mergeTwoLists(lists[0], lists[1]);        &#125;        else if(lists.size() &gt; 2)&#123;            vector&lt;ListNode*&gt; temp1;            int i;            for(i = 0; i &lt; lists.size()/2; ++i)&#123;                temp1.push_back(lists[i]);            &#125;            vector&lt;ListNode*&gt; temp2;            for(i; i&lt; lists.size(); ++i)&#123;                temp2.push_back(lists[i]);            &#125;            return mergeTwoLists(mergeKLists(temp1), mergeKLists(temp2));        &#125;    &#125;    ListNode* mergeTwoLists(ListNode* a, ListNode* b)&#123;        if(a == NULL)            return a;        else if(b == NULL)            return b;            ListNode *result;        if(a-&gt;val &lt; b-&gt;val)&#123;            result = new ListNode(a-&gt;val);            a = a-&gt;next;        &#125;        else&#123;            result = new ListNode(b-&gt;val);            b = b-&gt;next;        &#125;        result-&gt;next = NULL;        while(1)&#123;            if(a == NULL)&#123;                result-&gt;next = b;                break;            &#125;            else if(b == NULL)&#123;                result-&gt;next = a;                break;            &#125;            else&#123;                if(a-&gt;val &lt; b-&gt;val)&#123;                    result-&gt;next = new ListNode(a-&gt;val);                    result = result-&gt;next;                    a = a-&gt;next;                &#125;                else&#123;                    result-&gt;next = new ListNode(b-&gt;val);                    result = result-&gt;next;                    b = b-&gt;next;                &#125;            &#125;        &#125;        return result;    &#125;&#125;;
 
-    }
+分析https://leetcode.com/problems/merge-k-sorted-lists/solution/
 
-    ListNode* mergeTwoLists(ListNode* a, ListNode* b){
-        if(a == NULL)
-            return a;
-        else if(b == NULL)
-            return b;
+本文最初发布于简书。
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Leetcode 312. Burst Balloons</title>
+    <url>/2023/10/20/Algorithm/leetcode-312-burst-ballons/</url>
+    <content><![CDATA[
+第一次做动态规划的题目
 
-        ListNode *result;
-        if(a-&gt;val &lt; b-&gt;val){
-            result = new ListNode(a-&gt;val);
-            a = a-&gt;next;
-        }
-        else{
-            result = new ListNode(b-&gt;val);
-            b = b-&gt;next;
-        }
-        result-&gt;next = NULL;
+题目Given n balloons, indexed from 0 to n-1. Each balloon is painted with a number on it represented by array nums. You are asked to burst all the balloons. If the you burst balloon i you will get nums[left] * nums[i] * nums[right] coins. Here left and right are adjacent indices of i. After the burst, the left and right then becomes adjacent.
+Find the maximum coins you can collect by bursting the balloons wisely.
+Note:
 
-        while(1){
-            if(a == NULL){
-                result-&gt;next = b;
-                break;
-            }
-            else if(b == NULL){
-                result-&gt;next = a;
-                break;
-            }
-            else{
-                if(a-&gt;val &lt; b-&gt;val){
-                    result-&gt;next = new ListNode(a-&gt;val);
-                    result = result-&gt;next;
-                    a = a-&gt;next;
-                }
-                else{
-                    result-&gt;next = new ListNode(b-&gt;val);
-                    result = result-&gt;next;
-                    b = b-&gt;next;
-                }
-            }
-        }
-        return result;
-    }
-};
-</code></pre>
-<h1>分析</h1>
-<p><a href="https://leetcode.com/problems/merge-k-sorted-lists/solution/" target="_blank" rel="nofollow">https://leetcode.com/problems/merge-k-sorted-lists/solution/</a></p>]]></content>
-      <categories><category> 算法 </category></categories>
-    </entry>
-    <entry>
-      <title>LeetCode 11. Container With Most Water</title>
-      <link href="/2018/09/09/Algorithm/leetcode-11-container-with-most-water/"/>
-      <url>/2018/09/09/Algorithm/leetcode-11-container-with-most-water/</url>
-      <content type="html"><![CDATA[<h1>题目描述</h1>
-<p>Given n non-negative integers a1, a2, ..., an , where each represents a point at coordinate (i, ai). n vertical lines are drawn such that the two endpoints of line i is at (i, ai) and (i, 0). Find two lines, which together with x-axis forms a container, such that the container contains the most water.</p>
-<p>Note: You may not slant（倾斜） the container and n is at least 2.</p>
-<h1>题解</h1>
-<pre><code class="C++">class Solution
-{
-  public:
-    int maxArea(vector&lt;int&gt; &amp;height)
-    {
-        int size = height.size();
-        int max = 0;
-        for (int i = 0; i &lt; (size - 1); ++i)
-        {
-            for (int e = i + 1; e &lt; size; ++e)
-            {
-                int temp = (height[i] &gt; height[e]) ? height[e] : height[i];
-                // cout &lt;&lt; "\t" &lt;&lt; i &lt;&lt; "\t" &lt;&lt; e &lt;&lt; "\t" &lt;&lt; temp &lt;&lt; "\t" &lt;&lt; (e - i) * temp &lt;&lt; endl;
-                if ((e - i) * temp &gt; max)
-                    max = (e - i) * temp;
-            }
-        }
-        return max;
-    }
-};
-</code></pre>]]></content>
-      <categories><category> 算法 </category></categories>
-    </entry>
-    <entry>
-      <title>二项式分布算法（Java实现）</title>
-      <link href="/2018/08/26/Algorithm/binomial-distribution-java/"/>
-      <url>/2018/08/26/Algorithm/binomial-distribution-java/</url>
-      <content type="html"><![CDATA[<h1>二项式分布算法（Java实现）</h1>
-<p>最近开始看《算法(第四版)》，这是遇到的第一个算法题。题目要求的只是估计一下算法递归的次数，但我进一步研究了不同的计算二项式分布的算法。</p>
-<h2>二项式分布简介</h2>
-<p>这里就不过多展开，以自己的语言解释一下。<br><br>
-某一个实验出现事件<span class="math-inline">\(A\)</span>的概率为<span class="math-inline">\(p\)</span>, 且重复该实验结果不相互干扰（独立）<br><br>
-求重复<span class="math-inline">\(N\)</span>次该实验时，出现k次事件<span class="math-inline">\(A\)</span>的概率：<br>
-<div class="math-display">\[P(X=k;N,p)\]</div><br>
-上式即为本博客探讨的问题</p>
-<h2>利用二项式公式实现 V1.0</h2>
-<p>学数学时候比较熟悉的公式就是</p>
-<p><div class="math-display">\[P(X=k;N,p) = C_N^k \times p^k \times (1-p)^{N-k}\]</div></p>
-<pre><code class="Java">    public static double myBinomial(int N, int k, double p) {
-        long c = N;
-        for(int i = N-1; i &gt;= N-k+1; --i)
-            c*=i;
-        for(int i = 2; i &lt;= k; ++i)
-            c/=i;
-        double a1 = Math.pow(p, k);
-        double a2 = Math.pow(1-p, N-k);
-        return c*a1*a2;
-    }
-</code></pre>
-<h2>改进版 V1.1</h2>
-<p>改进版本聚焦V1.0中的一个问题：当计算 <span class="math-inline">\(C_N^k\)</span>的时候，有两个方式：</p>
-<ol>
-<li>
-<span class="math-inline">\(\large{C_N^k = \frac{N!}{k!(N-k)!} = \frac{N(N-1)\cdots(k+1)}{(N-k)(N-k-1)\cdots2}}\)</span> <br><br>
-</li>
-<li><span class="math-inline">\(\large{C_N^k = \frac{N!}{k!(N-k)!} = \frac{N(N-1)\cdots(N-k+1)}{k(k-1)\cdots2}}\)</span></li>
-</ol>
-<p>这两个方式的运算量不相同，在具体运算时可以进行选择</p>
-<pre><code class="Java">    public static double myBinomial2(int N, int k, double p) {
-        long c = N;
-        if(k &lt; N-k) {
-            for(int i = N-1; i &gt;= N-k+1; --i)
-                c*=i;
-            for(int i = 2; i &lt;= k; ++i)
-                c/=i;
-        }
-        else {
-            for(int i = N-1; i &gt;= k+1; --i)
-                c*=i;
-            for(int i = 2; i &lt;= N-k; ++i)
-                c/=i;
-        }
-        double a1 = Math.pow(p, k);
-        double a2 = Math.pow(1-p, N-k);
-        return c*a1*a2;
-    }
-</code></pre>
-<h2>利用递归实现 V2.0</h2>
-<p>这是示例的代码，在<a href="https://algs4.cs.princeton.edu/11model/Binomial.java.html" target="_blank" rel="nofollow">官网</a>可以查看<br><br>
-其基本思想是：<br>
-<div class="math-display">\[P(X=k;N,p) = p\times P(X=k-1;N-1,p) + (1-p)\times P(X=k;N-1,p)\]</div><br>
-将大问题逐次拆分为小问题的递归思想</p>
-<pre><code class="Java">    public static double binomial1(int N, int k, double p) {
-        if (N == 0 &amp;&amp; k == 0) return 1.0;
-        if (N &lt; 0 || k &lt; 0) return 0.0;
-        return (1.0 - p) *binomial1(N-1, k, p) + p*binomial1(N-1, k-1, p);
-    }
-</code></pre>
-<h2>将递归改进为迭代 V2.1</h2>
-<p>这里的方法挺巧妙的！<br>
-将递归的步骤“逆”过来，变成了“填格子”——递归自上而下，该方法则化为自下而上的迭代法。</p>
-<pre><code class="Java">public static double binomial2(int N, int k, double p) {
-        double[][] b = new double[N+1][k+1];
+You may imagine nums[-1] = nums[n] = 1. They are not real therefore you can not burst them.
+0 ≤ n ≤ 500, 0 ≤ nums[i] ≤ 100
 
-        // base cases
-        for (int i = 0; i &lt;= N; i++)
-            b[i][0] = Math.pow(1.0 - p, i);
-        b[0][0] = 1.0;
+Example:
+Input: [3,1,5,8]Output: 167 Explanation: nums = [3,1,5,8] --&gt; [3,5,8] --&gt;   [3,8]   --&gt;  [8]  --&gt; []             coins =  3*1*5      +  3*5*8    +  1*3*8      + 1*8*1   = 167
 
-        // recursive formula
-        for (int i = 1; i &lt;= N; i++) {
-            for (int j = 1; j &lt;= k; j++) {
-                b[i][j] = p * b[i-1][j-1] + (1.0 - p) *b[i-1][j];
-                StdOut.printf("%f\t", b[i][j]);
-            }
-            StdOut.println();
-        }
-        return b[N][k];
-    }
-</code></pre>
-<p>此方法虽然巧妙，但其实速度上比不过公式法(复杂度达到<span class="math-inline">\(O(N^2)\)</span>，而且有一部分计算是不需要的（有些“空”不需要填）</p>]]></content>
-      <categories><category> 算法 </category></categories>
-    </entry>
-  <!-- jianshu-imports:end -->
+题目解析与分析题意大概就是：有一排气球，每个标了数字，然后戳一个气球得到的奖励是左气球×该气球×右气球，当然如果左或右没有气球就乘1。问该以什么顺序戳气球得到的奖励最大
+最笨的思路枚举法：将所有的情况列举一遍。当有n个气球的时候，第一步我们有n种选择，第二步我们又有n-1个选择……显然全枚举的算法复杂度为$O(N!)$,效率不敢恭维，因此这里就不实现——因为不可能过。
+参阅
+进一步想法我们需要去考虑上面枚举法做了什么重复的计算。我们可以想到，给定一组气球，它所能获得的最大的奖励应该和前面已经被戳的气球无关——被戳过的气球只是在求和的时候累积上了而已。
+对于给定k&lt;n, 其可能的组合数有 $C_n^k$ 种，我们可以把k(从1开始)的所有情况都记录在内存上，k+1就可以基于k进行计算，那么我们总共需要进行的计算就是$$C_n^1+C_n^2+…+C_n^n$$这种算法优于$O(N!)$, 但仍然坏于$O(2^N)$; 我们需要更优的算法
+分治的想法我们考虑用分治去思考这一道题。先是正常地考虑分治，我戳爆某个气球，可不可以把剩下的气球分成两堆呢？这是否可行的前提是两堆会不会互相干扰：答案是肯定的，在戳爆某个气球以后，左堆的最右气球会需要右堆的最左气球来进行计算。
+这时候我们需要反向的思维：我们正向地想戳气球的过程，当然会导致两堆相互影响。那如果我们考虑的是在这一堆里最后戳爆的那个气球呢？假如A,B,C,D,E中我最后戳C, 那左堆(A,B)在戳的过程中显然会以C为右边界，而右堆(D,E)以C为左边界——这就实现了分治，两个子问题是相互不干扰的。
+
+想一下为什么分治会更好，它少算了哪些步骤
+
+定义一个函数 burst(left, right)，它的值表示以left right分别为左右边界的时候 [left,right]所能得到的最大的奖励值。这里需要说明的是这里定义的左右边界都需要晚于中间的任意气球被戳，那样在剩下的气球(i)里任意选取一个作为倒数第三（边界是倒数一、二，顺序不重要，只要知道它会比中间的数晚戳就行）去戳，那它又能成为左右两个新区间的新边界，则这样戳所能得到的最大值是
+nums[left]*nums[i]*nums[right] + burst(left,i) + burst(i,right)
+这样我们只要遍历每个 i in (left,right) 去求出上述等式并得到最大值，那就得到了 burst(left, right) 的最大值
+还有一些细节：
+
+假设 nums[-1]=nums[n]=1，这样两个假边界就显然是整组气球里“最晚被戳的气球”了
+当两个边界相邻，说明中间无球可戳，所以应该有burst(i,i+1)=0
+
+按照上面说的就可以实现如下具体的算法了：
+public int maxCoins(int[] iNums) &#123;    int[] nums = new int[iNums.length + 2];    int n = 1;    for (int x : iNums) if (x &gt; 0) nums[n++] = x;    nums[0] = nums[n++] = 1;    int[][] memo = new int[n][n];    return burst(memo, nums, 0, n - 1);&#125;public int burst(int[][] memo, int[] nums, int left, int right) &#123;    if (left + 1 == right) return 0;    if (memo[left][right] &gt; 0) return memo[left][right];    int ans = 0;    for (int i = left + 1; i &lt; right; ++i)        ans = Math.max(ans, nums[left] * nums[i] * nums[right]         + burst(memo, nums, left, i) + burst(memo, nums, i, right));    memo[left][right] = ans;    return ans;&#125;// 12 ms]]></content>
+      <tags>
+        <tag>算法</tag>
+        <tag>动态规划</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>LeetCode 145. Binary Tree Postorder Traversal</title>
+    <url>/2018/10/14/Algorithm/leetcode-145-binary-tree-postorder-traversal/</url>
+    <content><![CDATA[LeetCode 145. Binary Tree Postorder Traversal：题目、思路与代码实现。
+
+
+
+对树的内容有点遗忘了，做一道常见的后序遍历的题目来温习一下
+
+题目Given a binary tree, return the postorder traversal of its nodes’ values.
+/** * Definition for a binary tree node. * struct TreeNode &#123; *     int val; *     TreeNode *left; *     TreeNode *right; *     TreeNode(int x) : val(x), left(NULL), right(NULL) &#123;&#125; * &#125;; */
+
+题解这题用递归解法很简单，但做这题主要的目的就是为了复习循环实现的后序遍历
+递归实现vector&lt;int&gt; postorderTraversal(TreeNode* root) &#123;    vector&lt;int&gt; result;    if(root == NULL) return result; // special case        recurse(root, result);    return result;&#125;void recurse(TreeNode* node, vector&lt;int&gt; &amp;result)&#123;    if(node == NULL) return;    recurse(node-&gt;left, result);    recurse(node-&gt;right, result);    result.push_back(node-&gt;val);&#125;
+
+循环实现这一种实现方法其实是 “逆后序遍历” 的感觉，回头再尝试有没办法正儿八经地模拟函数递归进行正向迭代。
+vector&lt;int&gt; postorderTraversal(TreeNode* root) &#123;    vector&lt;int&gt; result;    if(root == NULL) return result; // special case        interate(root, result);    return result;&#125;void iterate(TreeNode* root, vector&lt;int&gt; &amp;result)&#123;    stack&lt;TreeNode*&gt; s;    s.push(root);    while(!s.empty()) &#123;         TreeNode* ele = s.top();        s.pop();         if(ele-&gt;left != NULL)             s.push(ele-&gt;left);         if(ele-&gt;right != NULL)            s.push(ele-&gt;right);        result.insert(result.begin(), ele-&gt;val);     &#125;&#125;
+
+
+本文最初发布于简书。
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>LeetCode 315. Count of Smaller Numbers After Self</title>
+    <url>/2018/10/08/Algorithm/leetcode-315-count-smaller-numbers-after-self/</url>
+    <content><![CDATA[LeetCode 315. Count of Smaller Numbers After Self：题目、思路与代码实现。
+
+
+315. Count of Smaller Numbers After Self题目You are given an integer array nums and you have to return a new counts array. The counts array has the property where counts[i] is the number of smaller elements to the right of nums[i].
+Example:
+Input: [5,2,6,1]Output: [2,1,1,0] Explanation:To the right of 5 there are 2 smaller elements (2 and 1).To the right of 2 there is only 1 smaller element (1).To the right of 6 there is 1 smaller element (1).To the right of 1 there is 0 smaller element.
+
+题目解析与作答这个题目很简短，而且很清楚，可以先用最简单的穷举法写出一个解法：
+V1 穷举法class Solution &#123;public:    vector&lt;int&gt; countSmaller(vector&lt;int&gt;&amp; nums) &#123;        vector&lt;int&gt; result;        for(int i = 0; i &lt; nums.size(); ++i)&#123;            int count = 0;            for(int e = i+1; e &lt; nums.size(); ++e)&#123;                if(nums[e] &lt; nums[i])                     count++;            &#125;            result.push_back(count);        &#125;        return result;    &#125;&#125;;
+
+这个解法竟然可以被Leetcode通过，实在是诧异。但也不妨来分析一下这个穷举法的复杂度：很显然，两层循环  
+\[O(N^2)\]
+
+
+本文最初发布于简书。
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>LeetCode 42. Trapping Rain Water</title>
+    <url>/2019/02/25/Algorithm/leetcode-42-trapping-rain-water/</url>
+    <content><![CDATA[42. Trapping Rain WaterGiven n non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it is able to trap after raining.
+
+The above elevation map is represented by array [0,1,0,2,1,0,1,3,2,1,2,1]. In this case, 6 units of rain water (blue section) are being trapped. Thanks Marcos for contributing this image!
+Example:
+Input: [0,1,0,2,1,0,1,3,2,1,2,1]Output: 6
+
+我的解法
+一开始我有一个错误的解法，这个解法是通过有穷自动机分析出来的；虽然这这种解法最终无法实现，但我发现有穷自动机真的是个逻辑分析的好工具，也算增长了经验
+
+
+先遍历一遍找出最大值，并假设一开始每一列都有着max高度的水；这个是个 O(N)的操作；
+而后从上至下，逐行地减去头和尾溢出的部分，这是个kO(N)的操作，k取决于最大的高度能有多大
+总结来说这是一个O(kN)的操作
+
+func trap(height []int) int &#123;        if len(height) == 0&#123;        return 0;    &#125;        // fill with the max;    max := height[0]    for _, val := range height &#123;        if max &lt; val &#123;            max = val        &#125;    &#125;    result := max * len(height)        // delete the first 0 cols    sp := 0    for ; sp &lt; len(height) &amp;&amp; height[sp] == 0; sp++ &#123;        result -= max;    &#125;        // delete the existing places    for e:=sp; e&lt;len(height); e++&#123;        result -= height[e];    &#125;        // delete row by row    for curH := max; curH &gt;= 1; curH-- &#123;                // delete the head        for e := sp;; e++ &#123;            if height[e] &lt; curH &#123;                result--;            &#125; else&#123;                break;            &#125;        &#125;        // delete the tail        for e := len(height)-1;;e--&#123;            if height[e] &lt; curH&#123;                result--;            &#125; else&#123;                break;            &#125;        &#125;    &#125;    return result;&#125;
+
+更巧妙的讨论区里利用双指针，可以有 O(N)（只遍历一遍）的算法。具体看这里，这里不说详细的解析，简单来说就是左右同步扫描，并将水从低处往高处逐列填。这里只贴一下代码
+class Solution &#123;public:    int trap(int A[], int n) &#123;        int left=0; int right=n-1;        int res=0;        int maxleft=0, maxright=0;        while(left&lt;=right)&#123;            if(A[left]&lt;=A[right])&#123;                if(A[left]&gt;=maxleft) maxleft=A[left];                else res+=maxleft-A[left];                left++;            &#125;            else&#123;                if(A[right]&gt;=maxright) maxright= A[right];                else res+=maxright-A[right];                right--;            &#125;        &#125;        return res;    &#125;&#125;;
+
+更多的解法Solution有更多的解法，还有一种动态规划的解法很有意思，将左边加起来，右边加起来，重叠部分就是所求。
+]]></content>
+  </entry>
+  <entry>
+    <title>LeetCode 778. Swim in Rising Water</title>
+    <url>/2018/09/30/Algorithm/leetcode-778-swim-in-rising-water/</url>
+    <content><![CDATA[LeetCode 778. Swim in Rising Water：题目、思路与代码实现。
+
+
+778. Swim in Rising Water题目On an N x N grid, each square grid[i][j] represents the elevation at that point (i,j).
+Now rain starts to fall. At time t, the depth of the water everywhere is t. You can swim from a square to another 4-directionally adjacent square if and only if the elevation of both squares individually are at most t. You can swim infinite distance in zero time. Of course, you must stay within the boundaries of the grid during your swim.
+You start at the top left square (0, 0). What is the least time until you can reach the bottom right square (N-1, N-1)?
+ExampleInput: [[0,1,2,3,4],[24,23,22,21,5],[12,13,14,15,16],[11,17,18,19,20],[10,9,8,7,6]]Output: 16Explanation: 0  1  2  3  424 23 22 21  512 13 14 15 1611 17 18 19 2010  9  8  7  6The final route is marked in bold.We need to wait until time 16 so that (0, 0) and (4, 4) are connected.
+
+算法分析及题解对题目进行分析后发现，海平面不断上升的过程，其实就是一个以(0,0)为起点的无向图不断扩充的过程。而当(N-1,N-1)也在该图内时，此时的海平面即为所求结果。再经过简单的分析，问题 “求点(N-1, N-1)可达时海平面的高度”可被分解为以下步骤解决：
+
+给定海平面高度（初始为0），点 (N-1, N-1) 是否可达
+若1判断不可达，海平面+1，回到1判断
+若1判断可达，返回当前海平面高度，程序结束
+
+23步很好表达：
+int swimInWater(vector&lt;vector&lt;int&gt;&gt;&amp; grid) &#123;        int elevation = 0;        while(!update(grid, elevation))&#123;            elevation ++;        &#125;        return elevation;    &#125;//elevation: 海平面高度//update(): 给定海平面，判断(N-1, N-1) 是否可达
+
+关键的问题就在于第一个步骤，怎么在给定的海平面高度里判断 (N-1, N-1) 是否可达，也即 update()函数该怎么写
+Update函数update()函数要解决的问题就是：给定正方形地图数据、当前海平面高度，判断 (N-1, N-1)是否可达。这里的图其实是一个类隐式图，正方形地图内点是否在图内是需要在搜索过程中进行判断的。那为什么说它是类隐式图呢？因为这个无向图里的点的域是确认的：从 (0,0) 到 (N-1, N-1)，因此如果不考虑性能，可以先遍历两次构造出无向图，然后再从(0,0)去遍历，也是可行的。当然这里为了性能不考虑这种算法。
+bool update(vector&lt;vector&lt;int&gt;&gt;&amp; grid, int elevation)&#123;            //N:正方形地图边长        int N = grid.size();            //mark：图结点访问标记        bool** mark = new bool*[N];        for(int i = 0; i &lt; N; ++i)&#123;            mark[i] = new bool[N];            for(int e = 0; e &lt; N; ++e)                mark[i][e] = false;        &#125;        //搜索        //清理内存        bool result = mark[N-1][N-1];        for(int i = 0; i &lt; N; ++i)&#123;            delete[] mark[i];        &#125;        delete[] mark;        return result;    &#125;
+
+注意到update()函数中 搜索 部分还是空缺的，这里有两种解法，DFS和BFS
+DFS实现搜索void DFS(vector&lt;vector&lt;int&gt;&gt;&amp; grid, int elevation, bool** mark, int x, int y)&#123;        int N = grid.size();        if(mark[x][y]) return;        if(grid[x][y] &lt;= elevation)&#123;            mark[x][y] = true;            if(x+1 &lt; N) DFS(grid,elevation,mark,x+1,y);            if(x-1 &gt;= 0) DFS(grid,elevation,mark,x-1,y);            if(y+1 &lt; N) DFS(grid,elevation,mark,x,y+1);            if(y-1 &gt;= 0) DFS(grid,elevation,mark,x,y-1);        &#125;    &#125;
+
+对应在update()函数内的搜索语句：
+//搜索DFS(grid, elevation, mark, 0, 0);
+
+BFS实现搜索void BFS(vector&lt;vector&lt;int&gt;&gt;&amp; grid, int elevation, bool** mark, int sx, int sy)&#123;        if(grid[sx][sy] &gt; elevation) return;                int N = grid.size();        pair&lt;int, int&gt; source = make_pair(sx,sy);        queue&lt; pair&lt;int, int&gt; &gt; q;        q.push(source);        while(!q.empty())&#123;            pair&lt;int, int&gt; now = q.front();            q.pop();            int x = now.first, y = now.second;            mark[x][y] = true;            if(x-1 &gt;= 0 &amp;&amp; !mark[x-1][y] &amp;&amp; grid[x-1][y] &lt;= elevation)                q.push(make_pair(x-1,y));            if(x+1 &lt; N &amp;&amp; !mark[x+1][y] &amp;&amp; grid[x+1][y] &lt;= elevation)                q.push(make_pair(x+1,y));            if(y-1 &gt;= 0 &amp;&amp; !mark[x][y-1] &amp;&amp; grid[x][y-1] &lt;= elevation)                q.push(make_pair(x,y-1));            if(y+1 &lt; N &amp;&amp; !mark[x][y+1] &amp;&amp; grid[x][y+1] &lt;= elevation)                q.push(make_pair(x,y+1));        &#125;    &#125;
+
+对应在update()函数内的搜索语句：
+//搜索BFS(grid, elevation, mark, 0, 0);
+
+这时候问题出现了：某一些测例出现了超时。
+BFS 优化考虑可能pair和queue占用了一些时间，因此优化了一下代码
+void BFS(vector&lt;vector&lt;int&gt;&gt;&amp; grid, int elevation, bool** mark, int sx, int sy)&#123;        if(grid[sx][sy] &gt; elevation) return;        int N = grid.size();        queue&lt;int&gt; q;        q.push(sx*N+sy);        while(!q.empty())&#123;            int now = q.front();            q.pop();            int x = now/N, y = now%N;            mark[x][y] = true;            if(x-1 &gt;= 0 &amp;&amp; !mark[x-1][y] &amp;&amp; grid[x-1][y] &lt;= elevation)                q.push((x-1)*N+y);            if(x+1 &lt; N &amp;&amp; !mark[x+1][y] &amp;&amp; grid[x+1][y] &lt;= elevation)                q.push((x+1)*N+y);            if(y-1 &gt;= 0 &amp;&amp; !mark[x][y-1] &amp;&amp; grid[x][y-1] &lt;= elevation)                q.push(x*N+y-1);            if(y+1 &lt; N &amp;&amp; !mark[x][y+1] &amp;&amp; grid[x][y+1] &lt;= elevation)                q.push(x*N+y+1);        &#125;    &#125;
+
+但是问题仍然存在。经过测试研究发现，BFS所经历的update次数要大于DFS，说明求路径存在而不是求最短路的时候采用DFS是更好的算法。
+
+本文最初发布于简书。
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>LeetCode 931. Minimum Falling Path Sum</title>
+    <url>/2018/11/28/Algorithm/leetcode-931-minimum-falling-path-sum/</url>
+    <content><![CDATA[LeetCode 931. Minimum Falling Path Sum：题目、思路与代码实现。
+
+
+
+对动态规划仍然不熟，而且最近想掌握一下Go语言，所以用它来做一下算法题
+
+题目Given a square array of integers A, we want the minimum sum of a falling path through A.
+A falling path starts at any element in the first row, and chooses one element from each row. The next row’s choice must be in a column that is different from the previous row’s column by at most one.
+Example 1:
+Input: [[1,2,3],[4,5,6],[7,8,9]]Output: 12Explanation: The possible falling paths are:[1,4,7], [1,4,8], [1,5,7], [1,5,8], [1,5,9][2,4,7], [2,4,8], [2,5,7], [2,5,8], [2,5,9], [2,6,8], [2,6,9][3,5,7], [3,5,8], [3,5,9], [3,6,8], [3,6,9]The falling path with the smallest sum is [1,4,7], so the answer is 12.
+
+Note:
+
+1 &lt;&#x3D; A.length &#x3D;&#x3D; A[0].length &lt;&#x3D; 100
+-100 &lt;&#x3D; A[i][j] &lt;&#x3D; 100
+
+题解这道题是很简单的动态规划题，题目解析在注释里已经有了。
+func minFallingPathSum(A [][]int) int&#123;    //题目：二维数组，像水流一样降落（降落时不能隔开超过一列），求降落总和最大    //状态：当以 A[row][col] 结尾时的最大总和    rowNum := len(A)    colNum := len(A[0])    //构建二维数组    min := make([][]int, rowNum)    for i:=0; i&lt;rowNum; i++&#123;        min[i] = make([]int, colNum)    &#125;    //计算min值    min[0] = A[0]    for row:=1; row&lt;rowNum; row++&#123;        for col:= 0; col&lt;colNum; col++&#123;            if col == 0&#123;                switch&#123;                case min[row-1][col] &lt; min[row-1][col+1]:                    min[row][col] = A[row][col] + min[row-1][col]                default:                    min[row][col] = A[row][col] + min[row-1][col+1]                &#125;            &#125; else if col == colNum-1&#123;                switch&#123;                case min[row-1][col] &lt; min[row-1][col-1]:                    min[row][col] = A[row][col] + min[row-1][col]                default:                    min[row][col] = A[row][col] + min[row-1][col-1]                &#125;            &#125; else&#123;                switch&#123;                case min[row-1][col-1] &lt; min[row-1][col] &amp;&amp; min[row-1][col-1] &lt; min[row-1][col+1]:                    min[row][col] = A[row][col] + min[row-1][col-1]                case min[row-1][col] &lt; min[row-1][col+1]:                    min[row][col] = A[row][col] + min[row-1][col]                default:                    min[row][col] = A[row][col] + min[row-1][col+1]                &#125;            &#125;        &#125;    &#125;    result := min[rowNum-1][0]    for i:=1; i&lt;colNum; i++&#123;        if min[rowNum-1][i] &lt; result&#123;            result = min[rowNum-1][i]        &#125;    &#125;    return result&#125;
+
+
+本文最初发布于简书。
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>LeetCode 99. Recover Binary Search Tree</title>
+    <url>/2018/12/12/Algorithm/leetcode-99-recover-binary-search-tree/</url>
+    <content><![CDATA[LeetCode 99. Recover Binary Search Tree：题目、思路与代码实现。
+
+
+题目Two elements of a binary search tree (BST) are swapped by mistake.
+Recover the tree without changing its structure.
+Example 1:Input: [1,3,null,null,2]   1  / 3  \   2Output: [3,1,null,null,2]   3  / 1  \   2Example 2:Input: [3,1,4,null,null,2]  3 / \1   4   /  2Output: [2,1,4,null,null,3]  2 / \1   4   /  3
+
+Follow up:
+A solution using O(n) space is pretty straight forward. Could you devise a constant space solution?
+题解第一版本这一个版本超出内存限制了
+func recoverTree(root *TreeNode)  &#123;    if root != nil &#123;        dfs(root)    &#125;    &#125;func dfs(root *TreeNode) bool&#123;        // bfs to move nextNode, swap with firstNode(root) and check    // if succeed, return true and skip    if root == nil &#123;        return false;    &#125;    var queue []*TreeNode    queue = append(queue, root)        for len(queue) != 0 &#123;                headNode := queue[0]        if headNode.Left != nil &#123;queue =  append(queue, headNode.Left) &#125;        if headNode.Right != nil &#123;queue =  append(queue, headNode.Right)&#125;                headNode.Left, headNode.Right = headNode.Right, headNode.Left        if check(root) &#123;            return true        &#125;        headNode.Left, headNode.Right = headNode.Right, headNode.Left    &#125;        // firstNode move to next, pre-order dfs    var flag bool    if root.Left != nil&#123;        flag = dfs(root.Left)    &#125;        if !flag &amp;&amp; root.Right != nil&#123;        flag = dfs(root.Right)    &#125;        return flag&#125; func check(root *TreeNode) bool&#123;    if root == nil &#123;        return true    &#125;        checkLeft := (root.Left == nil || root.Left.Val &lt; root.Val) &amp;&amp; check(root.Left)    checkRight := (root.Right == nil || root.Right.Val &gt; root.Val) &amp;&amp; check(root.Right)        return (checkLeft &amp;&amp; checkRight);&#125;
+
+第二版本“冒泡”思路。
+func recoverTree2(root *TreeNode)  &#123;    help(root)    first.Val, second.Val = second.Val, first.Val&#125;func help(root *TreeNode) &#123;    if root == nil &#123; return &#125;    help(root.Left)    if(first == nil &amp;&amp; prev.Val &gt;= root.Val)&#123;        first = prev    &#125;    if(first != nil &amp;&amp; prev.Val &gt;= root.Val)&#123;        second = root    &#125;    prev = root    help(root.Right)&#125;
+
+令人诧异的是：同一份TestCase在Run和Submit居然有不同的结果！这属于编译器本地错误了，不管它
+第三版本要利用好Go的语言特性，使用channel 进行并发；且仅占O(1)内存空间
+func Swap(x, y *TreeNode) &#123;    x.Val, y.Val = y.Val, x.Val&#125;func Inorder(c chan *TreeNode, root *TreeNode) &#123;    if root == nil &#123;        return    &#125;    Inorder(c, root.Left)    c &lt;- root    Inorder(c, root.Right)&#125;func recoverTree(root *TreeNode) &#123;    c := make(chan *TreeNode)    go func() &#123;        Inorder(c, root)        close(c)    &#125;()    var first, second *TreeNode    prev := &lt;-c    for x := range c &#123;        if x.Val &lt; prev.Val &#123;            if first == nil &#123;                first = prev            &#125;             if first != nil &#123;                second = x            &#125;        &#125;        prev = x    &#125;    Swap(first, second)&#125;
+
+
+本文最初发布于简书。
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>LeetCode Regular Expression Matching</title>
+    <url>/2018/12/05/Algorithm/leetcode-regular-expression-matching/</url>
+    <content><![CDATA[LeetCode Regular Expression Matching：题目、思路与代码实现。
+
+
+
+今天尝试做一道正则表达式判断的String题目, 同时温习一下C语言的使用
+
+题目Given an input string (s) and a pattern (p), implement regular expression matching with support for ‘.’ and ‘*‘.
+
+‘.’ Matches any single character.
+‘*‘ Matches zero or more of the preceding element.
+The matching should cover the entire input string (not partial).
+
+Note:
+
+s could be empty and contains only lowercase letters a-z.
+p could be empty and contains only lowercase letters a-z, and characters like . or *.
+
+题解这是一段错误的代码, 其思维是线性的; 而在编译原理学正则表达式的时候,我们往往需要构建分析树, 这说明一个语言(这里当然不是指编程语言)在做正则化判断时候不能单纯线性地去考虑, 而且树的形状也应该很容易想到递归才是.
+bool isMatch(char* s, char* p) &#123;    char last = 0;    while(*p != 0)&#123;        if(*p == &#x27;*&#x27;)&#123;            if(*s == last || last == &#x27;.&#x27;)                p--;            else                s--;        &#125;        else if(*(p+1) == &#x27;*&#x27;)&#123;            last = *p;            s--;        &#125;        else if(*p != &#x27;.&#x27; &amp;&amp; *p != *s)&#123;            break;        &#125;        p++;        s++;            &#125;        return (*p == 0 &amp;&amp; *s == 0);&#125;
+
+第二版本的代码如下, 采用了递归, 通过了(在几次试错之下)
+bool isMatch(char* s, char* p) &#123;        // printf(&quot;test: [%s] [%s]\n&quot;, s, p);        if(*p == 0 &amp;&amp; *s == 0) return true;    else if(*(p+1) == &#x27;*&#x27;)&#123;        if(isMatch(s, p+2)) return true;        while(*s == *p || (*p == &#x27;.&#x27; &amp;&amp; *s != 0))&#123;            if(isMatch(++s,p+2)) return true;        &#125;    &#125;    else if(*s == *p || (*p == &#x27;.&#x27; &amp;&amp; *s != 0))&#123;        return isMatch(s+1, p+1);    &#125;        return false;&#125;
+
+万万没想到: 这题也是可以用动态规划来做,而且效率很高:
+解析 (这个思路真的挺有深度的,值得多次回顾)
+
+本文最初发布于简书。
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>《自控力》</title>
+    <url>/2020/05/09/Reading/self-control/</url>
+    <content><![CDATA[《自控力》读书笔记。
+
+
+
+开始读这一本久负盛名的关于自控和意志的书。书其实比较通俗易懂，包含了许多可以简短概括的理论、针对自身的分析、行动准则（实验），因此这里就统一用一个帖子逐条记录，帮助回忆。
+
+01 我要做，我不要，我想要：什么是意志力？为什么意志力至关重要？
+自知之明是自控的基础，认识到自己意志力存在的问题是自控的关键
+【分析】什么是自己的“我要做”、“我不要”、“我想要”
+大脑的前额皮质是自控的关键，在原有的冲动、本能之上，进化出了自控系统
+【分析】认清在面临挑战时的两个自我：冲动的自我、自控的自我。都很重要，没有谁对谁错。
+【实验】选一天在结束时尽量地回忆自己所做的决定，观察自己在什么时候如何屈服于冲动。
+通过训练大脑能增强意志力：简单的自控训练、冥想
+冥想时感觉糟糕反而更有效果
+【实验】五分钟冥想训练，关注呼吸
+
+
+这一章讲了自控的原理
+
+02 意志力的本能 - 人生来就能抵制奶酪蛋糕的诱惑
+自控力是心理和生理的综合
+应激反应：面对实际威胁时全身“激灵”并选择“战斗或逃跑”是原始本能
+干扰目标的欲望并不是外在的实际威胁，威胁其实来自自己的内心
+【实验】在受到诱惑时，观察一下自己在想什么
+意志力也是本能，在面对诱惑时大脑会本能地犹豫和思考，因此最好可以放慢速度，增加大脑思考的时间来提升自控力
+应激反应→心率加快；成功自控→心率降低；心率降低→心率变异度增高→自控能力增强
+简单的长呼吸（冥想）就能降低心率，提高心率变异度，从而增强自控力；这也是前面说的“放慢速度”
+体育锻炼也能提高意志力
+【实验】五分钟“绿色”锻炼
+睡眠不足会降低前额皮质对大脑的控制，副交感神经变弱，交感神经变强，就会对压力反应过度
+【实验】睡个好觉
+明知早睡有益，却总是无法实现，那就不要想睡觉这件事，想一想你到底对什么说了“我想要”（什么拖延了睡觉），换个角度实现目标。
+自控过多不是好事，自控力和压力一样会消耗能量，会让下一次需要自控的时候失去力量。
+再次强调！！睡眠很重要！！
+
+
+这一章主要就是讲生理，如何让自己调整到利于自控的生理状态：冥想、睡眠、锻炼
+
+03 累到无力抵抗：为什么自控力和肌肉一样有极限？
+自控力就像肌肉一样有极限，如果你的大脑和身体需要停下来思考一下再作决定，你就是在拉伸像肌肉一样有极限的自控力
+【实验】观察自己一天之内的意志力强弱波动，特别是有什么活动会让自己恢复本来已经觉得空乏的意志力。
+最想做的事情别在一天劳累以后做，在早上一天意志力最强的时候做（早起学习警告）
+自控力会消耗实际的能量，但没有想象中多（远没有运动多），但在支出过多时脑细胞就会倾向于减少供应，储存能量（自私的细胞）
+吃点小零食实际上是对自控力有用的（除非你本身就是要减肥），饥饿会使冲动自我更加活跃
+高血糖的食物虽然短期有效，但其实会出现血糖高而能量不足的情况，更好的做法是保持食物的供应，维持血糖的稳定（低血糖食物）
+【实验】吃低血糖食物！低血糖食品包括瘦肉蛋白、坚果和豆类、粗纤维谷类和麦片、大多数的水果和蔬菜。
+【实验】控制自己以前不会去控制的小事，以此来训练自控力肌肉；增加自我监控记录
+意志力像体力一样，会在真正耗尽时就感觉疲惫，事实上我们只是需要积攒使用意志力的动力罢了
+【实验】下次再触碰到意志力的“墙”时，试着像长跑时一样寻找动力：挖掘“我想要”的力量。考虑：自己的收获、身边人的收获、下次做同样事会更容易。
+增强自控力要考虑如何支撑住最疲惫的自己，而不是期待理想的状态出现
+
+
+这一章把意志力和体力做类比，讨论了它的有限性和可锻炼性，以及意志力减少时身体所给出的疲惫信号。
+
+04 容忍罪恶：为何善行之后会有恶行
+觉得自己品德高尚反而是通往罪恶的快速通道；当你做善事的时候，你会感觉良好。这就意味着，你更可能相信自己的冲动。而冲动常常会允许你做坏事（“道德许可效应”）。
+在完成了小阶段目标的时候，我们更倾向于纵容自己，忘记真正的目标，向诱惑屈服。
+我们通常相信这种感觉：我一直是善良的，一直是个好人。但我们很少为我们的行为进行符合逻辑的解释。
+如果你自控的唯一动力就是成为一个足够好的人，那么每当你自我感觉良好的时候，你就会放弃自控。如果戒烟只是因为这样是对的，而不是为了达成某个目标，那就很容易放弃。
+【分析】分析自己近段时间成功或失败自控时自己的想法和评价，是否有因为自己的“良好表现”而出现纵容自己的行为？
+不要把支持目标实现的行为误认为是目标本身。
+【实验】回忆自己如何成功自控，会让自己产生满足感而选择放纵；回忆当时是为了什么自控，更能抵制接下来的诱惑。在面对诱惑时思考上一次抵制它是因为什么。
+“道德许可”并不只计算过去的善行，我们同样可能看到未来，认为我们计划要做的善行也值得称赞。大脑会对能完成目标的可能性感到兴奋，它错把可能性当成真正完成了目标。
+**我们不断期望明天能作出和今天不同的选择，但这种期望是错误的。
+【实验】为了克服对未来的“道德许可效应”，可以在心里减少行为的变化性，意思是把你今天作的每个决定都看成是对今后每天的承诺，如果今天这样做了，那明天也肯定会这样做。
+光环效应：我们会为我们的放纵找“美德”，特别是使你放纵的东西和使你觉得品德高尚的东西同时出现时。光环效应下我们对目标是矛盾的（理智的自己想要实现目标，冲动的自己更希望通过“高尚行为”获得快乐）。
+【分析】自己是否有因为某事物的某种品质或“神奇词语”而自我放纵？
+道德许可的本质，是对自我认知的偏离：认为需要奖励、冲动和放纵的才是内心深处真实的自己，因此自控行为实际上是种强迫和惩罚；但实际上，只要在内心更认同想变好的自己，把它视为真实的自己，就会轻松很多。
+
+
+这一章主要讲道德许可效应，当我们对自控行为赋予“对”和“错”的概念，而不是关注目标本身，我们实际上更容易失去自控。学习的时候不要认为“这个时候就应该学习”，这么想的话学完就浪了；而是关注自己学习是想要获取什么知识，实现什么价值。
+
+05 大脑的弥天大谎：为什么我们误把渴望当幸福？
+刺激小白鼠脑电极使它们产生的是渴望（对奖励的承诺）而不是快乐（奖励本身）。
+在追寻快乐的过程中，我们不能全信大脑所指引的方向。
+大量的多巴胺并不能产生快乐的感觉，那种感觉更像是一种激励。2001年，斯坦福神经科学家布莱恩·克努森（Brian Knutson）发表了一份具有决定意义的实验报告，证明了多巴胺会促使人们期待得到奖励，但不能感觉到获得奖励时的快乐。
+现代科技“及时行乐”的特点，加上原始的激励系统，就让我们成了多巴胺的奴隶。
+【分析】什么在刺激你的多巴胺，吸引你的注意力，给你奖励的承诺，强迫你去追求满足感？
+如果奖励迟迟没有到来的话，奖励的承诺（和一想到要停下来就不断增长的焦虑）足以让我们一直上瘾。
+【分析】观察一下，零售商和营销人员究竟是如何刺激奖励承诺的。
+【实验】尝试把拖延的任务和能促使多巴胺的事情联系在一起（“鱼缸抽奖法”）（不想工作时可以放点背景乐）。
+【分析】观察分析渴望引起的压力和焦虑，并且当自己最终屈服于诱惑时，分析自己是为了满足欲望还是缓解焦虑，哪个比重更高？
+【实验】选取一次放纵的过程来观察。在放纵前观察大脑和身体的感觉，内心的期望；然后在放纵时观察是否有之前内心期望的事情发生，这种渴望有没有随着满足而消失，时间长了会产生什么别的感觉？
+
+
+这一章主要就是讲现代社会多巴胺给人们造成的困境，因为多巴胺会给予人奖励的承诺但不是奖励本身，在无法实现时会重复导致上瘾。认识到这一点是更好自觉自控的开始。
+
+06 那又如何：情绪低落为何会使人屈服于诱惑
+情绪低落、有压力时我们会去追寻“奖励的承诺”，但通常我们缓解压力的办法反而会让我们更有压力。
+当我们有压力时，大脑为了自我保护会带来欲望，应激反应中释放的压力荷尔蒙会提高多巴胺神经元的兴奋程度
+【分析】观察自己情绪低落、有压力、生气时的做法，会不会更容易受到诱惑？是不是会更难集中注意力，或更容易拖延呢？（确实，特别是有压力的时候）
+虽然很多流行的解压方法没什么用，但有些策略的确管用。美国心理学家协会的调查发现，最有效的解压方法包括：锻炼或参加体育活动、祈祷或参加宗教活动、阅读、听音乐、与家人朋友相处、按摩、外出散步、冥想或做瑜伽，以及培养有创意的爱好。最没效果的缓解压力的方法则包括：赌博、购物、抽烟、喝酒、暴饮暴食、玩游戏、上网、花两小时以上看电视或电影。
+真正能缓解压力的不是释放多巴胺或依赖奖励的承诺，而是增加大脑中改善情绪的化学物质，如血清素、γ-氨基丁酸和让人感觉良好的催产素。
+【实验】面对压力时使用更有效的解压方式。可以使用一些简单的提醒机制（录音之类的）
+有时候，“恐惧管理”带来的不是诱惑，而是拖延。
+【分析】请注意观察什么事情会引发你大脑里的“恐惧管理”。
+“那又如何”效应：放纵行为引起的罪恶感和内疚感反而会更容易让人继续选择放纵
+【分析】留意自己在意志力失效时的反应，会责备自己，认为自己永远好不了吗？更重要的是，会因为挫折的关系，更加地放纵自己吗？
+自我谅解是打破“那又如何”循环的最好办法。众多研究显示，自我批评会降低积极性和自控力，而且也是最容易导致抑郁的因素；相反，自我同情则会提升积极性和自控力，比如，在压力和挫折面前支持自己、对自己好一些。
+【实验】失败的时候，尝试原谅自己。尝试以下角度：描述一下你的实际感觉；告诉自己只是个凡人，挫折并不意味着你本身有问题；假如你的朋友遇到了这样的事，你会怎么安慰TA？
+“虚假希望综合征”：下定决心改变自己会让我们立刻有了放松感和控制感，以为自己自控了，但这是典型的即时满足感——在我们做真正任何事之前就已经自我感觉良好，因此很少向我们希望的方向发展。
+【分析】请花一点时间，仔细想一想你改变自己的动力和期望。你只有在情绪低落时才会有动力改变吗？想象成功改变生活时的快乐，是不是你作出改变的唯一动力？你会通过幻想未来的自己来改善现在的心情，而不是采取实际行动改善自己的行为吗？
+【实验】做一个乐观的悲观主义者，在面对意志力挑战的时候，悲观而客观地预测自己什么情况下会向诱惑屈服，由此来制定对抗意志力屈服的对策。
+
+
+这一章主要讲低落情绪对于自控的陷阱，如果一直自责会持续地失去自控，自我谅解是恢复自控的起点。同时缓解压力的方法也有好坏之分，有些行为确实解压，有些却会让人上瘾而无用。最后，不要沉迷于”下定决心改变“，那是意志力的陷阱。
+
+07 出售未来：及时享乐的经济学
+“延迟折扣”：我们会倾向于把未来的奖励打个折扣，认为没那么好，从而屈服于眼前的诱惑。
+【分析】探索自己给未来奖励打折的情形
+延迟折扣产生的原因就是，大脑处理眼前的诱惑时会刺激多巴胺兴奋，但处理未来的奖励时，因为过于抽象，所以很难刺激到多巴胺。
+【实验】在所有诱惑面前安排十分钟的等待时间，让眼前的诱惑和未来的奖励得以比较。
+你对未来打的折是多是少，很大程度上决定了你长期的健康状况和你获得的成功。
+【实验】降低你的折扣率，在抉择时首先去想象未来的奖励，并努力想象得到它和因为屈服眼前诱惑而失去它的感觉。
+受诱惑的自我是个无法预料的敌人，更好的做法是在未受诱惑之前就限制好自己。
+【实验】在清醒时给自己的意志力“加个保证”（像早起打卡罚钱制度），stickk.com
+我们经常会把未来的自己想象成完全不一样的人，因此给他增加各种负担。但当我们到了未来，我们“理想的自己”却不见了。
+【分析】你是否在拖延和推迟，等待未来的自己来改变现状？（差点如此，这一章的笔记差点就想拖到明天，但明天一样是会困的）
+【实验】接近和认识“未来的自己”：想象未来某个场景中的自己、给未来的自己发信息、设想未来的自己。
+偶尔也还是需要及时行乐！不然负担会太重！（而且这样活也没意思不是吗）
+
+
+这一章对我来说相当重要，因为我就是这样一个把自己和未来严重割裂开的人，一方面给未来自己所获得的奖励打折扣（不给萝卜），另一方面还要不断拖延现在的任务给未来的自己增加压力（给大棒子）。很高兴现在已经慢慢从行动上有了改变。
+
+08 传染：为什么意志力会传染？
+我们个人的选择在很大程度上会受他人想法、意愿和行为的影响，意志力薄弱会传染；坏习惯和积极的改变都能像细菌一样在人群中传播，而且没有人能完全不受其影响。
+【分析】回忆自己的意志力挑战，有没有受到身边的人影响，变得更简单或者更困难？有没有被身边的人感染某种良好或不良的习惯？
+镜像神经元会让我们去观察和模仿他人的行为，会无意识地模仿他人行为，或者被他人的情绪所传染。当我们的镜像神经元获取了别人奖励承诺的信息时，我们自己也会渴望得到奖励。
+当我们看到别人忽视规则、受欲望支配的时候，我们更可能在任何冲动面前选择屈服。
+【分析】我在模仿谁的坏习惯吗？
+目标也能传染，我们很容易感染别人的目标，从而改变自己的行为。当然这仅限于我们已经拥有的目标（可能自己也没意识到），这回使我们在目标的冲突中倾向于一边。
+【实验】增强自控的“免疫系统”，在每天刚开始的时候花几分钟想想自己的目标，想想你会怎么受到诱惑，想要改变自己的目标。
+【实验】找到一个意志力榜样，想想TA会怎么做？
+【分析】亲密的人更容易感染，分析你身上的行为和习惯哪些和亲密的人有关。
+基于社会认同，群体里的其他人都在做某件事时，我们很容易认为这件事是应该做的聪明事。
+【分析】是否意识到，自己认识的所有人都有同样的不良习惯？如果是这样，你可能会质疑这种看法。质疑它的最好方法就是找到一群人，他们正在做你渴望做到的事。（support group）
+预想自己实现目标（比如戒烟或献血）后会非常自豪的人，更有可能坚持到底并获得成功，预想自己的行为会受到谴责也很有效。
+与讨论长期成本和收益的理性论证比起来，自豪、羞愧等社会情感能更迅速、更直接地影响我们的选择。
+羞愧要有限度，过于羞愧会让我们感到糟糕，糟糕的感觉会将意志力消耗光而让人放弃抵抗。
+自豪感可以增强意志力，为了让自豪感发挥作用，我们必须认为别人都在监视自己。让自己坚定决心的有效策略是——公开你的意志力挑战。
+【实验】想象一下你在意志力挑战中取得成功后会多么自豪。想象自己可以炫耀的场景（当然也要警惕虚假的自控感，想象过后的自豪感不意味着自己已经实现了自控，自己还什么都没做呢！）
+但我们最该警觉的行为，是避开那些不能按我们喜欢的方式自控的人。这不仅是一种对待别人的残酷做法，还是一种激励自己改变的糟糕策略。
+【实验】与他人一起完成“意志力竞争”而实现社会认同和支持，你无须单独面对你的意志力挑战。
+
+
+这一章讲的是自控和身边人、社会的关系，自控是非常受环境影响的。但我们最应该做的不是先在心里排斥它（这反而让我们陷进去），我们先意识到它的存在，增强自己的免疫力，然后向意志力强的、具有符合自己目标习惯的人靠拢。
+
+09 别读这章：“我不要”力量的局限性
+对焦虑、沮丧、节食、上瘾的最新调查证实，把“我不要”的力量用在涉及思想、情感的内心世界，它就会失效。（“别想白熊”效应&#x2F;讽刺性反弹），越尝试摆脱某种想法和情绪，它反而会越根深蒂固。
+大脑有负责“操控”和“监督”两部分，当疲惫的“操作”和精力充沛的“监控”造成了大脑的不平衡时，就会产生讽刺性反弹的情况。
+认知失调：我们相信，我们的思想是信息的重要来源。当一个想法频繁出现、难以摆脱时，人们会很自然地认为它是需要关注的重要消息。
+【分析】你是否想忘记某些东西？如果是，请检验一下讽刺性反弹理论。压抑有用吗？试图忘记某些东西是否让它回来时变得更强烈？
+放弃控制内心感受，反而能让我们更好地控制外在行为。放弃自控，以此对抗讽刺性反弹
+感受身体里的焦虑，然后把注意力转移到呼吸上。如果焦虑仍然存在，去想象那些想法和焦虑随着呼吸消散。不和焦虑对抗，焦虑就会自然离去。
+【实验】意志力实验：忠于你的感受，但别相信你所有的想法。感受情绪和思绪的存在，控制自己的行为而不是思想。让意识和想法自由地来来去去。
+越想通过抑制想法来抵抗诱惑，受到的不良影响就越大。
+使用压抑自己的办法进行自控时，如果我们控制思想和行为失败了，我们会认为是自己压抑得不够，而不会认为压抑思想的方法根本行不通。
+【分析】深入剖析：你最渴望什么？当你抑制它的时候，能坚持多久？
+【实验】直面自身欲望，但不要付诸行动（和上面的实验比较像啊）
+【实验】把“我不要”变成“我想要”。除了“我不要”，你还能做什么来满足同样的需求？你可以关注这些需求，用有同样效果的健康的新习惯来戒掉坏习惯。如果没有了坏习惯，你还能做些什么？你可以做其他有趣的事来代替坏习惯。
+【实验】感受和驾驭冲动。无论你对什么上瘾，“驾驭冲动”的技巧都能帮你抵抗诱惑，而不是屈服于它。当冲动占据你的头脑时，花至少一分钟去感觉自己的身体。
+
+
+这一章“批评”了“我不要”的自控方法，通过压抑自己的思想和情绪（“不要去想那件事！！”）来完成自控是非常不靠谱的。试着控制自己的思想和感受，反而会对我们原先的目标产生反面效果。接受思想和感受的存在，呼吸，感受身体的感觉，然后慢慢rang
+
+
+本文最初发布于简书。
+]]></content>
+      <categories>
+        <category>阅读</category>
+      </categories>
+      <tags>
+        <tag>阅读</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>乡土中国-从欲望到需要</title>
+    <url>/2020/05/08/Reading/%E4%B9%A1%E5%9C%9F%E4%B8%AD%E5%9B%BD-%E4%BB%8E%E6%AC%B2%E6%9C%9B%E5%88%B0%E9%9C%80%E8%A6%81/</url>
+    <content><![CDATA[这一章主脉络是划分了欲望和需要的区别，进而描述了从乡土社会的基于欲望行事演变到现代社会的基于需要行事的过程。
+单纯的欲望指导行为符合这样的流程：欲望–紧张–行动–满足–愉快。这一种满足欲望的能力是天生的，最重要的一点就是人都需要生存，因此会去吃甜食。除了原始的欲望以外，还有基于经验和教化的欲望，我这里称之为“文化欲望”。费先生把欲望全然归结于文化，我觉得是有偏颇的，更何况两者本身就是相辅相成的存在。
+在乡土社会中，原始欲望和文化欲望大部分正好符合社会的良性发展，比如人饿了就吃东西，虽然只是考虑了自己的原始的欲望，但实际上整个族群也因为它没有饿死而得到更多的劳力；夫妻间的性行为可以说是爱和性冲动所结合的行为，但从社会的角度也是有益于族群的繁衍。当然夫妻之事经发展也成为了一种文化欲望：“传宗接代”仍是老一辈人根深蒂固的原则。
+关于文化欲望对社会的正面作用作者还举了一个比较好的例子——巫术。从现代科学的角度，巫术对于驱散鬼怪（无论是否真实存在）都没有什么大的意义，但巫术也切实地消减了人们对于未知的恐惧，心安对于社会继续稳定发展是特别有益的，毕竟恐慌蔓延下没有人会有心思关心生产。
+但为什么说这些欲望是“大部分”符合社会发展，而不是直接断言全部呢？因为实际上稳定的乡土社会也在以一个缓慢的速率改变着的，原来符合发展的欲望并不能直接切除，也是身处社会中的人不断试错而形成新的欲望来满足社会的需要。
+但现代社会发展的速度远非乡土社会可比，单靠欲望行事是靠不住的，正如亚当·斯密所描述的“冥冥中的手”也是具有局限性的。现代社会的欲望逐渐进化为需要，需要是自觉的，是对行为和目的背后的理解。譬如现在的人吃东西不单单是关注食物好吃（当然对好吃食物的追随这一原始欲望仍然很重要），而是开始关注这食物含了多少卡路里，有什么维生素，够不够蛋白质等等。
+因而在现代社会中，谁更能对行为和目的有更深刻的理解，谁就能有更多的时势权力来指导身边、社区乃至整个社会的人。这也就是我们通常所说的“知识就是力量”，这句话虽然俗，但蕴含了这么一部分的道理。
+]]></content>
+      <categories>
+        <category>阅读</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>乡土中国-名实分离</title>
+    <url>/2020/05/07/Reading/%E4%B9%A1%E5%9C%9F%E4%B8%AD%E5%9B%BD-%E5%90%8D%E5%AE%9E%E5%88%86%E7%A6%BB/</url>
+    <content><![CDATA[
+晨读day two
+
+这章有点标题党的感觉，虽然名字叫“名实分离”，但其实关于这一部分在最后才有所提及，也是前文论述的部分延伸结果。名实分离实际是变动社会中人们对长老权力的一种适应，在权力未惠及自己（还不是长老）时选择“阳奉阴违”的方式，而后在自己也成为长老以后以注释的方式为权力加入新的解释内容（注释），满足变动社会中维护长老社会的需求。
+来进一步总结一下社会的几种权力的形式。首先就是上文提到的长老权力，这是稳定的乡村社会中具备的一种权力，父命子不可违。其次是横暴权力，是独裁和专制，其基础是剥削。随后是同意权力，发生在契约建立的基础上，辅以对权力的监督；最后是变动社会中特有的权力，可以说是长老权力的反面，时势权力。这里其实是化用了“时势造英雄”这一句，因为这种权力突出的就是英雄这个符号。由英雄带领大家走出社会变更时期的惶恐和迷茫。
+这一章实际上针对时势权力影射了当时的政治内容，但并没有举出时下的例子，也没有拿乡村社会的变更作为示例。这一点其实让我有些不满意，有点“没有值回票价”的感觉。倒不是我想实际地看政治例子，这方面可以自己补充，我想了解的是乡村是怎么样受时势权力影响和变更的。当然这里我自己也有记忆储备，便是前段时间看的《平凡的世界》，里面的孙少安就可以算是这样的一个英雄。
+横暴权力压制反对，同意权力实际上建立在反对（监督）的基础上，长老社会虽也不同意反对但有独特的改进方法。而对于时势权力，反对也当然是存在的，因为文化英雄的观点受其局限性总会有失偏颇或不公的地方，再者说，一个迷茫的时代肯定不止一个英雄，社会不会缺少自信的人。这时候反对的声音引起的结果就是拉阵营、搞宣传、打嘴仗，从而争取人民的跟随和信任。所以实际上时势权力也是无法容忍反对的，反对者不是同一个阵营。因此在我理解上，时势权力也是需要逐渐被同意权力过渡的，这也是因为人民无法容忍一直迷茫，总要向平稳发展过渡。
+另外讲到社会结构的变动时候，作者提到了一个观点（他不同意），社会结构也类似于有机体，也有生长、发展和衰老的阶段。他认为社会结构就是人用于满足生活需要的工具，当社会结构不满足人的需要时，就会发生社会结构的变更，这一动作是人主动去做的。实际我认为两种说法都有合理性，社会结构确实是由人发明和更改的，但根据论文 More Is Different 的说法，更宏观的内容实际上已经不能够用微观的调研方法去研究，正如小球的自由落体不能用分子动力学来研究一样，社会结构本身应该以高于个体的宏观研究方法去研究。
+]]></content>
+      <categories>
+        <category>阅读</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>乡土中国-血缘与地缘</title>
+    <url>/2020/05/06/Reading/%E4%B9%A1%E5%9C%9F%E4%B8%AD%E5%9B%BD-%E8%A1%80%E7%BC%98%E4%B8%8E%E5%9C%B0%E7%BC%98/</url>
+    <content><![CDATA[
+很久没有好好看书做笔记了
+
+血缘与地缘的联系乡土社会稳定的社会结构是以血缘为基础的，以子继父业的形式形成稳定的社会分工，也就是所谓“农人之子恒为农，商人之子恒为商”。血缘以不由分说、无可争辩地形式分配传统社会中各人的职业、身份和财产。
+在稳定的乡土社会中，地缘不过是血缘的投影，地域的远近一定程度反映着血缘的亲疏，因此地理区位也就成为了社会化了的空间。我们现在仍然可以见到这样对区位的划分：左尊于右，南尊于北；更明显的例子是，我们现在仍然用“地位”一词表示一个人的社会阶层，这便是来自血缘的地域投影。在原始社会中血缘和地域是合一的，而现代社会仍然延续了部分的传统。
+但人，特别是现代人，终究是要流动的。传统社会的人口流动主要源自于繁殖引起的土地资源不足，首先会引起向内的精耕以提升土地的单位报酬，但随着人口的继续增加，社群便会分裂，形成新的村落，寻找新的耕地。而现代人流动的理由就更多了，就业、教育，亦或是单纯对某一地的喜爱，这在发达的现代社会已成为可能。
+但人口在流动时，仍然会以另外的形式保有血缘的空间投影。比如移民社会中的“新英伦新约克New York”云云。再者还有我们的籍贯，即使我们一生都可能不会去往我们籍贯所在的地方，但我们还是会在介绍自己以及填写资料的时候诚实地写上。但事实上，现在随着社会的进一步变迁、城市化的发展，籍贯的概念可能会越来越模糊并最终消失。但在它消失之前，我们仍可以说，籍贯是血缘的一种表现形式。
+血缘关系的局限和新地域概念血缘关系对社会活动有许多限制，最大的体现莫过于商业活动。亲戚间的交易往往是基于人情和相互拖欠，也就是俗话说的“亲戚间不用计较那么细”。反而明算账意味着人情的减弱甚至有点绝交的意味。这样一来，一宗“人情交易”可以被长期甚至永久地搁置，因此对于不亲的关系人们反而会减少这样的往来，避免太多的人情债，无论是别人欠自己的还是自己欠别人的。
+随着社会生活的逐渐发达，牵扯的社会活动越来越多，就越来越不能靠人情来维系权利和义务的平衡，这时候就需要一定程度的“当场清算”，也就是商业。但这种形式是有悖于传统的亲密血缘关系的，因此就衍生出集市的概念，乡村社会划分出一个特定的地点让大家都到这里来，暂时撇开社会联系，进行纯粹的商业交易与结算，不用讲人情。
+因为有集市的存在，“外村人”也可以参与本村的商业活动并生活于此，这是由商业衍生出的新的地缘概念，有别于传统的附加在血缘上的地缘关系，是契约关系的基础，也是现代社会的基础。从学院结合转变到地缘结合是社会性质的转变，也是社会史上的大转变。
+
+有不少概念也是在自己的理解上添油加醋，也不保证能准确传达费孝通先生原文的意思，比如关于籍贯、新地缘关系的产生部分。
+
+]]></content>
+      <categories>
+        <category>阅读</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>乡土中国</title>
+    <url>/2018/08/10/Reading/%E4%B9%A1%E5%9C%9F%E4%B8%AD%E5%9B%BD/</url>
+    <content><![CDATA[
+再拾起这本书，一晃已是五个月过去。
+
+序言
+1947首版，1984年再版
+
+  费孝通先生声明了本书并不是完全严密的观点，更多是启发式的描述。这本书原本就是教书用的小册子。另外，本书不会深入到具体乡村社会的细节描写，而是概念的提炼(Ideal Type)
+乡土本色土是中心词，对土地的依赖，对土地的依赖导致了：
+
+人与空间关系上——不流动
+人在空间上不流动表现为人与人在空间的排列关系上——孤立和隔绝。
+
+这种人与人之间的隔绝不是指单个人与他人之间的，而是以一处住在一起的集团为单位(一个村落)。
+但这看起来有点奇怪，因为单就农业来说，并不需要群居合作。以家庭为单位足以维持生产，夫妇和孩子聚居于一处有者两性和抚养上的需要。
+群居的原因：
+
+小农经济，保证住处离农场近
+水利合作
+安全，共同防卫
+（我觉得这个最重要）土地平等继承，兄弟继承祖业并适当向周围拓展。（三家村-&gt;几千户的大村）
+
+综上，乡土属性导致中国乡土社区的单位是村落，形成了“生于斯、死于斯”的社会，村落之间人口流动少，各地乡村生活则具有地方性
+这种低流动性使得乡村形成一种熟悉的社会
+两种社会类型：
+
+
+
+社会类型
+目的性
+德语
+又名
+
+
+
+乡村
+无目的，一起生长而发生
+Gemeinschaft“有机的团结”
+礼俗社会
+
+
+城市
+有目的，完成任务而聚集
+Gesellschaft “机械的团结”
+法理社会
+
+
+乡下人对人和物都是自然习得的，无需去抽象出普遍规则，只需在接触所及的范围之中知道从手段到目的间的个别关联。
+
+孔子言孝，没有抽象地加以说明，而是列举具体的行为，并归结于心安二字。
+
+熟悉则可随心所欲而不逾矩，人人都遵守从小习得的规矩，
+
+“大家都是熟人了，打个招呼就是了，还用得着多说吗？”
+
+这种乡村里自然习得的规矩在城里却往往行不通，这便是乡下人“土气”的来源之一 —— 他们不是落后的东西，只是在陌生人所组成的现代社会中无法用规矩去应付，于是“土气”成了骂人的词汇。
+]]></content>
+      <categories>
+        <category>阅读</category>
+      </categories>
+  </entry>
 </search>

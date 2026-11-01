@@ -2,31 +2,31 @@
 
 
 <html lang="zh-CN / en-US">
-
+  
 
     <head>
       <meta charset="utf-8" />
-
+        
       <meta
         name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1"
       />
       <title>LeetCode 99. Recover Binary Search Tree |  Jeff的博客</title>
   <meta name="generator" content="hexo-theme-ayer">
-
+      
       <link rel="shortcut icon" href="/favicon.ico" />
-
+       
 <link rel="stylesheet" href="/dist/main.css">
 
-
+      
 <link rel="stylesheet" href="/css/fonts/remixicon.css">
 
-
+      
 <link rel="stylesheet" href="/css/custom.css">
-
+ 
       <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
-
-
+       
+ 
 
       <link
         rel="stylesheet"
@@ -35,7 +35,7 @@
       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
 
       <!-- mermaid -->
-
+      
       <style>
         .swal2-styled.swal2-confirm {
           font-size: 1.6rem;
@@ -48,8 +48,8 @@
 
 <body>
   <div id="app">
-
-
+    
+      
     <main class="content on">
       <section class="outer">
   <article
@@ -60,31 +60,31 @@
   data-scroll-reveal
 >
   <div class="article-inner">
-
+    
     <header class="article-header">
-
+       
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
   LeetCode 99. Recover Binary Search Tree
 </h1>
+ 
 
-
-
+      
     </header>
-
+     
     <div class="article-meta">
       <a href="/2018/12/12/Algorithm/leetcode-99-recover-binary-search-tree/" class="article-date">
   <time datetime="2018-12-12T00:00:00.000Z" itemprop="datePublished">2018-12-12</time>
-</a>
+</a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a>
   </div>
-
+  
 <div class="word_count">
     <span class="post-time">
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">1977</span>
+            <span class="post-count">547</span>
         </span>
     </span>
 
@@ -93,211 +93,70 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">5 min</span>
+            <span class="post-count">3 min</span>
         </span>
     </span>
 </div>
-
+ 
     </div>
+      
+    <div class="tocbot"></div>
 
 
 
 
-
+  
     <div class="article-entry" itemprop="articleBody">
+       
+  <p>LeetCode 99. Recover Binary Search Tree：题目、思路与代码实现。</p>
+<span id="more"></span>
 
-
-  <h1>题目</h1>
-<p>Two elements of a binary search tree (BST) are swapped by mistake.</p>
+<h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><p>Two elements of a binary search tree (BST) are swapped by mistake.</p>
 <p>Recover the tree without changing its structure.</p>
-<pre><code>Example 1:
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">Example 1:</span><br><span class="line"></span><br><span class="line">Input: [1,3,null,null,2]</span><br><span class="line"></span><br><span class="line">   1</span><br><span class="line">  /</span><br><span class="line"> 3</span><br><span class="line">  \</span><br><span class="line">   2</span><br><span class="line"></span><br><span class="line">Output: [3,1,null,null,2]</span><br><span class="line"></span><br><span class="line">   3</span><br><span class="line">  /</span><br><span class="line"> 1</span><br><span class="line">  \</span><br><span class="line">   2</span><br><span class="line">Example 2:</span><br><span class="line"></span><br><span class="line">Input: [3,1,4,null,null,2]</span><br><span class="line"></span><br><span class="line">  3</span><br><span class="line"> / \</span><br><span class="line">1   4</span><br><span class="line">   /</span><br><span class="line">  2</span><br><span class="line"></span><br><span class="line">Output: [2,1,4,null,null,3]</span><br><span class="line"></span><br><span class="line">  2</span><br><span class="line"> / \</span><br><span class="line">1   4</span><br><span class="line">   /</span><br><span class="line">  3</span><br></pre></td></tr></table></figure>
 
-Input: [1,3,null,null,2]
-
-   1
-  /
- 3
-  \
-   2
-
-Output: [3,1,null,null,2]
-
-   3
-  /
- 1
-  \
-   2
-Example 2:
-
-Input: [3,1,4,null,null,2]
-
-  3
- / \
-1   4
-   /
-  2
-
-Output: [2,1,4,null,null,3]
-
-  2
- / \
-1   4
-   /
-  3
-</code></pre>
 <p>Follow up:</p>
 <p>A solution using O(n) space is pretty straight forward. Could you devise a constant space solution?</p>
-<h1>题解</h1>
-<h2>第一版本</h2>
-<p>这一个版本超出内存限制了</p>
-<pre><code class="go">func recoverTree(root *TreeNode)  {
-    if root != nil {
-        dfs(root)
-    }
+<h1 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h1><h2 id="第一版本"><a href="#第一版本" class="headerlink" title="第一版本"></a>第一版本</h2><p>这一个版本超出内存限制了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">func recoverTree(root *TreeNode)  &#123;</span><br><span class="line">    if root != nil &#123;</span><br><span class="line">        dfs(root)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func dfs(root *TreeNode) bool&#123;</span><br><span class="line">    </span><br><span class="line">    // bfs to move nextNode, swap with firstNode(root) and check</span><br><span class="line">    // if succeed, return true and skip</span><br><span class="line">    if root == nil &#123;</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line">    var queue []*TreeNode</span><br><span class="line">    queue = append(queue, root)</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">    for len(queue) != 0 &#123;</span><br><span class="line">        </span><br><span class="line">        headNode := queue[0]</span><br><span class="line">        if headNode.Left != nil &#123;queue =  append(queue, headNode.Left) &#125;</span><br><span class="line">        if headNode.Right != nil &#123;queue =  append(queue, headNode.Right)&#125;</span><br><span class="line">        </span><br><span class="line">        headNode.Left, headNode.Right = headNode.Right, headNode.Left</span><br><span class="line">        if check(root) &#123;</span><br><span class="line">            return true</span><br><span class="line">        &#125;</span><br><span class="line">        headNode.Left, headNode.Right = headNode.Right, headNode.Left</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // firstNode move to next, pre-order dfs</span><br><span class="line">    var flag bool</span><br><span class="line">    if root.Left != nil&#123;</span><br><span class="line">        flag = dfs(root.Left)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    if !flag &amp;&amp; root.Right != nil&#123;</span><br><span class="line">        flag = dfs(root.Right)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    return flag</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">func check(root *TreeNode) bool&#123;</span><br><span class="line">    if root == nil &#123;</span><br><span class="line">        return true</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    checkLeft := (root.Left == nil || root.Left.Val &lt; root.Val) &amp;&amp; check(root.Left)</span><br><span class="line">    checkRight := (root.Right == nil || root.Right.Val &gt; root.Val) &amp;&amp; check(root.Right)</span><br><span class="line">    </span><br><span class="line">    return (checkLeft &amp;&amp; checkRight);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-}
+<h2 id="第二版本"><a href="#第二版本" class="headerlink" title="第二版本"></a>第二版本</h2><p>“冒泡”思路。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">func recoverTree2(root *TreeNode)  &#123;</span><br><span class="line">    help(root)</span><br><span class="line">    first.Val, second.Val = second.Val, first.Val</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func help(root *TreeNode) &#123;</span><br><span class="line">    if root == nil &#123; return &#125;</span><br><span class="line">    help(root.Left)</span><br><span class="line">    if(first == nil &amp;&amp; prev.Val &gt;= root.Val)&#123;</span><br><span class="line">        first = prev</span><br><span class="line">    &#125;</span><br><span class="line">    if(first != nil &amp;&amp; prev.Val &gt;= root.Val)&#123;</span><br><span class="line">        second = root</span><br><span class="line">    &#125;</span><br><span class="line">    prev = root</span><br><span class="line">    help(root.Right)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-func dfs(root *TreeNode) bool{
-
-    // bfs to move nextNode, swap with firstNode(root) and check
-    // if succeed, return true and skip
-    if root == nil {
-        return false;
-    }
-    var queue []*TreeNode
-    queue = append(queue, root)
-
-
-
-    for len(queue) != 0 {
-
-        headNode := queue[0]
-        if headNode.Left != nil {queue =  append(queue, headNode.Left) }
-        if headNode.Right != nil {queue =  append(queue, headNode.Right)}
-
-        headNode.Left, headNode.Right = headNode.Right, headNode.Left
-        if check(root) {
-            return true
-        }
-        headNode.Left, headNode.Right = headNode.Right, headNode.Left
-    }
-
-    // firstNode move to next, pre-order dfs
-    var flag bool
-    if root.Left != nil{
-        flag = dfs(root.Left)
-    }
-
-    if !flag &amp;&amp; root.Right != nil{
-        flag = dfs(root.Right)
-    }
-
-    return flag
-}
-
-
-func check(root *TreeNode) bool{
-    if root == nil {
-        return true
-    }
-
-    checkLeft := (root.Left == nil || root.Left.Val &lt; root.Val) &amp;&amp; check(root.Left)
-    checkRight := (root.Right == nil || root.Right.Val &gt; root.Val) &amp;&amp; check(root.Right)
-
-    return (checkLeft &amp;&amp; checkRight);
-}
-</code></pre>
-<h2>第二版本</h2>
-<p>“冒泡”思路。</p>
-<pre><code class="Go">func recoverTree2(root *TreeNode)  {
-    help(root)
-    first.Val, second.Val = second.Val, first.Val
-}
-
-func help(root *TreeNode) {
-    if root == nil { return }
-    help(root.Left)
-    if(first == nil &amp;&amp; prev.Val &gt;= root.Val){
-        first = prev
-    }
-    if(first != nil &amp;&amp; prev.Val &gt;= root.Val){
-        second = root
-    }
-    prev = root
-    help(root.Right)
-}
-
-</code></pre>
 <p>令人诧异的是：同一份TestCase在Run和Submit居然有不同的结果！这属于编译器本地错误了，不管它</p>
-<h2>第三版本</h2>
-<p>要利用好Go的语言特性，使用<code>channel</code> 进行并发；且仅占O(1)内存空间</p>
-<pre><code class="Go">func Swap(x, y *TreeNode) {
-    x.Val, y.Val = y.Val, x.Val
-}
+<h2 id="第三版本"><a href="#第三版本" class="headerlink" title="第三版本"></a>第三版本</h2><p>要利用好Go的语言特性，使用<code>channel</code> 进行并发；且仅占O(1)内存空间</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">func Swap(x, y *TreeNode) &#123;</span><br><span class="line">    x.Val, y.Val = y.Val, x.Val</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func Inorder(c chan *TreeNode, root *TreeNode) &#123;</span><br><span class="line">    if root == nil &#123;</span><br><span class="line">        return</span><br><span class="line">    &#125;</span><br><span class="line">    Inorder(c, root.Left)</span><br><span class="line">    c &lt;- root</span><br><span class="line">    Inorder(c, root.Right)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func recoverTree(root *TreeNode) &#123;</span><br><span class="line">    c := make(chan *TreeNode)</span><br><span class="line">    go func() &#123;</span><br><span class="line">        Inorder(c, root)</span><br><span class="line">        close(c)</span><br><span class="line">    &#125;()</span><br><span class="line"></span><br><span class="line">    var first, second *TreeNode</span><br><span class="line">    prev := &lt;-c</span><br><span class="line">    for x := range c &#123;</span><br><span class="line">        if x.Val &lt; prev.Val &#123;</span><br><span class="line">            if first == nil &#123;</span><br><span class="line">                first = prev</span><br><span class="line">            &#125; </span><br><span class="line">            if first != nil &#123;</span><br><span class="line">                second = x</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        prev = x</span><br><span class="line">    &#125;</span><br><span class="line">    Swap(first, second)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-func Inorder(c chan *TreeNode, root *TreeNode) {
-    if root == nil {
-        return
-    }
-    Inorder(c, root.Left)
-    c &lt;- root
-    Inorder(c, root.Right)
-}
-
-func recoverTree(root *TreeNode) {
-    c := make(chan *TreeNode)
-    go func() {
-        Inorder(c, root)
-        close(c)
-    }()
-
-    var first, second *TreeNode
-    prev := &lt;-c
-    for x := range c {
-        if x.Val &lt; prev.Val {
-            if first == nil {
-                first = prev
-            }
-            if first != nil {
-                second = x
-            }
-        }
-        prev = x
-    }
-    Swap(first, second)
-}
-</code></pre>
 <hr>
-<p><small>本文最初发布于 <a href="https://www.jianshu.com/p/0d46756f6eef" target="_blank" rel="noopener">简书</a>，现迁移至本站。</small></p>
-
-
+<p>本文最初发布于<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/0d46756f6eef">简书</a>。</p>
+ 
       <!-- reward -->
-
+      
       <div id="reword-out">
         <div id="reward-btn">
           Donate
         </div>
       </div>
-
+      
     </div>
-
+    
 
     <!-- copyright -->
-
+    
     <div class="declare">
       <ul class="post-copyright">
         <li>
           <i class="ri-copyright-line"></i>
           <strong>Copyright： </strong>
-
+          
           Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
-
+          
         </li>
       </ul>
     </div>
-
+    
     <footer class="article-footer">
-
+       
 <div class="share-btn">
       <span class="share-sns share-outer">
         <i class="ri-share-forward-line"></i>
@@ -306,7 +165,7 @@ func recoverTree(root *TreeNode) {
       <div class="share-wrap">
         <i class="arrow"></i>
         <div class="share-icons">
-
+          
           <a class="weibo share-sns" href="javascript:;" data-type="weibo">
             <i class="ri-weibo-fill"></i>
           </a>
@@ -322,7 +181,7 @@ func recoverTree(root *TreeNode) {
           <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
             <i class="icon icon-qzone"></i>
           </a> -->
-
+          
           <a class="facebook share-sns" href="javascript:;" data-type="facebook">
             <i class="ri-facebook-circle-fill"></i>
           </a>
@@ -340,19 +199,38 @@ func recoverTree(root *TreeNode) {
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://jeffzys8.github.io/2018/12/12/Algorithm/leetcode-99-recover-binary-search-tree/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://jeffzys8.github.io/2018/12/12/Algorithm/leetcode-99-recover-binary-search-tree/" alt="微信分享二维码">
     </div>
 </div>
 
-<div id="share-mask"></div>
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
+
     </footer>
   </div>
 
+   
+  <nav class="article-nav">
+    
+      <a href="/2019/02/25/Algorithm/leetcode-42-trapping-rain-water/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            LeetCode 42. Trapping Rain Water
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2018/12/05/Algorithm/leetcode-regular-expression-matching/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">LeetCode Regular Expression Matching</div>
+      </a>
+    
+  </nav>
 
-  <nav class="article-nav"><a href="/jianshu/" class="article-nav-link"><strong class="article-nav-caption">返回</strong><div class="article-nav-title">简书迁移文章目录</div></a></nav>
-
-
-
+  
+   
 <div class="gitalk" id="gitalk-container"></div>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
@@ -360,7 +238,7 @@ func recoverTree(root *TreeNode) {
 
 <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
 
-<!--
+<!-- 
 <script src="https://raw.githubusercontent.com/blueimp/JavaScript-MD5/refs/tags/v2.19.0/js/md5.min.js"></script>
  -->
 <script type="text/javascript">
@@ -382,8 +260,8 @@ func recoverTree(root *TreeNode) {
   gitalk.render('gitalk-container')
 </script>
 
-
-
+  
+   
     <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
     <div id="twikoo" class="twikoo"></div>
     <script>
@@ -391,7 +269,7 @@ func recoverTree(root *TreeNode) {
             envId: ""
         })
     </script>
-
+ 
 </article>
 
 </section>
@@ -400,43 +278,43 @@ func recoverTree(root *TreeNode) {
     <ul>
       <li>
         Copyrights &copy;
-        2015-2024
+        2015-2026
         <i class="ri-heart-fill heart_icon"></i> Jeff
       </li>
     </ul>
     <ul>
       <li>
-
+        
       </li>
     </ul>
     <ul>
       <li>
-
-
+        
+        
         <span>
   <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></span>
   <span class="division">|</span>
   <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
 </span>
-
+        
       </li>
     </ul>
     <ul>
-
+      
     </ul>
     <ul>
-
+      
     </ul>
     <ul>
       <li>
         <!-- cnzz统计 -->
-
+        
         <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
-
+        
       </li>
     </ul>
   </div>
-</footer>
+</footer>    
     </main>
     <div class="float_btns">
       <div class="totop" id="totop">
@@ -451,48 +329,44 @@ func recoverTree(root *TreeNode) {
     <aside class="sidebar on">
       <button class="navbar-toggle"></button>
 <nav class="navbar">
-
+  
   <div class="logo">
     <a href="/"><img src="/images/ayer-side.svg" alt="Jeff的博客"></a>
   </div>
-
+  
   <ul class="nav nav-main">
-
+    
     <li class="nav-item">
       <a class="nav-item-link" href="/">主页</a>
     </li>
-
+    
     <li class="nav-item">
       <a class="nav-item-link" href="/archives">归档</a>
     </li>
-
-    <li class="nav-item">
-      <a class="nav-item-link" href="/jianshu/">简书迁移</a>
-    </li>
-
+    
     <li class="nav-item">
       <a class="nav-item-link" href="/categories">分类</a>
     </li>
-
+    
     <li class="nav-item">
       <a class="nav-item-link" href="/tags">标签</a>
     </li>
-
+    
   </ul>
 </nav>
 <nav class="navbar navbar-bottom">
   <ul class="nav">
     <li class="nav-item">
-
+      
       <a class="nav-item-link nav-item-search"  title="Search">
         <i class="ri-search-line"></i>
       </a>
-
-
+      
+      
       <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
         <i class="ri-rss-line"></i>
       </a>
-
+      
     </li>
   </ul>
 </nav>
@@ -510,27 +384,27 @@ func recoverTree(root *TreeNode) {
   <span class="close"><i class="ri-close-line"></i></span>
   <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
   <div class="reward-box">
-
+    
     <div class="reward-item">
       <img class="reward-img" src="/images/alipay.jpg">
       <span class="reward-type">支付宝</span>
     </div>
-
-
+    
+    
     <div class="reward-item">
       <img class="reward-img" src="/images/wechat.jpg">
       <span class="reward-type">微信</span>
     </div>
-
+    
   </div>
 </div>
-
+    
 <script src="/js/jquery-3.6.0.min.js"></script>
-
+ 
 <script src="/js/lazyload.min.js"></script>
 
 <!-- Tocbot -->
-
+ 
 <script src="/js/tocbot.min.js"></script>
 
 <script>
@@ -560,14 +434,14 @@ func recoverTree(root *TreeNode) {
  <!-- Root element of PhotoSwipe. Must have class pswp. -->
 <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
 
-    <!-- Background of PhotoSwipe.
+    <!-- Background of PhotoSwipe. 
          It's a separate element as animating opacity is faster than rgba(). -->
     <div class="pswp__bg"></div>
 
     <!-- Slides wrapper with overflow:hidden. -->
     <div class="pswp__scroll-wrap">
 
-        <!-- Container that holds slides.
+        <!-- Container that holds slides. 
             PhotoSwipe keeps only 3 of them in the DOM to save memory.
             Don't modify these 3 pswp__item elements, data is added later on. -->
         <div class="pswp__container">
@@ -662,7 +536,7 @@ func recoverTree(root *TreeNode) {
         })
     }
     viewer_init()
-</script>
+</script> 
 <!-- MathJax -->
  <script type="text/x-mathjax-config">
   MathJax.Hub.Config({
@@ -692,9 +566,9 @@ func recoverTree(root *TreeNode) {
 <!-- Katex -->
 
 <!-- busuanzi  -->
-
+ 
 <script src="/js/busuanzi-2.3.pure.min.js"></script>
-
+ 
 <!-- ClickLove -->
 
 <!-- ClickBoom1 -->
@@ -702,7 +576,7 @@ func recoverTree(root *TreeNode) {
 <!-- ClickBoom2 -->
 
 <!-- CodeCopy -->
-
+ 
 <link rel="stylesheet" href="/css/clipboard.css">
  <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
 <script>
@@ -731,7 +605,7 @@ func recoverTree(root *TreeNode) {
         $icon.addClass('ri-checkbox-circle-line');
         let $span = $($btn.find('span'));
         $span[0].innerText = 'COPIED';
-
+        
         wait(function () { // 等待两秒钟后恢复
           $icon.removeClass('ri-checkbox-circle-line');
           $icon.addClass('ri-file-copy-2-line');
@@ -747,7 +621,7 @@ func recoverTree(root *TreeNode) {
         $icon.addClass('ri-time-line');
         let $span = $($btn.find('span'));
         $span[0].innerText = 'COPY FAILED';
-
+        
         wait(function () { // 等待两秒钟后恢复
           $icon.removeClass('ri-time-line');
           $icon.addClass('ri-file-copy-2-line');
@@ -758,7 +632,7 @@ func recoverTree(root *TreeNode) {
     initCopyCode();
   }(window, document);
 </script>
-
+ 
 <!-- CanvasBackground -->
 
 <script>
@@ -768,8 +642,8 @@ func recoverTree(root *TreeNode) {
 </script>
 
 
-
-
+    
+    
 
   </div>
 </body>

@@ -2,31 +2,31 @@
 
 
 <html lang="zh-CN / en-US">
-
+  
 
     <head>
       <meta charset="utf-8" />
-
+        
       <meta
         name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1"
       />
       <title>LeetCode 145. Binary Tree Postorder Traversal |  Jeff的博客</title>
   <meta name="generator" content="hexo-theme-ayer">
-
+      
       <link rel="shortcut icon" href="/favicon.ico" />
-
+       
 <link rel="stylesheet" href="/dist/main.css">
 
-
+      
 <link rel="stylesheet" href="/css/fonts/remixicon.css">
 
-
+      
 <link rel="stylesheet" href="/css/custom.css">
-
+ 
       <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
-
-
+       
+ 
 
       <link
         rel="stylesheet"
@@ -35,7 +35,7 @@
       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
 
       <!-- mermaid -->
-
+      
       <style>
         .swal2-styled.swal2-confirm {
           font-size: 1.6rem;
@@ -48,8 +48,8 @@
 
 <body>
   <div id="app">
-
-
+    
+      
     <main class="content on">
       <section class="outer">
   <article
@@ -60,31 +60,31 @@
   data-scroll-reveal
 >
   <div class="article-inner">
-
+    
     <header class="article-header">
-
+       
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
   LeetCode 145. Binary Tree Postorder Traversal
 </h1>
+ 
 
-
-
+      
     </header>
-
+     
     <div class="article-meta">
       <a href="/2018/10/14/Algorithm/leetcode-145-binary-tree-postorder-traversal/" class="article-date">
   <time datetime="2018-10-14T00:00:00.000Z" itemprop="datePublished">2018-10-14</time>
-</a>
+</a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a>
   </div>
-
+  
 <div class="word_count">
     <span class="post-time">
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">995</span>
+            <span class="post-count">323</span>
         </span>
     </span>
 
@@ -93,107 +93,66 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">2 min</span>
+            <span class="post-count">1 min</span>
         </span>
     </span>
 </div>
-
+ 
     </div>
+      
+    <div class="tocbot"></div>
 
 
 
 
-
+  
     <div class="article-entry" itemprop="articleBody">
+       
+  <p>LeetCode 145. Binary Tree Postorder Traversal：题目、思路与代码实现。</p>
+<span id="more"></span>
 
-
-  <blockquote>
+<blockquote>
 <p>对树的内容有点遗忘了，做一道常见的后序遍历的题目来温习一下</p>
 </blockquote>
-<h1>题目</h1>
-<p>Given a binary tree, return the postorder traversal of its nodes' values.</p>
-<pre><code class="C++">/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     TreeNode *left;
- *     TreeNode *right;
- *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
- * };
- */
-</code></pre>
-<h1>题解</h1>
-<p>这题用递归解法很简单，但做这题主要的目的就是为了复习循环实现的后序遍历</p>
-<h2>递归实现</h2>
-<pre><code class="C++">    vector&lt;int&gt; postorderTraversal(TreeNode* root) {
-        vector&lt;int&gt; result;
-        if(root == NULL) return result; // special case
+<h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><p>Given a binary tree, return the postorder traversal of its nodes’ values.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Definition for a binary tree node.</span><br><span class="line"> * struct TreeNode &#123;</span><br><span class="line"> *     int val;</span><br><span class="line"> *     TreeNode *left;</span><br><span class="line"> *     TreeNode *right;</span><br><span class="line"> *     TreeNode(int x) : val(x), left(NULL), right(NULL) &#123;&#125;</span><br><span class="line"> * &#125;;</span><br><span class="line"> */</span><br></pre></td></tr></table></figure>
 
-        recurse(root, result);
-        return result;
-    }
+<h1 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h1><p>这题用递归解法很简单，但做这题主要的目的就是为了复习循环实现的后序遍历</p>
+<h2 id="递归实现"><a href="#递归实现" class="headerlink" title="递归实现"></a>递归实现</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">vector&lt;int&gt; postorderTraversal(TreeNode* root) &#123;</span><br><span class="line">    vector&lt;int&gt; result;</span><br><span class="line">    if(root == NULL) return result; // special case</span><br><span class="line">    </span><br><span class="line">    recurse(root, result);</span><br><span class="line">    return result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void recurse(TreeNode* node, vector&lt;int&gt; &amp;result)&#123;</span><br><span class="line">    if(node == NULL) return;</span><br><span class="line">    recurse(node-&gt;left, result);</span><br><span class="line">    recurse(node-&gt;right, result);</span><br><span class="line">    result.push_back(node-&gt;val);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-    void recurse(TreeNode* node, vector&lt;int&gt; &amp;result){
-        if(node == NULL) return;
-        recurse(node-&gt;left, result);
-        recurse(node-&gt;right, result);
-        result.push_back(node-&gt;val);
-    }
-</code></pre>
-<h2>循环实现</h2>
-<p>这一种实现方法其实是 “逆后序遍历” 的感觉，回头再尝试有没办法正儿八经地模拟函数递归进行正向迭代。</p>
-<pre><code class="C++">    vector&lt;int&gt; postorderTraversal(TreeNode* root) {
-        vector&lt;int&gt; result;
-        if(root == NULL) return result; // special case
+<h2 id="循环实现"><a href="#循环实现" class="headerlink" title="循环实现"></a>循环实现</h2><p>这一种实现方法其实是 “逆后序遍历” 的感觉，回头再尝试有没办法正儿八经地模拟函数递归进行正向迭代。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">vector&lt;int&gt; postorderTraversal(TreeNode* root) &#123;</span><br><span class="line">    vector&lt;int&gt; result;</span><br><span class="line">    if(root == NULL) return result; // special case</span><br><span class="line">    </span><br><span class="line">    interate(root, result);</span><br><span class="line">    return result;</span><br><span class="line">&#125;</span><br><span class="line">void iterate(TreeNode* root, vector&lt;int&gt; &amp;result)&#123;</span><br><span class="line">    stack&lt;TreeNode*&gt; s;</span><br><span class="line">    s.push(root);</span><br><span class="line">    while(!s.empty()) &#123; </span><br><span class="line">        TreeNode* ele = s.top();</span><br><span class="line">        s.pop(); </span><br><span class="line">        if(ele-&gt;left != NULL) </span><br><span class="line">            s.push(ele-&gt;left); </span><br><span class="line">        if(ele-&gt;right != NULL)</span><br><span class="line">            s.push(ele-&gt;right);</span><br><span class="line">        result.insert(result.begin(), ele-&gt;val); </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-        interate(root, result);
-        return result;
-    }
-    void iterate(TreeNode* root, vector&lt;int&gt; &amp;result){
-        stack&lt;TreeNode*&gt; s;
-        s.push(root);
-        while(!s.empty()) {
-            TreeNode* ele = s.top();
-            s.pop();
-            if(ele-&gt;left != NULL)
-                s.push(ele-&gt;left);
-            if(ele-&gt;right != NULL)
-                s.push(ele-&gt;right);
-            result.insert(result.begin(), ele-&gt;val);
-        }
-    }
-</code></pre>
 <hr>
-<p><small>本文最初发布于 <a href="https://www.jianshu.com/p/d794af2d1dd6" target="_blank" rel="noopener">简书</a>，现迁移至本站。</small></p>
-
-
+<p>本文最初发布于<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/d794af2d1dd6">简书</a>。</p>
+ 
       <!-- reward -->
-
+      
       <div id="reword-out">
         <div id="reward-btn">
           Donate
         </div>
       </div>
-
+      
     </div>
-
+    
 
     <!-- copyright -->
-
+    
     <div class="declare">
       <ul class="post-copyright">
         <li>
           <i class="ri-copyright-line"></i>
           <strong>Copyright： </strong>
-
+          
           Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
-
+          
         </li>
       </ul>
     </div>
-
+    
     <footer class="article-footer">
-
+       
 <div class="share-btn">
       <span class="share-sns share-outer">
         <i class="ri-share-forward-line"></i>
@@ -202,7 +161,7 @@
       <div class="share-wrap">
         <i class="arrow"></i>
         <div class="share-icons">
-
+          
           <a class="weibo share-sns" href="javascript:;" data-type="weibo">
             <i class="ri-weibo-fill"></i>
           </a>
@@ -218,7 +177,7 @@
           <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
             <i class="icon icon-qzone"></i>
           </a> -->
-
+          
           <a class="facebook share-sns" href="javascript:;" data-type="facebook">
             <i class="ri-facebook-circle-fill"></i>
           </a>
@@ -236,19 +195,38 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://jeffzys8.github.io/2018/10/14/Algorithm/leetcode-145-binary-tree-postorder-traversal/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://jeffzys8.github.io/2018/10/14/Algorithm/leetcode-145-binary-tree-postorder-traversal/" alt="微信分享二维码">
     </div>
 </div>
 
-<div id="share-mask"></div>
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
+
     </footer>
   </div>
 
+   
+  <nav class="article-nav">
+    
+      <a href="/2018/11/24/Programming%20Languages/Go-Learning/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Go Learning
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2018/10/08/Algorithm/leetcode-315-count-smaller-numbers-after-self/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">LeetCode 315. Count of Smaller Numbers After Self</div>
+      </a>
+    
+  </nav>
 
-  <nav class="article-nav"><a href="/jianshu/" class="article-nav-link"><strong class="article-nav-caption">返回</strong><div class="article-nav-title">简书迁移文章目录</div></a></nav>
-
-
-
+  
+   
 <div class="gitalk" id="gitalk-container"></div>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
@@ -256,7 +234,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
 
-<!--
+<!-- 
 <script src="https://raw.githubusercontent.com/blueimp/JavaScript-MD5/refs/tags/v2.19.0/js/md5.min.js"></script>
  -->
 <script type="text/javascript">
@@ -278,8 +256,8 @@
   gitalk.render('gitalk-container')
 </script>
 
-
-
+  
+   
     <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
     <div id="twikoo" class="twikoo"></div>
     <script>
@@ -287,7 +265,7 @@
             envId: ""
         })
     </script>
-
+ 
 </article>
 
 </section>
@@ -296,43 +274,43 @@
     <ul>
       <li>
         Copyrights &copy;
-        2015-2024
+        2015-2026
         <i class="ri-heart-fill heart_icon"></i> Jeff
       </li>
     </ul>
     <ul>
       <li>
-
+        
       </li>
     </ul>
     <ul>
       <li>
-
-
+        
+        
         <span>
   <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></span>
   <span class="division">|</span>
   <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
 </span>
-
+        
       </li>
     </ul>
     <ul>
-
+      
     </ul>
     <ul>
-
+      
     </ul>
     <ul>
       <li>
         <!-- cnzz统计 -->
-
+        
         <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
-
+        
       </li>
     </ul>
   </div>
-</footer>
+</footer>    
     </main>
     <div class="float_btns">
       <div class="totop" id="totop">
@@ -347,48 +325,44 @@
     <aside class="sidebar on">
       <button class="navbar-toggle"></button>
 <nav class="navbar">
-
+  
   <div class="logo">
     <a href="/"><img src="/images/ayer-side.svg" alt="Jeff的博客"></a>
   </div>
-
+  
   <ul class="nav nav-main">
-
+    
     <li class="nav-item">
       <a class="nav-item-link" href="/">主页</a>
     </li>
-
+    
     <li class="nav-item">
       <a class="nav-item-link" href="/archives">归档</a>
     </li>
-
-    <li class="nav-item">
-      <a class="nav-item-link" href="/jianshu/">简书迁移</a>
-    </li>
-
+    
     <li class="nav-item">
       <a class="nav-item-link" href="/categories">分类</a>
     </li>
-
+    
     <li class="nav-item">
       <a class="nav-item-link" href="/tags">标签</a>
     </li>
-
+    
   </ul>
 </nav>
 <nav class="navbar navbar-bottom">
   <ul class="nav">
     <li class="nav-item">
-
+      
       <a class="nav-item-link nav-item-search"  title="Search">
         <i class="ri-search-line"></i>
       </a>
-
-
+      
+      
       <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
         <i class="ri-rss-line"></i>
       </a>
-
+      
     </li>
   </ul>
 </nav>
@@ -406,27 +380,27 @@
   <span class="close"><i class="ri-close-line"></i></span>
   <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
   <div class="reward-box">
-
+    
     <div class="reward-item">
       <img class="reward-img" src="/images/alipay.jpg">
       <span class="reward-type">支付宝</span>
     </div>
-
-
+    
+    
     <div class="reward-item">
       <img class="reward-img" src="/images/wechat.jpg">
       <span class="reward-type">微信</span>
     </div>
-
+    
   </div>
 </div>
-
+    
 <script src="/js/jquery-3.6.0.min.js"></script>
-
+ 
 <script src="/js/lazyload.min.js"></script>
 
 <!-- Tocbot -->
-
+ 
 <script src="/js/tocbot.min.js"></script>
 
 <script>
@@ -456,14 +430,14 @@
  <!-- Root element of PhotoSwipe. Must have class pswp. -->
 <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
 
-    <!-- Background of PhotoSwipe.
+    <!-- Background of PhotoSwipe. 
          It's a separate element as animating opacity is faster than rgba(). -->
     <div class="pswp__bg"></div>
 
     <!-- Slides wrapper with overflow:hidden. -->
     <div class="pswp__scroll-wrap">
 
-        <!-- Container that holds slides.
+        <!-- Container that holds slides. 
             PhotoSwipe keeps only 3 of them in the DOM to save memory.
             Don't modify these 3 pswp__item elements, data is added later on. -->
         <div class="pswp__container">
@@ -558,7 +532,7 @@
         })
     }
     viewer_init()
-</script>
+</script> 
 <!-- MathJax -->
  <script type="text/x-mathjax-config">
   MathJax.Hub.Config({
@@ -588,9 +562,9 @@
 <!-- Katex -->
 
 <!-- busuanzi  -->
-
+ 
 <script src="/js/busuanzi-2.3.pure.min.js"></script>
-
+ 
 <!-- ClickLove -->
 
 <!-- ClickBoom1 -->
@@ -598,7 +572,7 @@
 <!-- ClickBoom2 -->
 
 <!-- CodeCopy -->
-
+ 
 <link rel="stylesheet" href="/css/clipboard.css">
  <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
 <script>
@@ -627,7 +601,7 @@
         $icon.addClass('ri-checkbox-circle-line');
         let $span = $($btn.find('span'));
         $span[0].innerText = 'COPIED';
-
+        
         wait(function () { // 等待两秒钟后恢复
           $icon.removeClass('ri-checkbox-circle-line');
           $icon.addClass('ri-file-copy-2-line');
@@ -643,7 +617,7 @@
         $icon.addClass('ri-time-line');
         let $span = $($btn.find('span'));
         $span[0].innerText = 'COPY FAILED';
-
+        
         wait(function () { // 等待两秒钟后恢复
           $icon.removeClass('ri-time-line');
           $icon.addClass('ri-file-copy-2-line');
@@ -654,7 +628,7 @@
     initCopyCode();
   }(window, document);
 </script>
-
+ 
 <!-- CanvasBackground -->
 
 <script>
@@ -664,8 +638,8 @@
 </script>
 
 
-
-
+    
+    
 
   </div>
 </body>

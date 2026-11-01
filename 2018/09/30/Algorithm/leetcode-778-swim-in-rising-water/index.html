@@ -2,31 +2,31 @@
 
 
 <html lang="zh-CN / en-US">
-
+  
 
     <head>
       <meta charset="utf-8" />
-
+        
       <meta
         name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1"
       />
       <title>LeetCode 778. Swim in Rising Water |  Jeff的博客</title>
   <meta name="generator" content="hexo-theme-ayer">
-
+      
       <link rel="shortcut icon" href="/favicon.ico" />
-
+       
 <link rel="stylesheet" href="/dist/main.css">
 
-
+      
 <link rel="stylesheet" href="/css/fonts/remixicon.css">
 
-
+      
 <link rel="stylesheet" href="/css/custom.css">
-
+ 
       <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
-
-
+       
+ 
 
       <link
         rel="stylesheet"
@@ -35,7 +35,7 @@
       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
 
       <!-- mermaid -->
-
+      
       <style>
         .swal2-styled.swal2-confirm {
           font-size: 1.6rem;
@@ -48,8 +48,8 @@
 
 <body>
   <div id="app">
-
-
+    
+      
     <main class="content on">
       <section class="outer">
   <article
@@ -60,31 +60,31 @@
   data-scroll-reveal
 >
   <div class="article-inner">
-
+    
     <header class="article-header">
-
+       
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
   LeetCode 778. Swim in Rising Water
 </h1>
+ 
 
-
-
+      
     </header>
-
+     
     <div class="article-meta">
       <a href="/2018/09/30/Algorithm/leetcode-778-swim-in-rising-water/" class="article-date">
   <time datetime="2018-09-30T00:00:00.000Z" itemprop="datePublished">2018-09-30</time>
-</a>
+</a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a>
   </div>
-
+  
 <div class="word_count">
     <span class="post-time">
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">3313</span>
+            <span class="post-count">1.3k</span>
         </span>
     </span>
 
@@ -93,187 +93,88 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">8 min</span>
+            <span class="post-count">6 min</span>
         </span>
     </span>
 </div>
-
+ 
     </div>
+      
+    <div class="tocbot"></div>
 
 
 
 
-
+  
     <div class="article-entry" itemprop="articleBody">
+       
+  <p>LeetCode 778. Swim in Rising Water：题目、思路与代码实现。</p>
+<span id="more"></span>
 
-
-  <h1>778. Swim in Rising Water</h1>
-<h2>题目</h2>
-<p>On an N x N <code>grid</code>, each square <code>grid[i][j]</code> represents the elevation at that point (<code>i,j)</code>.</p>
+<h1 id="778-Swim-in-Rising-Water"><a href="#778-Swim-in-Rising-Water" class="headerlink" title="778. Swim in Rising Water"></a>778. Swim in Rising Water</h1><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>On an N x N <code>grid</code>, each square <code>grid[i][j]</code> represents the elevation at that point (<code>i,j)</code>.</p>
 <p>Now rain starts to fall. At time <code>t</code>, the depth of the water everywhere is <code>t</code>. You can swim from a square to another 4-directionally adjacent square if and only if the elevation of both squares individually are at most <code>t</code>. You can swim infinite distance in zero time. Of course, you must stay within the boundaries of the grid during your swim.</p>
 <p>You start at the top left square <code>(0, 0)</code>. What is the least time until you can reach the bottom right square <code>(N-1, N-1)</code>?</p>
-<h3>Example</h3>
-<pre><code>Input: [[0,1,2,3,4],[24,23,22,21,5],[12,13,14,15,16],[11,17,18,19,20],[10,9,8,7,6]]
-Output: 16
-Explanation:
- 0  1  2  3  4
-24 23 22 21  5
-12 13 14 15 16
-11 17 18 19 20
-10  9  8  7  6
+<h3 id="Example"><a href="#Example" class="headerlink" title="Example"></a>Example</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Input: [[0,1,2,3,4],[24,23,22,21,5],[12,13,14,15,16],[11,17,18,19,20],[10,9,8,7,6]]</span><br><span class="line">Output: 16</span><br><span class="line">Explanation:</span><br><span class="line"> 0  1  2  3  4</span><br><span class="line">24 23 22 21  5</span><br><span class="line">12 13 14 15 16</span><br><span class="line">11 17 18 19 20</span><br><span class="line">10  9  8  7  6</span><br><span class="line"></span><br><span class="line">The final route is marked in bold.</span><br><span class="line">We need to wait until time 16 so that (0, 0) and (4, 4) are connected.</span><br></pre></td></tr></table></figure>
 
-The final route is marked in bold.
-We need to wait until time 16 so that (0, 0) and (4, 4) are connected.
-</code></pre>
-<h2>算法分析及题解</h2>
-<p>对题目进行分析后发现，海平面不断上升的过程，其实就是一个以<code>(0,0)</code>为起点的无向图不断扩充的过程。而当<code>(N-1,N-1)</code>也在该图内时，此时的海平面即为所求结果。再经过简单的分析，问题 “求点<code>(N-1, N-1)</code>可达时海平面的高度”可被分解为以下步骤解决：</p>
+<h2 id="算法分析及题解"><a href="#算法分析及题解" class="headerlink" title="算法分析及题解"></a>算法分析及题解</h2><p>对题目进行分析后发现，海平面不断上升的过程，其实就是一个以<code>(0,0)</code>为起点的无向图不断扩充的过程。而当<code>(N-1,N-1)</code>也在该图内时，此时的海平面即为所求结果。再经过简单的分析，问题 “求点<code>(N-1, N-1)</code>可达时海平面的高度”可被分解为以下步骤解决：</p>
 <ol>
 <li>给定海平面高度（初始为0），点 <code>(N-1, N-1)</code> 是否可达</li>
 <li>若1判断不可达，海平面+1，回到1判断</li>
 <li>若1判断可达，返回当前海平面高度，程序结束</li>
 </ol>
 <p>23步很好表达：</p>
-<pre><code class="C++">int swimInWater(vector&lt;vector&lt;int&gt;&gt;&amp; grid) {
-        int elevation = 0;
-        while(!update(grid, elevation)){
-            elevation ++;
-        }
-        return elevation;
-    }
-//elevation: 海平面高度
-//update(): 给定海平面，判断(N-1, N-1) 是否可达
-</code></pre>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">int swimInWater(vector&lt;vector&lt;int&gt;&gt;&amp; grid) &#123;</span><br><span class="line">        int elevation = 0;</span><br><span class="line">        while(!update(grid, elevation))&#123;</span><br><span class="line">            elevation ++;</span><br><span class="line">        &#125;</span><br><span class="line">        return elevation;</span><br><span class="line">    &#125;</span><br><span class="line">//elevation: 海平面高度</span><br><span class="line">//update(): 给定海平面，判断(N-1, N-1) 是否可达</span><br></pre></td></tr></table></figure>
+
 <p>关键的问题就在于第一个步骤，怎么在给定的海平面高度里判断 <code>(N-1, N-1)</code> 是否可达，也即 <code>update()</code>函数该怎么写</p>
-<h3>Update函数</h3>
-<p><code>update()</code>函数要解决的问题就是：给定正方形地图数据、当前海平面高度，判断 <code>(N-1, N-1)</code>是否可达。这里的图其实是一个<strong>类隐式图</strong>，正方形地图内点是否在图内是需要在搜索过程中进行判断的。那为什么说它是类隐式图呢？因为这个无向图里的点的域是确认的：从 <code>(0,0)</code> 到 <code>(N-1, N-1)</code>，因此如果不考虑性能，可以先遍历两次构造出无向图，然后再从<code>(0,0)</code>去遍历，也是可行的。当然这里为了性能不考虑这种算法。</p>
-<pre><code class="C++">bool update(vector&lt;vector&lt;int&gt;&gt;&amp; grid, int elevation){
-            //N:正方形地图边长
-        int N = grid.size();
-            //mark：图结点访问标记
-        bool** mark = new bool*[N];
-        for(int i = 0; i &lt; N; ++i){
-            mark[i] = new bool[N];
-            for(int e = 0; e &lt; N; ++e)
-                mark[i][e] = false;
-        }
+<h3 id="Update函数"><a href="#Update函数" class="headerlink" title="Update函数"></a>Update函数</h3><p><code>update()</code>函数要解决的问题就是：给定正方形地图数据、当前海平面高度，判断 <code>(N-1, N-1)</code>是否可达。这里的图其实是一个<strong>类隐式图</strong>，正方形地图内点是否在图内是需要在搜索过程中进行判断的。那为什么说它是类隐式图呢？因为这个无向图里的点的域是确认的：从 <code>(0,0)</code> 到 <code>(N-1, N-1)</code>，因此如果不考虑性能，可以先遍历两次构造出无向图，然后再从<code>(0,0)</code>去遍历，也是可行的。当然这里为了性能不考虑这种算法。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">bool update(vector&lt;vector&lt;int&gt;&gt;&amp; grid, int elevation)&#123;</span><br><span class="line">            //N:正方形地图边长</span><br><span class="line">        int N = grid.size();</span><br><span class="line">            //mark：图结点访问标记</span><br><span class="line">        bool** mark = new bool*[N];</span><br><span class="line">        for(int i = 0; i &lt; N; ++i)&#123;</span><br><span class="line">            mark[i] = new bool[N];</span><br><span class="line">            for(int e = 0; e &lt; N; ++e)</span><br><span class="line">                mark[i][e] = false;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        //搜索</span><br><span class="line"></span><br><span class="line">        //清理内存</span><br><span class="line">        bool result = mark[N-1][N-1];</span><br><span class="line">        for(int i = 0; i &lt; N; ++i)&#123;</span><br><span class="line">            delete[] mark[i];</span><br><span class="line">        &#125;</span><br><span class="line">        delete[] mark;</span><br><span class="line">        return result;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
-        //搜索
-
-        //清理内存
-        bool result = mark[N-1][N-1];
-        for(int i = 0; i &lt; N; ++i){
-            delete[] mark[i];
-        }
-        delete[] mark;
-        return result;
-    }
-</code></pre>
 <p>注意到<code>update()</code>函数中 <strong>搜索</strong> 部分还是空缺的，这里有两种解法，DFS和BFS</p>
-<h3>DFS实现搜索</h3>
-<pre><code class="C++">void DFS(vector&lt;vector&lt;int&gt;&gt;&amp; grid, int elevation, bool** mark, int x, int y){
-        int N = grid.size();
-        if(mark[x][y]) return;
+<h3 id="DFS实现搜索"><a href="#DFS实现搜索" class="headerlink" title="DFS实现搜索"></a>DFS实现搜索</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">void DFS(vector&lt;vector&lt;int&gt;&gt;&amp; grid, int elevation, bool** mark, int x, int y)&#123;</span><br><span class="line">        int N = grid.size();</span><br><span class="line">        if(mark[x][y]) return;</span><br><span class="line"></span><br><span class="line">        if(grid[x][y] &lt;= elevation)&#123;</span><br><span class="line">            mark[x][y] = true;</span><br><span class="line">            if(x+1 &lt; N) DFS(grid,elevation,mark,x+1,y);</span><br><span class="line">            if(x-1 &gt;= 0) DFS(grid,elevation,mark,x-1,y);</span><br><span class="line">            if(y+1 &lt; N) DFS(grid,elevation,mark,x,y+1);</span><br><span class="line">            if(y-1 &gt;= 0) DFS(grid,elevation,mark,x,y-1);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
-        if(grid[x][y] &lt;= elevation){
-            mark[x][y] = true;
-            if(x+1 &lt; N) DFS(grid,elevation,mark,x+1,y);
-            if(x-1 &gt;= 0) DFS(grid,elevation,mark,x-1,y);
-            if(y+1 &lt; N) DFS(grid,elevation,mark,x,y+1);
-            if(y-1 &gt;= 0) DFS(grid,elevation,mark,x,y-1);
-        }
-    }
-</code></pre>
 <p>对应在<code>update()</code>函数内的搜索语句：</p>
-<pre><code class="C++">//搜索
-DFS(grid, elevation, mark, 0, 0);
-</code></pre>
-<h3>BFS实现搜索</h3>
-<pre><code class="C++">void BFS(vector&lt;vector&lt;int&gt;&gt;&amp; grid, int elevation, bool** mark, int sx, int sy){
-        if(grid[sx][sy] &gt; elevation) return;
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">//搜索</span><br><span class="line">DFS(grid, elevation, mark, 0, 0);</span><br></pre></td></tr></table></figure>
 
-        int N = grid.size();
-        pair&lt;int, int&gt; source = make_pair(sx,sy);
-        queue&lt; pair&lt;int, int&gt; &gt; q;
-        q.push(source);
-        while(!q.empty()){
-            pair&lt;int, int&gt; now = q.front();
-            q.pop();
-            int x = now.first, y = now.second;
-            mark[x][y] = true;
+<h3 id="BFS实现搜索"><a href="#BFS实现搜索" class="headerlink" title="BFS实现搜索"></a>BFS实现搜索</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">void BFS(vector&lt;vector&lt;int&gt;&gt;&amp; grid, int elevation, bool** mark, int sx, int sy)&#123;</span><br><span class="line">        if(grid[sx][sy] &gt; elevation) return;</span><br><span class="line">        </span><br><span class="line">        int N = grid.size();</span><br><span class="line">        pair&lt;int, int&gt; source = make_pair(sx,sy);</span><br><span class="line">        queue&lt; pair&lt;int, int&gt; &gt; q;</span><br><span class="line">        q.push(source);</span><br><span class="line">        while(!q.empty())&#123;</span><br><span class="line">            pair&lt;int, int&gt; now = q.front();</span><br><span class="line">            q.pop();</span><br><span class="line">            int x = now.first, y = now.second;</span><br><span class="line">            mark[x][y] = true;</span><br><span class="line"></span><br><span class="line">            if(x-1 &gt;= 0 &amp;&amp; !mark[x-1][y] &amp;&amp; grid[x-1][y] &lt;= elevation)</span><br><span class="line">                q.push(make_pair(x-1,y));</span><br><span class="line">            if(x+1 &lt; N &amp;&amp; !mark[x+1][y] &amp;&amp; grid[x+1][y] &lt;= elevation)</span><br><span class="line">                q.push(make_pair(x+1,y));</span><br><span class="line">            if(y-1 &gt;= 0 &amp;&amp; !mark[x][y-1] &amp;&amp; grid[x][y-1] &lt;= elevation)</span><br><span class="line">                q.push(make_pair(x,y-1));</span><br><span class="line">            if(y+1 &lt; N &amp;&amp; !mark[x][y+1] &amp;&amp; grid[x][y+1] &lt;= elevation)</span><br><span class="line">                q.push(make_pair(x,y+1));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
-            if(x-1 &gt;= 0 &amp;&amp; !mark[x-1][y] &amp;&amp; grid[x-1][y] &lt;= elevation)
-                q.push(make_pair(x-1,y));
-            if(x+1 &lt; N &amp;&amp; !mark[x+1][y] &amp;&amp; grid[x+1][y] &lt;= elevation)
-                q.push(make_pair(x+1,y));
-            if(y-1 &gt;= 0 &amp;&amp; !mark[x][y-1] &amp;&amp; grid[x][y-1] &lt;= elevation)
-                q.push(make_pair(x,y-1));
-            if(y+1 &lt; N &amp;&amp; !mark[x][y+1] &amp;&amp; grid[x][y+1] &lt;= elevation)
-                q.push(make_pair(x,y+1));
-        }
-    }
-</code></pre>
 <p>对应在<code>update()</code>函数内的搜索语句：</p>
-<pre><code class="C++">//搜索
-BFS(grid, elevation, mark, 0, 0);
-</code></pre>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">//搜索</span><br><span class="line">BFS(grid, elevation, mark, 0, 0);</span><br></pre></td></tr></table></figure>
+
 <p>这时候问题出现了：某一些测例出现了超时。</p>
-<h3>BFS 优化</h3>
-<p>考虑可能pair和queue占用了一些时间，因此优化了一下代码</p>
-<pre><code class="C++">void BFS(vector&lt;vector&lt;int&gt;&gt;&amp; grid, int elevation, bool** mark, int sx, int sy){
-        if(grid[sx][sy] &gt; elevation) return;
+<h3 id="BFS-优化"><a href="#BFS-优化" class="headerlink" title="BFS 优化"></a>BFS 优化</h3><p>考虑可能pair和queue占用了一些时间，因此优化了一下代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">void BFS(vector&lt;vector&lt;int&gt;&gt;&amp; grid, int elevation, bool** mark, int sx, int sy)&#123;</span><br><span class="line">        if(grid[sx][sy] &gt; elevation) return;</span><br><span class="line"></span><br><span class="line">        int N = grid.size();</span><br><span class="line">        queue&lt;int&gt; q;</span><br><span class="line">        q.push(sx*N+sy);</span><br><span class="line">        while(!q.empty())&#123;</span><br><span class="line">            int now = q.front();</span><br><span class="line">            q.pop();</span><br><span class="line">            int x = now/N, y = now%N;</span><br><span class="line">            mark[x][y] = true;</span><br><span class="line"></span><br><span class="line">            if(x-1 &gt;= 0 &amp;&amp; !mark[x-1][y] &amp;&amp; grid[x-1][y] &lt;= elevation)</span><br><span class="line">                q.push((x-1)*N+y);</span><br><span class="line">            if(x+1 &lt; N &amp;&amp; !mark[x+1][y] &amp;&amp; grid[x+1][y] &lt;= elevation)</span><br><span class="line">                q.push((x+1)*N+y);</span><br><span class="line">            if(y-1 &gt;= 0 &amp;&amp; !mark[x][y-1] &amp;&amp; grid[x][y-1] &lt;= elevation)</span><br><span class="line">                q.push(x*N+y-1);</span><br><span class="line">            if(y+1 &lt; N &amp;&amp; !mark[x][y+1] &amp;&amp; grid[x][y+1] &lt;= elevation)</span><br><span class="line">                q.push(x*N+y+1);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
-        int N = grid.size();
-        queue&lt;int&gt; q;
-        q.push(sx*N+sy);
-        while(!q.empty()){
-            int now = q.front();
-            q.pop();
-            int x = now/N, y = now%N;
-            mark[x][y] = true;
-
-            if(x-1 &gt;= 0 &amp;&amp; !mark[x-1][y] &amp;&amp; grid[x-1][y] &lt;= elevation)
-                q.push((x-1)*N+y);
-            if(x+1 &lt; N &amp;&amp; !mark[x+1][y] &amp;&amp; grid[x+1][y] &lt;= elevation)
-                q.push((x+1)*N+y);
-            if(y-1 &gt;= 0 &amp;&amp; !mark[x][y-1] &amp;&amp; grid[x][y-1] &lt;= elevation)
-                q.push(x*N+y-1);
-            if(y+1 &lt; N &amp;&amp; !mark[x][y+1] &amp;&amp; grid[x][y+1] &lt;= elevation)
-                q.push(x*N+y+1);
-        }
-    }
-</code></pre>
 <p>但是问题仍然存在。经过测试研究发现，BFS所经历的update次数要大于DFS，说明求路径存在而不是求最短路的时候采用DFS是更好的算法。</p>
 <hr>
-<p><small>本文最初发布于 <a href="https://www.jianshu.com/p/d26cf1dc029a" target="_blank" rel="noopener">简书</a>，现迁移至本站。</small></p>
-
-
+<p>本文最初发布于<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/d26cf1dc029a">简书</a>。</p>
+ 
       <!-- reward -->
-
+      
       <div id="reword-out">
         <div id="reward-btn">
           Donate
         </div>
       </div>
-
+      
     </div>
-
+    
 
     <!-- copyright -->
-
+    
     <div class="declare">
       <ul class="post-copyright">
         <li>
           <i class="ri-copyright-line"></i>
           <strong>Copyright： </strong>
-
+          
           Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
-
+          
         </li>
       </ul>
     </div>
-
+    
     <footer class="article-footer">
-
+       
 <div class="share-btn">
       <span class="share-sns share-outer">
         <i class="ri-share-forward-line"></i>
@@ -282,7 +183,7 @@ BFS(grid, elevation, mark, 0, 0);
       <div class="share-wrap">
         <i class="arrow"></i>
         <div class="share-icons">
-
+          
           <a class="weibo share-sns" href="javascript:;" data-type="weibo">
             <i class="ri-weibo-fill"></i>
           </a>
@@ -298,7 +199,7 @@ BFS(grid, elevation, mark, 0, 0);
           <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
             <i class="icon icon-qzone"></i>
           </a> -->
-
+          
           <a class="facebook share-sns" href="javascript:;" data-type="facebook">
             <i class="ri-facebook-circle-fill"></i>
           </a>
@@ -316,19 +217,38 @@ BFS(grid, elevation, mark, 0, 0);
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://jeffzys8.github.io/2018/09/30/Algorithm/leetcode-778-swim-in-rising-water/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://jeffzys8.github.io/2018/09/30/Algorithm/leetcode-778-swim-in-rising-water/" alt="微信分享二维码">
     </div>
 </div>
 
-<div id="share-mask"></div>
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
+
     </footer>
   </div>
 
+   
+  <nav class="article-nav">
+    
+      <a href="/2018/10/08/Algorithm/leetcode-315-count-smaller-numbers-after-self/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            LeetCode 315. Count of Smaller Numbers After Self
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2018/09/23/Algorithm/leetcode-207-course-schedule/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">LeetCode 207. Course Schedule</div>
+      </a>
+    
+  </nav>
 
-  <nav class="article-nav"><a href="/jianshu/" class="article-nav-link"><strong class="article-nav-caption">返回</strong><div class="article-nav-title">简书迁移文章目录</div></a></nav>
-
-
-
+  
+   
 <div class="gitalk" id="gitalk-container"></div>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
@@ -336,7 +256,7 @@ BFS(grid, elevation, mark, 0, 0);
 
 <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
 
-<!--
+<!-- 
 <script src="https://raw.githubusercontent.com/blueimp/JavaScript-MD5/refs/tags/v2.19.0/js/md5.min.js"></script>
  -->
 <script type="text/javascript">
@@ -358,8 +278,8 @@ BFS(grid, elevation, mark, 0, 0);
   gitalk.render('gitalk-container')
 </script>
 
-
-
+  
+   
     <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
     <div id="twikoo" class="twikoo"></div>
     <script>
@@ -367,7 +287,7 @@ BFS(grid, elevation, mark, 0, 0);
             envId: ""
         })
     </script>
-
+ 
 </article>
 
 </section>
@@ -376,43 +296,43 @@ BFS(grid, elevation, mark, 0, 0);
     <ul>
       <li>
         Copyrights &copy;
-        2015-2024
+        2015-2026
         <i class="ri-heart-fill heart_icon"></i> Jeff
       </li>
     </ul>
     <ul>
       <li>
-
+        
       </li>
     </ul>
     <ul>
       <li>
-
-
+        
+        
         <span>
   <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></span>
   <span class="division">|</span>
   <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
 </span>
-
+        
       </li>
     </ul>
     <ul>
-
+      
     </ul>
     <ul>
-
+      
     </ul>
     <ul>
       <li>
         <!-- cnzz统计 -->
-
+        
         <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
-
+        
       </li>
     </ul>
   </div>
-</footer>
+</footer>    
     </main>
     <div class="float_btns">
       <div class="totop" id="totop">
@@ -427,48 +347,44 @@ BFS(grid, elevation, mark, 0, 0);
     <aside class="sidebar on">
       <button class="navbar-toggle"></button>
 <nav class="navbar">
-
+  
   <div class="logo">
     <a href="/"><img src="/images/ayer-side.svg" alt="Jeff的博客"></a>
   </div>
-
+  
   <ul class="nav nav-main">
-
+    
     <li class="nav-item">
       <a class="nav-item-link" href="/">主页</a>
     </li>
-
+    
     <li class="nav-item">
       <a class="nav-item-link" href="/archives">归档</a>
     </li>
-
-    <li class="nav-item">
-      <a class="nav-item-link" href="/jianshu/">简书迁移</a>
-    </li>
-
+    
     <li class="nav-item">
       <a class="nav-item-link" href="/categories">分类</a>
     </li>
-
+    
     <li class="nav-item">
       <a class="nav-item-link" href="/tags">标签</a>
     </li>
-
+    
   </ul>
 </nav>
 <nav class="navbar navbar-bottom">
   <ul class="nav">
     <li class="nav-item">
-
+      
       <a class="nav-item-link nav-item-search"  title="Search">
         <i class="ri-search-line"></i>
       </a>
-
-
+      
+      
       <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
         <i class="ri-rss-line"></i>
       </a>
-
+      
     </li>
   </ul>
 </nav>
@@ -486,27 +402,27 @@ BFS(grid, elevation, mark, 0, 0);
   <span class="close"><i class="ri-close-line"></i></span>
   <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
   <div class="reward-box">
-
+    
     <div class="reward-item">
       <img class="reward-img" src="/images/alipay.jpg">
       <span class="reward-type">支付宝</span>
     </div>
-
-
+    
+    
     <div class="reward-item">
       <img class="reward-img" src="/images/wechat.jpg">
       <span class="reward-type">微信</span>
     </div>
-
+    
   </div>
 </div>
-
+    
 <script src="/js/jquery-3.6.0.min.js"></script>
-
+ 
 <script src="/js/lazyload.min.js"></script>
 
 <!-- Tocbot -->
-
+ 
 <script src="/js/tocbot.min.js"></script>
 
 <script>
@@ -536,14 +452,14 @@ BFS(grid, elevation, mark, 0, 0);
  <!-- Root element of PhotoSwipe. Must have class pswp. -->
 <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
 
-    <!-- Background of PhotoSwipe.
+    <!-- Background of PhotoSwipe. 
          It's a separate element as animating opacity is faster than rgba(). -->
     <div class="pswp__bg"></div>
 
     <!-- Slides wrapper with overflow:hidden. -->
     <div class="pswp__scroll-wrap">
 
-        <!-- Container that holds slides.
+        <!-- Container that holds slides. 
             PhotoSwipe keeps only 3 of them in the DOM to save memory.
             Don't modify these 3 pswp__item elements, data is added later on. -->
         <div class="pswp__container">
@@ -638,7 +554,7 @@ BFS(grid, elevation, mark, 0, 0);
         })
     }
     viewer_init()
-</script>
+</script> 
 <!-- MathJax -->
  <script type="text/x-mathjax-config">
   MathJax.Hub.Config({
@@ -668,9 +584,9 @@ BFS(grid, elevation, mark, 0, 0);
 <!-- Katex -->
 
 <!-- busuanzi  -->
-
+ 
 <script src="/js/busuanzi-2.3.pure.min.js"></script>
-
+ 
 <!-- ClickLove -->
 
 <!-- ClickBoom1 -->
@@ -678,7 +594,7 @@ BFS(grid, elevation, mark, 0, 0);
 <!-- ClickBoom2 -->
 
 <!-- CodeCopy -->
-
+ 
 <link rel="stylesheet" href="/css/clipboard.css">
  <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
 <script>
@@ -707,7 +623,7 @@ BFS(grid, elevation, mark, 0, 0);
         $icon.addClass('ri-checkbox-circle-line');
         let $span = $($btn.find('span'));
         $span[0].innerText = 'COPIED';
-
+        
         wait(function () { // 等待两秒钟后恢复
           $icon.removeClass('ri-checkbox-circle-line');
           $icon.addClass('ri-file-copy-2-line');
@@ -723,7 +639,7 @@ BFS(grid, elevation, mark, 0, 0);
         $icon.addClass('ri-time-line');
         let $span = $($btn.find('span'));
         $span[0].innerText = 'COPY FAILED';
-
+        
         wait(function () { // 等待两秒钟后恢复
           $icon.removeClass('ri-time-line');
           $icon.addClass('ri-file-copy-2-line');
@@ -734,7 +650,7 @@ BFS(grid, elevation, mark, 0, 0);
     initCopyCode();
   }(window, document);
 </script>
-
+ 
 <!-- CanvasBackground -->
 
 <script>
@@ -744,8 +660,8 @@ BFS(grid, elevation, mark, 0, 0);
 </script>
 
 
-
-
+    
+    
 
   </div>
 </body>
