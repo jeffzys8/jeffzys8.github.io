@@ -1,684 +1,1172 @@
 <!DOCTYPE html>
-<html>
-<head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="utf-8">
-  <title>Jeff的博客</title>
-  <meta name="keywords" content>
-  <meta name="description" content="Jeff的博客">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta name="description" content="Linux目录树标准 - FHSFHS 全称Filesystem Hierarchy Standard 文件系统层级结构标准。Linux内核在初始化时会生成根目录/为起点的文件目录树，而 FHS 作为Linux的工业标准规范了目录树的基本结构，当然各个发行版在这个基础上还有额外增加的内容。 FHS官方文档 总分类：  / (root) 与开机系统有关； /usr (unix software re">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Linux目录树标准 - FHS">
-<meta property="og:url" content="http://zys980808.github.io/2020/04/25/Linux/linux-fhs/index.html">
-<meta property="og:site_name" content="Jeff的博客">
-<meta property="og:description" content="Linux目录树标准 - FHSFHS 全称Filesystem Hierarchy Standard 文件系统层级结构标准。Linux内核在初始化时会生成根目录/为起点的文件目录树，而 FHS 作为Linux的工业标准规范了目录树的基本结构，当然各个发行版在这个基础上还有额外增加的内容。 FHS官方文档 总分类：  / (root) 与开机系统有关； /usr (unix software re">
-<meta property="og:locale" content="zh-CN / en-US">
-<meta property="og:updated_time" content="2020-04-25T15:35:16.355Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Linux目录树标准 - FHS">
-<meta name="twitter:description" content="Linux目录树标准 - FHSFHS 全称Filesystem Hierarchy Standard 文件系统层级结构标准。Linux内核在初始化时会生成根目录/为起点的文件目录树，而 FHS 作为Linux的工业标准规范了目录树的基本结构，当然各个发行版在这个基础上还有额外增加的内容。 FHS官方文档 总分类：  / (root) 与开机系统有关； /usr (unix software re">
 
 
-<link rel="icon" href="/img/avatar.jpg">
+<html lang="zh-CN / en-US">
+  
 
-<link href="/css/style.css?v=1.0.1" rel="stylesheet">
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title> Jeff的博客</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
 
-<link href="/css/hl_theme/atom-light.css?v=1.0.1" rel="stylesheet">
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
 
-<link href="//cdn.bootcss.com/animate.css/3.5.2/animate.min.css" rel="stylesheet">
-<link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
 
-<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
-<script src="/js/jquery.autocomplete.min.js?v=1.0.1"></script>
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
 
-<script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
-<script>
-    hljs.initHighlightingOnLoad();
-</script>
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
 
-<script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
-
-
-
-<script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
-
-<script src="/js/iconfont.js?v=1.0.1"></script>
-
-</head>
-<div style="display: none">
-  <input class="theme_disqus_on" value="false">
-  <input class="theme_preload_comment" value="false">
-  <input class="theme_blog_path" value>
-</div>
 
 <body>
-<aside class="nav mobile">
-    <div class="nav-left">
-        <a href="/" class="avatar_target">
-    <img class="avatar" src="/img/avatar.jpg" />
-</a>
-<div class="author">
-    <span>Jeff</span>
-</div>
-
-<div class="icon">
+  <div id="app">
     
-        
-        <a title="rss" href="/atom.xml" target="_blank">
-            
-                <svg class="iconfont-svg" aria-hidden="true">
-                    <use xlink:href="#icon-rss"></use>
-                </svg>
-            
-        </a>
-        
+      
+    <main class="content on">
+      
+<section class="cover">
     
-        
-        <a title="github" href="https://github.com/yelog" target="_blank">
-            
-                <svg class="iconfont-svg" aria-hidden="true">
-                    <use xlink:href="#icon-github"></use>
-                </svg>
-            
-        </a>
-        
+      
+      <a class="forkMe" href="https://github.com/Shen-Yu/hexo-theme-ayer"
+        target="_blank"><img width="149" height="149" src="/images/forkme.png"
+          class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
     
-        
-        <a title="facebook" href="https://www.facebook.com/faker.tops" target="_blank">
-            
-                <svg class="iconfont-svg" aria-hidden="true">
-                    <use xlink:href="#icon-facebook"></use>
-                </svg>
-            
-        </a>
-        
-    
-        
-    
-        
-    
-        
-        <a title="instagram" href="https://www.facebook.com/faker.tops" target="_blank">
-            
-                <svg class="iconfont-svg" aria-hidden="true">
-                    <use xlink:href="#icon-instagram"></use>
-                </svg>
-            
-        </a>
-        
-    
-        
-        <a title="reddit" href="https://www.reddit.com/user/yelog/" target="_blank">
-            
-                <svg class="iconfont-svg" aria-hidden="true">
-                    <use xlink:href="#icon-reddit"></use>
-                </svg>
-            
-        </a>
-        
-    
-        
-        <a title="weibo" href="http://weibo.com/u/2307534817" target="_blank">
-            
-                <svg class="iconfont-svg" aria-hidden="true">
-                    <use xlink:href="#icon-weibo"></use>
-                </svg>
-            
-        </a>
-        
-    
-        
-        <a title="jianshu" href="https://www.jianshu.com/u/ff56736de7cf" target="_blank">
-            
-                <svg class="iconfont-svg" aria-hidden="true">
-                    <use xlink:href="#icon-jianshu"></use>
-                </svg>
-            
-        </a>
-        
-    
-        
-        <a title="zhihu" href="https://www.zhihu.com/people/jaytp/activities" target="_blank">
-            
-                <svg class="iconfont-svg" aria-hidden="true">
-                    <use xlink:href="#icon-zhihu"></use>
-                </svg>
-            
-        </a>
-        
-    
-        
-    
-        
-        <a title="oschina" href="https://my.oschina.net/yelog" target="_blank">
-            
-                <svg class="iconfont-svg" aria-hidden="true">
-                    <use xlink:href="#icon-oschina"></use>
-                </svg>
-            
-        </a>
-        
-    
-        
-    
-        
-        <a title="email" href="mailto:jaytp@qq.com" target="_blank">
-            
-                <svg class="iconfont-svg" aria-hidden="true">
-                    <use xlink:href="#icon-email"></use>
-                </svg>
-            
-        </a>
-        
-    
-        
-        <a title="qq" href="http://wpa.qq.com/msgrd?v=3&uin=872336115&site=qq&menu=yes" target="_blank">
-            
-                <svg class="iconfont-svg" aria-hidden="true">
-                    <use xlink:href="#icon-qq"></use>
-                </svg>
-            
-        </a>
-        
-    
-        
-        <a title="kugou" href="https://www.kugou.com/" target="_blank">
-            
-                <svg class="iconfont-svg" aria-hidden="true">
-                    <use xlink:href="#icon-kugou"></use>
-                </svg>
-            
-        </a>
-        
-    
-        
-        <a title="neteasemusic" href="https://music.163.com/#/user/home?id=88151013" target="_blank">
-            
-                <svg class="iconfont-svg" aria-hidden="true">
-                    <use xlink:href="#icon-neteasemusic"></use>
-                </svg>
-            
-        </a>
-        
-    
-</div>
-
-
-
-
-<ul>
-    <li><div class="all active">全部文章<small>(7)</small></div></li>
-    
-        
-            
-            <li><div data-rel="其他">其他<small>(1)</small></div>
-                
-            </li>
-            
-        
-    
-        
-            
-            <li><div data-rel="编程语言">编程语言<small>(1)</small></div>
-                
-            </li>
-            
-        
-    
-        
-            
-            <li><div data-rel="Linux">Linux<small>(3)</small></div>
-                
-            </li>
-            
-        
-    
-        
-            
-            <li><div data-rel="算法">算法<small>(2)</small></div>
-                
-            </li>
-            
-        
-    
-</ul>
-<div class="left-bottom">
-    <div class="menus">
-    
-    
-    
-    
+  <div class="cover-frame">
+    <div class="bg-box">
+      <img src="/images/cover1.jpg" alt="image frame" />
     </div>
-    <div><a class="about  hasFriend  site_url"  href="/about">关于</a><a style="width: 50%"  class="friends">友链</a></div>
-</div>
-<input type="hidden" id="yelog_site_posts_number" value="7">
-<input type="hidden" id="yelog_site_word_count" value="9.6k">
-<div style="display: none">
-    <span id="busuanzi_value_site_uv"></span>
-    <span id="busuanzi_value_site_pv"></span>
-</div>
+    <div class="cover-inner text-center text-white">
+      <h1><a href="/">Jeff的博客</a></h1>
+      <div id="subtitle-box">
+        
+        <span id="subtitle"></span>
+        
+      </div>
+      <div>
+        
+      </div>
+    </div>
+  </div>
+  <div class="cover-learn-more">
+    <a href="javascript:void(0)" class="anchor"><i class="ri-arrow-down-line"></i></a>
+  </div>
+</section>
 
-    </div>
-    <div class="nav-right">
-        <div class="friends-area">
-    <div class="friends-title">
-        友情链接
-        <i class="back-title-list"></i>
-    </div>
-    <div class="friends-content">
-        <ul>
-            
-            <li><a target="_blank" href="http://yelog.org/">叶落阁</a></li>
-            
-        </ul>
-    </div>
-</div>
-        <div class="title-list">
-    <form onkeydown="if(event.keyCode === 13){return false;}">
-        <input id="local-search-input" class="search" type="text" placeholder="Search..." />
-        <i class="cross"></i>
-        <span>
-            <label for="tagswitch">Tags:</label>
-            <input id="tagswitch" type="checkbox" style="display: none" />
-            <i id="tagsWitchIcon"></i>
-        </span>
-    </form>
-    <div class="tags-list">
-    
-    <li class="article-tag-list-item">
-        <a class="color3">面试</a>
-    </li>
-    
-    <li class="article-tag-list-item">
-        <a class="color3">Go</a>
-    </li>
-    
-    <li class="article-tag-list-item">
-        <a class="color5">编程语言</a>
-    </li>
-    
-    <li class="article-tag-list-item">
-        <a class="color3">算法</a>
-    </li>
-    
-    <li class="article-tag-list-item">
-        <a class="color3">图论</a>
-    </li>
-    
-    <div class="clearfix"></div>
-</div>
 
-    
-    <nav id="title-list-nav">
-        
-        <a  class="其他 "
-           href="/2018/11/26/Interview-ByteDance/"
-           data-tag="面试,Go"
-           data-author="" >
-            <span class="post-title" title="面试经历-字节跳动后台开发(基础架构)实习岗">面试经历-字节跳动后台开发(基础架构)实习岗</span>
-            <span class="post-date" title="2018-11-26 13:47:10">2018/11/26</span>
-        </a>
-        
-        <a  class="编程语言 "
-           href="/2018/11/24/Go-Learning/"
-           data-tag="Go,编程语言"
-           data-author="" >
-            <span class="post-title" title="Go基础语法">Go基础语法</span>
-            <span class="post-date" title="2018-11-24 11:58:17">2018/11/24</span>
-        </a>
-        
-        <a  class="Linux "
-           href="/2018/11/24/Linux/VitualBox-Double-System/"
-           data-tag=""
-           data-author="" >
-            <span class="post-title" title="VirtualBox安装 WinXP+CentOS双系统">VirtualBox安装 WinXP+CentOS双系统</span>
-            <span class="post-date" title="2018-11-24 14:11:22">2018/11/24</span>
-        </a>
-        
-        <a  class="Linux "
-           href="/2020/04/19/Linux/Linux-Quick-Start-md/"
-           data-tag=""
-           data-author="" >
-            <span class="post-title" title="Linux快速入门">Linux快速入门</span>
-            <span class="post-date" title="2020-04-19 14:54:00">2020/04/19</span>
-        </a>
-        
-        <a  class="Linux "
-           href="/2020/04/25/Linux/linux-fhs/"
-           data-tag=""
-           data-author="" >
-            <span class="post-title" title="Linux目录树标准 - FHS">Linux目录树标准 - FHS</span>
-            <span class="post-date" title="2020-04-25 23:30:13">2020/04/25</span>
-        </a>
-        
-        <a  class="算法 "
-           href="/2018/11/26/Algorithm/graph-edge-type/"
-           data-tag="算法,图论"
-           data-author="" >
-            <span class="post-title" title="有向图边的类型">有向图边的类型</span>
-            <span class="post-date" title="2018-11-26 15:02:26">2018/11/26</span>
-        </a>
-        
-        <a  class="算法 "
-           href="/2018/11/26/Algorithm/graph-scc/"
-           data-tag="算法,图论"
-           data-author="" >
-            <span class="post-title" title="强连通分量">强连通分量</span>
-            <span class="post-date" title="2018-11-26 14:56:31">2018/11/26</span>
-        </a>
-        
-    </nav>
-</div>
-    </div>
-    <div class="hide-list">
-        <div class="semicircle">
-            <div class="brackets first"><</div>
-            <div class="brackets">&gt;</div>
-        </div>
-    </div>
-</aside>
-<div class="post index">
-    <div class="pjax">
-        <article class="index">
-            <div class="toc-ref">
-    
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Jeff’s-博客"><span class="toc-text">Jeff’s 博客</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#博客平台"><span class="toc-text">博客平台</span></a></li></ol></li></ol>
-    
-<style>
-    .left-col .switch-btn,
-    .left-col .switch-area {
-        display: none;
+
+<script src="https://cdn.staticfile.org/typed.js/2.0.12/typed.min.js"></script>
+
+
+<!-- Subtitle -->
+
+  <script>
+    try {
+      var typed = new Typed("#subtitle", {
+        strings: ['多听，多看，多写', '', ''],
+        startDelay: 0,
+        typeSpeed: 200,
+        loop: true,
+        backSpeed: 100,
+        showCursor: true
+      });
+    } catch (err) {
+      console.log(err)
     }
-    .toc-level-3 i,
-    .toc-level-3 ol {
-        display: none !important;
-    }
-</style>
+  </script>
+  
+<div id="main">
+  <section class="outer">
+  
+  
+  
+
+<div class="notice" style="margin-top:50px">
+    <i class="ri-heart-fill"></i>
+    <div class="notice-content" id="broad"></div>
 </div>
-            <h1 id="Jeff’s-博客"><a href="#Jeff’s-博客" class="headerlink" title="Jeff’s 博客"></a>Jeff’s 博客</h1><p>这是Jeff的个人博客，希望能经常更新。</p>
-<p>到目前为止已经写了<code class="article_number"></code>篇文章， 共<code class="site_word_count"></code>字。</p>
-<h2 id="博客平台"><a href="#博客平台" class="headerlink" title="博客平台"></a>博客平台</h2><p>这个博客通过 <a href="https://hexo.io/">Hexo</a> 生成，部署在 <a href="https://pages.github.com/">GitHub Pages</a>，主题 <a href="https://github.com/yelog/hexo-theme-3-hexo">3-hexo</a> 已经在github上开源</p>
-<p>主要功能：</p>
-<ul>
-<li>搜索支持文章标题、标签(#标签)、作者(@作者)</li>
-<li>pad/手机等移动端适配</li>
-<li>页面全局快捷键 <a href='http://yelog.org/2017/03/24/3-hexo-shortcuts/'>3-hexo快捷键说明</a></li>
-</ul>
-
-        </article>
-        
-        <p>
-            <a  class="dashang" onclick="dashangToggle()">赏</a>
-        </p>
-        
-        
-    </div>
-    <div class="copyright">
-        <p class="footer-entry">©2016-2019 Yelog</p>
-<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
-
-    </div>
-    <div class="full-toc">
-        <button class="full"><span class="min "></span></button>
-<button class="post-toc-menu"><span class="post-toc-menu-icons"></span></button>
-<div class="post-toc"><span class="post-toc-title">目录</span>
-    <div class="post-toc-content">
-
-    </div>
-</div>
-<a class="" id="rocket" ></a>
-
-    </div>
-</div>
-<div class="acParent"></div>
-
-<div class="hide_box" onclick="dashangToggle()"></div>
-<div class="shang_box">
-    <a class="shang_close"  onclick="dashangToggle()">×</a>
-    <div class="shang_tit">
-        <p>谢谢老板！老板大气！</p>
-    </div>
-    <div class="shang_payimg">
-        <div class="pay_img">
-            <img src="/img/alipay.jpg" class="alipay" title="扫码支持">
-            <img src="/img/weixin.jpg" class="weixin" title="扫码支持">
-        </div>
-    </div>
-    <div class="shang_payselect">
-        <span><label><input type="radio" name="pay" checked value="alipay">支付宝</label></span><span><label><input type="radio" name="pay" value="weixin">微信</label></span>
-    </div>
-</div>
-
-
-</body>
-<script src="/js/jquery.pjax.js?v=1.0.1" ></script>
-
-<script src="/js/script.js?v=1.0.1" ></script>
-<script>
-    var img_resize = 'default';
-    /*作者、标签的自动补全*/
-    $(function () {
-        $('.search').AutoComplete({
-            'data': ['#面试','#Go','#编程语言','#算法','#图论',],
-            'itemHeight': 20,
-            'width': 418
-        }).AutoComplete('show');
-    })
-    function initArticle() {
-        /*渲染对应的表格样式*/
-        
-            $(".post .pjax table").addClass("green_title");
-        
-
-        /*渲染打赏样式*/
-        
-        $("input[name=pay]").on("click", function () {
-            if($("input[name=pay]:checked").val()=="weixin"){
-                $(".shang_box .shang_payimg .pay_img").addClass("weixin_img");
-            } else {
-                $(".shang_box .shang_payimg .pay_img").removeClass("weixin_img");
-            }
+<script type="text/javascript">
+    fetch('https://v1.hitokoto.cn')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("broad").innerHTML = data.hitokoto;
         })
-        
-
-        /*高亮代码块行号*/
-        
-        $('pre code').each(function(){
-            var lines = $(this).text().trim().split('\n').length, widther='';
-            if (lines>99) {
-                widther = 'widther'
-            }
-            var $numbering = $('<ul/>').addClass('pre-numbering ' + widther).attr("unselectable","on");
-            $(this).addClass('has-numbering ' + widther)
-                    .parent()
-                    .append($numbering);
-            for(var i=1;i<=lines;i++){
-                $numbering.append($('<li/>').text(i));
-            }
-        });
-        
-
-        /*访问数量*/
-        
-        $.getScript("//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js");
-        
-
-        /*代码高亮，行号对齐*/
-        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
-
-        
-        
-    }
-
-    /*打赏页面隐藏与展示*/
-    
-    function dashangToggle() {
-        $(".shang_box").fadeToggle();
-        $(".hide_box").fadeToggle();
-    }
-    
-
+        .catch(console.error)
 </script>
 
-<!--加入行号的高亮代码块样式-->
-
 <style>
-    pre{
+    .notice {
+        padding: 20px;
+        border: 1px dashed #e6e6e6;
+        color: #969696;
         position: relative;
-        margin-bottom: 24px;
-        border-radius: 10px;
-        border: 1px solid #e2dede;
-        background: #FFF;
-        overflow: hidden;
-    }
-    code.has-numbering{
-        margin-left: 30px;
-    }
-    code.has-numbering.widther{
-        margin-left: 35px;
-    }
-    .pre-numbering{
-        margin: 0px;
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 20px;
-        padding: 0.5em 3px 0.7em 5px;
-        border-right: 1px solid #C3CCD0;
-        text-align: right;
-        color: #AAA;
-        background-color: #fafafa;
-    }
-    .pre-numbering.widther {
-        width: 35px;
-    }
-</style>
-
-<!--自定义样式设置-->
-<style>
-    
-    
-    .nav {
-        width: 542px;
-    }
-    .nav.fullscreen {
-        margin-left: -542px;
-    }
-    .nav-left {
-        width: 120px;
-    }
-    
-    
-    @media screen and (max-width: 1468px) {
-        .nav {
-            width: 492px;
-        }
-        .nav.fullscreen {
-            margin-left: -492px;
-        }
-        .nav-left {
-            width: 100px;
-        }
-    }
-    
-    
-    @media screen and (max-width: 1024px) {
-        .nav {
-            width: 492px;
-            margin-left: -492px
-        }
-        .nav.fullscreen {
-            margin-left: 0;
-        }
-        .nav .hide-list.fullscreen {
-            left: 492px
-        }
-    }
-    
-    @media screen and (max-width: 426px) {
-        .nav {
-            width: 100%;
-        }
-        .nav-left {
-            width: 100%;
-        }
-    }
-    
-    
-    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
-        color: #383636;
-    }
-    
-    
-    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
-        color: #5e5e5f;
-    }
-    
-    
-    .nav-right nav a.hover, #local-search-result a.hover{
-        background-color: #e2e0e0;
-    }
-    
-    
-
-    /*列表样式*/
-    
-    .post .pjax article .article-entry>ol, .post .pjax article .article-entry>ul, .post .pjax article>ol, .post .pjax article>ul{
-        border: #e2dede solid 1px;
-        border-radius: 10px;
-        padding: 10px 32px 10px 56px;
-    }
-    .post .pjax article .article-entry li>ol, .post .pjax article .article-entry li>ul,.post .pjax article li>ol, .post .pjax article li>ul{
-        padding-top: 5px;
-        padding-bottom: 5px;
-    }
-    .post .pjax article .article-entry>ol>li, .post .pjax article .article-entry>ul>li,.post .pjax article>ol>li, .post .pjax article>ul>li{
-        margin-bottom: auto;
-        margin-left: auto;
-    }
-    .post .pjax article .article-entry li>ol>li, .post .pjax article .article-entry li>ul>li,.post .pjax article li>ol>li, .post .pjax article li>ul>li{
-        margin-bottom: auto;
-        margin-left: auto;
-    }
-    
-
-    /* 背景图样式 */
-    
-    
-
-
-    /*引用块样式*/
-    
-
-    /*文章列表背景图*/
-    
-    .nav-right:before {
-        content: ' ';
-        display: block;
-        position: absolute;
-        left: 0;
-        top: 0;
+        display: inline-block;
         width: 100%;
-        height: 100%;
-        opacity: 0.3;
-        background: url("https://i.loli.net/2019/07/22/5d3521411f3f169375.png");
-        background-repeat: no-repeat;
-        background-position: 50% 0;
-        -ms-background-size: cover;
-        -o-background-size: cover;
-        -moz-background-size: cover;
-        -webkit-background-size: cover;
-        background-size: cover;
+        background: #fbfbfb50;
+        border-radius: 10px;
     }
-    
 
-    
+    .notice i {
+        float: left;
+        color: #999;
+        font-size: 16px;
+        padding-right: 10px;
+        vertical-align: middle;
+        margin-top: -2px;
+    }
+
+    .notice-content {
+        display: initial;
+        vertical-align: middle;
+    }
 </style>
+  
+  <article class="articles">
+    
+    
+    
+    
+    <article
+  id="post-Mesh/Non-client-server mesh sidecar"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2024/12/22/Mesh/Non-client-server%20mesh%20sidecar/"
+    >Non-client-server mesh sidecar</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2024/12/22/Mesh/Non-client-server%20mesh%20sidecar/" class="article-date">
+  <time datetime="2024-12-22T12:18:59.000Z" itemprop="datePublished">2024-12-22</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Mesh/">Mesh</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>网络服务一般分为client和server端, server端负责监听一个地址, 等待client的连接</p>
+<p><img src="/2024/12/22/Mesh/Non-client-server%20mesh%20sidecar/2024-12-22-20-31-51.png"></p>
+<p>在他们中间如果需要做七层的流量治理与转发, 通常会引入一个像下图的proxy(以envoy为例)</p>
+<p><img src="/2024/12/22/Mesh/Non-client-server%20mesh%20sidecar/2024-12-22-23-17-21.png"></p>
+<p>proxy进程内包含两部分: Listeners负责监听来自client的连接, Upstream Clusters负责主动dial server, 并将数据转发给server</p>
+<p>这样的模式很容易拓展到多级的proxy</p>
+<p><img src="/2024/12/22/Mesh/Non-client-server%20mesh%20sidecar/2024-12-22-23-19-54.png"></p>
+<p>但我司的Service mesh产品却是不一样的做法: 无论是client应用还是server应用, 都统一去dial proxy</p>
+<p><img src="/2024/12/22/Mesh/Non-client-server%20mesh%20sidecar/2024-12-22-23-41-13.png"></p>
+<p>Listners:</p>
+<ul>
+<li>App Listener: 负责监听来自app(client&#x2F;server)的连接</li>
+<li>Proxy Listner: 负责监听来自client端proxy的连接</li>
+</ul>
+<p>Clusters:</p>
+<ul>
+<li>Proxy Clusters: 负责将来自client app的数据转发到server proxy</li>
+<li>Upstream Cluseters: 负责将来自client proxy的数据转发到server app, <strong>其中server app是通过app listener注册到Upstream Clusters上来的</strong></li>
+</ul>
+<p>这样有几个显而易见的坏处</p>
+<ul>
+<li>代码结构冗余, 需要存在两套不一样的Listener和upstream逻辑, 给代码理解和日常维护带来了一定的障碍</li>
+<li>多级的拓展变得非常费劲</li>
+</ul>
+<p>但其实也仔细挖掘也是有好处的</p>
+<ul>
+<li>app视角里模糊了client&#x2F;server的界限, 可以用同一个conn执行client和server的操作</li>
+<li>server连接是app主动连接注册到proxy, 所以proxy就不需要再执行类似<strong>连接预热</strong>的操作了</li>
+<li>mesh产品覆盖率直线上升, 传染法则 (LOL)</li>
+</ul>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Mesh/" rel="tag">Mesh</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Networking/" rel="tag">Networking</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+  
+</article>
+
+    
+    <article
+  id="post-Essay/在工作中保持临在"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/11/02/Essay/%E5%9C%A8%E5%B7%A5%E4%BD%9C%E4%B8%AD%E4%BF%9D%E6%8C%81%E4%B8%B4%E5%9C%A8/"
+    >在工作中保持临在</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/11/02/Essay/%E5%9C%A8%E5%B7%A5%E4%BD%9C%E4%B8%AD%E4%BF%9D%E6%8C%81%E4%B8%B4%E5%9C%A8/" class="article-date">
+  <time datetime="2023-11-01T17:21:18.000Z" itemprop="datePublished">2023-11-02</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%9D%82%E8%AE%B0/">杂记</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>我记得差不多是一年前和老板有一次对话，那时候公司在剧烈动荡，我说我要“不管公司整体舆论也好氛围也好，努力去专注于自己眼前的事”，但显然那个时候的我并没有怎么体会过临在，所以这句话也不过是某种虚伪的讨好。</p>
+<p>对于我而言在工作中保持临在很难，这是多年学生生涯一次次的态度选择积累的惯性思维：本能地去嫉妒能力强的和知道的多的，对自己的无知和无能会感到极度的恐慌，会急功近利地厌恶细节和琐碎的事情。</p>
+<p>但今天我意识到我好好地做了件“琐碎”的事：我花了一天的一大半时间去支持了一个稍微边缘的团队一个极度落后服务版本的需求，这需要我去翻读两年前的代码，梳理结构和权限，也要求助之前有过相关经验的同事。不知不觉就把这件事情支持好，并且还花时间去做了梳理和总结，把核心内容总结给同事们。</p>
+<p>当然是会收到同事们的小鼓励，但我很快回到当下。这确实也不是很大的事情，前面的支持和后面的总结分享都不过是单纯觉得“就这样去做这件事本身，而且会对他人有帮助”，并没有想着做的过程会多费劲、做完以后能有什么具体的反馈和影响。</p>
+<p>临在是需要可以练习的，这是我这一两个月来学习到的并在践行的事情，而且这股力量它不是间歇的，同时也不是很强大，但是是在持续地在每个当下发挥着作用。</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+    </footer>
+  </div>
+
+   
+   
+  
+</article>
+
+    
+    <article
+  id="post-Essay/幸福"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/10/23/Essay/%E5%B9%B8%E7%A6%8F/"
+    >践行幸福的哲学</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/10/23/Essay/%E5%B9%B8%E7%A6%8F/" class="article-date">
+  <time datetime="2023-10-22T16:52:25.000Z" itemprop="datePublished">2023-10-23</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%9D%82%E8%AE%B0/">杂记</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <blockquote>
+<p>近期其实一直都很想好好写一下，今晚又在亲近的人身上感受到了幸福的力量和勇气</p>
+</blockquote>
+<p>摊开我大学四年甚至更之前的日记本，写的满满的都是“挣扎” —— 我想要获得幸福，想要通过这样那样的方法改变我眼前的问题来找到答案或者平衡，却不断地被失败和焦虑袭击而放弃。这样的状态反应到了生活的方方面面上，当然也反应到了博客的经营上。</p>
+<p>于是我时常在挣扎中感到绝望：<strong>人是不是没有改变自己的能力</strong>。我当然不会允许自己沉浸在这样的思维里，于是会有许多自我安慰甚至是自我欺骗式的鼓励，内心的焦虑却在一次次的挫败中不断地放大。</p>
+<p>那么人到底有没有能力改变自己，并最终获得幸福，我现在开始从心底里相信是有的。但这种改变和相信和以往的认知并不一样。</p>
+<p><strong>幸福不是一个状态，而是一个需要勇气和毅力去践行的哲学。</strong>《被讨厌的勇气》里说的是，“任何人都能随时获得幸福”，我开始慢慢理解这句话的含义：世界其实并没有美丑，世界只不过是世界罢了，那么认定自己幸福与否的，从来就只是自己。</p>
+<p>大家肉体最终都会消散（意识会不会我不知道，但我还是有些希望不会哈哈），有的也只是当下。但要是沉浸在“我本应该”、“世界对我不公”、“要是这样就好了”之中，那就离开了当下，也就离开了幸福。所以无论旅途最终会去到哪里，最重要的永远都是当下，此时此刻。</p>
+<p>随着一部分自己的觉醒，开始意识到身边被痛苦之身包围着的人们，同时也意识到自己被很大的痛苦之身包围着；甚至很有可能是因为自己的痛苦之身比一般人大得多，在倏然观察到它的时候才会如此惊讶。由它衍生出的受害者心理、焦虑、敌对感便得到了解释。</p>
+<p>践行幸福的哲学其实最早可以追溯到大三时的生日朋友圈，那可能是最早记录下来的自我接纳。旅程中有许许多多的反复，但是正如《新世界 灵性的觉醒》里说的：“觉醒一旦发生，就不会停下”。于是便更有了前进下去的勇气。</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+    </footer>
+  </div>
+
+   
+   
+  
+</article>
+
+    
+    <article
+  id="post-Algorithm/leetcode-312-burst-ballons"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/10/20/Algorithm/leetcode-312-burst-ballons/"
+    >Leetcode 312. Burst Balloons</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/10/20/Algorithm/leetcode-312-burst-ballons/" class="article-date">
+  <time datetime="2023-10-20T04:30:48.000Z" itemprop="datePublished">2023-10-20</time>
+</a>    
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <blockquote>
+<p>第一次做动态规划的题目</p>
+</blockquote>
+<h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><p>Given n balloons, indexed from <code>0</code> to <code>n-1</code>. Each balloon is painted with a number on it represented by array nums. You are asked to burst all the balloons. If the you burst balloon i you will get <code>nums[left] * nums[i] * nums[right]</code> coins. Here left and right are adjacent indices of <code>i</code>. After the burst, the left and right then becomes adjacent.</p>
+<p>Find the maximum coins you can collect by bursting the balloons wisely.</p>
+<p><strong>Note</strong>:</p>
+<ul>
+<li>You may imagine <code>nums[-1] = nums[n] = 1</code>. They are not real therefore you can not burst them.</li>
+<li><code>0 ≤ n ≤ 500</code>, <code>0 ≤ nums[i] ≤ 100</code></li>
+</ul>
+<p><strong>Example</strong>:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Input: [3,1,5,8]</span><br><span class="line">Output: 167 </span><br><span class="line">Explanation: nums = [3,1,5,8] --&gt; [3,5,8] --&gt;   [3,8]   --&gt;  [8]  --&gt; []</span><br><span class="line">             coins =  3*1*5      +  3*5*8    +  1*3*8      + 1*8*1   = 167</span><br></pre></td></tr></table></figure>
+
+<h1 id="题目解析与分析"><a href="#题目解析与分析" class="headerlink" title="题目解析与分析"></a>题目解析与分析</h1><h2 id="题意"><a href="#题意" class="headerlink" title="题意"></a>题意</h2><p>大概就是：有一排气球，每个标了数字，然后戳一个气球得到的奖励是<code>左气球×该气球×右气球</code>，当然如果左或右没有气球就乘1。问该以什么顺序戳气球得到的奖励最大</p>
+<h2 id="最笨的思路"><a href="#最笨的思路" class="headerlink" title="最笨的思路"></a>最笨的思路</h2><p>枚举法：将所有的情况列举一遍。当有<code>n</code>个气球的时候，第一步我们有<code>n</code>种选择，第二步我们又有<code>n-1</code>个选择……显然全枚举的算法复杂度为$O(N!)$,效率不敢恭维，因此这里就不实现——因为不可能过。</p>
+<h2 id=""><a href="#" class="headerlink" title=""></a></h2><p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/burst-balloons/discuss/76228/Share-some-analysis-and-explanations">参阅</a></p>
+<h2 id="进一步想法"><a href="#进一步想法" class="headerlink" title="进一步想法"></a>进一步想法</h2><p>我们需要去考虑上面枚举法做了什么重复的计算。我们可以想到，给定一组气球，它所能获得的最大的奖励应该和前面已经被戳的气球无关——被戳过的气球只是在求和的时候累积上了而已。</p>
+<p>对于给定<code>k&lt;n</code>, 其可能的组合数有 $C_n^k$ 种，我们可以把<code>k</code>(从1开始)的所有情况都记录在内存上，<code>k+1</code>就可以基于<code>k</code>进行计算，那么我们总共需要进行的计算就是<br>$$C_n^1+C_n^2+…+C_n^n$$<br>这种算法优于$O(N!)$, 但仍然坏于$O(2^N)$; 我们需要更优的算法</p>
+<h2 id="分治的想法"><a href="#分治的想法" class="headerlink" title="分治的想法"></a>分治的想法</h2><p>我们考虑用分治去思考这一道题。先是正常地考虑分治，我戳爆某个气球，可不可以把剩下的气球分成两堆呢？这是否可行的前提是两堆会不会互相干扰：答案是肯定的，在戳爆某个气球以后，左堆的最右气球会需要右堆的最左气球来进行计算。</p>
+<p><strong>这时候我们需要反向的思维</strong>：我们正向地想戳气球的过程，当然会导致两堆相互影响。那如果我们考虑的是<strong>在这一堆里最后戳爆的那个气球</strong>呢？假如A,B,C,D,E中我最后戳C, 那左堆(A,B)在戳的过程中显然会以C为右边界，而右堆(D,E)以C为左边界——这就实现了分治，两个子问题是相互不干扰的。</p>
+<blockquote>
+<p>想一下为什么分治会更好，它少算了哪些步骤</p>
+</blockquote>
+<p>定义一个函数 <code>burst(left, right)</code>，它的值表示以<code>left</code> <code>right</code>分别为左右边界的时候 <code>[left,right]</code>所能得到的最大的奖励值。这里需要说明的是<strong>这里定义的左右边界都需要晚于中间的任意气球被戳</strong>，那样在剩下的气球(<code>i</code>)里任意选取一个作为倒数第三（边界是倒数一、二，顺序不重要，只要知道它会比中间的数晚戳就行）去戳，那它又能成为左右两个新区间的新边界，则这样戳所能得到的最大值是</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nums[left]*nums[i]*nums[right] + burst(left,i) + burst(i,right)</span><br></pre></td></tr></table></figure>
+<p>这样我们只要遍历每个 <code>i in (left,right)</code> 去求出上述等式并得到最大值，那就得到了 <code>burst(left, right)</code> 的最大值</p>
+<p>还有一些细节：</p>
+<ul>
+<li>假设 <code>nums[-1]=nums[n]=1</code>，这样两个假边界就显然是整组气球里“最晚被戳的气球”了</li>
+<li>当两个边界相邻，说明中间无球可戳，所以应该有<code>burst(i,i+1)=0</code></li>
+</ul>
+<p>按照上面说的就可以实现如下具体的算法了：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">maxCoins</span><span class="params">(<span class="type">int</span>[] iNums)</span> &#123;</span><br><span class="line">    <span class="type">int</span>[] nums = <span class="keyword">new</span> <span class="title class_">int</span>[iNums.length + <span class="number">2</span>];</span><br><span class="line">    <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> x : iNums) <span class="keyword">if</span> (x &gt; <span class="number">0</span>) nums[n++] = x;</span><br><span class="line">    nums[<span class="number">0</span>] = nums[n++] = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="type">int</span>[][] memo = <span class="keyword">new</span> <span class="title class_">int</span>[n][n];</span><br><span class="line">    <span class="keyword">return</span> burst(memo, nums, <span class="number">0</span>, n - <span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">burst</span><span class="params">(<span class="type">int</span>[][] memo, <span class="type">int</span>[] nums, <span class="type">int</span> left, <span class="type">int</span> right)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (left + <span class="number">1</span> == right) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (memo[left][right] &gt; <span class="number">0</span>) <span class="keyword">return</span> memo[left][right];</span><br><span class="line">    <span class="type">int</span> <span class="variable">ans</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> left + <span class="number">1</span>; i &lt; right; ++i)</span><br><span class="line">        ans = Math.max(ans, nums[left] * nums[i] * nums[right] </span><br><span class="line">        + burst(memo, nums, left, i) + burst(memo, nums, i, right));</span><br><span class="line">    memo[left][right] = ans;</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 12 ms</span></span><br></pre></td></tr></table></figure> 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag">动态规划</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+  
+</article>
+
+    
+    <article
+  id="post-Essay/ad钙奶和房子"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/10/17/Essay/ad%E9%92%99%E5%A5%B6%E5%92%8C%E6%88%BF%E5%AD%90/"
+    >ad钙奶和房子</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/10/17/Essay/ad%E9%92%99%E5%A5%B6%E5%92%8C%E6%88%BF%E5%AD%90/" class="article-date">
+  <time datetime="2023-10-16T16:22:54.000Z" itemprop="datePublished">2023-10-17</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%9D%82%E8%AE%B0/">杂记</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>现在对贩卖焦虑的行为已经越来越敏感了。</p>
+<p>上班路上看到了一个这样的广告：一个小男孩一身汗地跑进家里向妈妈哭诉，“妈！我又被班里的高个子男生撞倒了”，妈妈一脸慈爱地拿出了一罐ad钙奶……<br>我在想这种情况的真实版会是怎么样的？小孩的哭诉一直在发生，妈妈真实的话可能会是：“平时让你多喝牛奶你不喝，现在被撞了才知道在这里哭！”看完广告的区别，可能是把牛奶换成两倍的ad钙奶。</p>
+<p>其实我也在贩卖焦虑。最近一年来我们家发生了一件我不愿意发生的大事：在我妈的极力主张下，非常勉强地、左拼右凑地在南沙区买了一套小房子，比较鸡肋、没有什么上升空间，还让降低了爸妈的生活水平。</p>
+<p>所以最近沟通免不了和我妈沟通（吵架）。昨天出门前又聊到了这件事，起因是她现在不舍得打车了，因为还欠着钱想要先紧巴紧巴先还上。我想告诉她的是，小钱省不了多少，我们是应该关注和节省的是那些冲动下花出去的大钱。</p>
+<p>可想而知又是吵一顿，但随着房价真的在下跌，经济情况如当时预料的那样在变坏，我妈吵架的底气越来越弱。从结果来看我好像“赢了”，但我并不怎么开心，因为我妈开始说她后悔了，她也开始想这个决定是不是太冲动了，现在压力很大，然后想到我说的一些话又觉得很绝情，压力就更大了。</p>
+<p>我突然有点惊醒了，我说的话也是在贩卖焦虑；资本家贩卖焦虑能赚钱，我贩卖焦虑赚的是一种延迟复仇的快感；我相信两者最终都没法指向内心的平和与愉悦。</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+    </footer>
+  </div>
+
+   
+   
+  
+</article>
+
+    
+    <article
+  id="post-Essay/对网络编程的思考"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2022/10/30/Essay/%E5%AF%B9%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E7%9A%84%E6%80%9D%E8%80%83/"
+    >对网络编程的思考</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2022/10/30/Essay/%E5%AF%B9%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E7%9A%84%E6%80%9D%E8%80%83/" class="article-date">
+  <time datetime="2022-10-30T10:19:00.000Z" itemprop="datePublished">2022-10-30</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%9D%82%E8%AE%B0/">杂记</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>加入Spex接近两年，但是其实到今年七月份开始才真正做agent相关的工作，并且也是到最近才算是半只脚迈进对agent进行性能分析的部分；在做这一部分工作的时候，除了有“这一部分真有意思”的激动，同时也觉察出自己在网络编程方面知识和经验的欠缺，阻碍了对程序的优化 —— 而且这样的现象在组里其实比较普遍。</p>
+<p>Spex agent的代码基本是一个proxy server（IO-&gt;逻辑处理-&gt;IO，既接收连接又对外创建连接）， 服务端部分采用的是类似经典的reactor的事件处理模型。值得一提的是逻辑处理环节利用了Go的channel特性划分了几个阶段，这也给性能和代码逻辑分析带来了一定的挑战。</p>
+<p>萌生对网络编程进行更系统化学习的起因是最近一次失败的性能优化尝试。在现有Spex agent的代码中，客户端部分（即作为client向外创建连接并交换数据的部分，这包括client agent向server agent建立TCP连接 &amp; server agent向server instance建立UDS连接的部分）中是每个goroutine用一个for loop处理一个连接的序列化和I&#x2F;O，我怀疑这部分可能会造成队头阻塞，就用goroutine pool来调用序列化和I&#x2F;O。结果在和QA的简单验证下，发现延时P99并无法得到明显的改善，而与此同时系统的吞吐量下降了。</p>
+<p>但并不是说这一个思路不正确就说明这个尝试失败了，而是在验证的过程中其实很大程度是不严谨的 —— 使用的是最基础的性能测试场景以及凭借自己猜测增加了请求包大小的测例，并没有尝试构建复现队头阻塞的场景，对于应该关注哪些指标，怎么看系统是否达到了瓶颈也有些无头苍蝇的感觉……当然这些问题其实都可以逐一地去研究并解决，但就是如果有更系统化的知识体系，这些问题本来也应该是很常见思路比较明确的问题，没有必要一个劲地瞎闯，还是需要更系统地学习网络编程。</p>
+<p>之前也看了一些书，比如《UNP》、《Linux高性能服务器编程》，同时也有对Go HTTP的源码进行学习。但之前的学习没有领悟到一个比较重要的原则：抓大放小 —— 很容易就陷入到某一细分领域的某一个细节，但这往往在进行系统化学习的时候都是不重要且会分散注意力的。因此这些书的学习基本都虎头蛇尾，对于关键内容也没有清晰的认识和总结。</p>
+<p>这次我选的核心阅读书目是陈硕的《Linux多线程服务器编程》，也是在许久之后把C++重新捡回来，为后面envoy相关的项目打一下基础。既然遵循抓大放小的原则，就对一些觉得是重点的内容深入代码和示例去看去运行，但不要去纠结小的点。同时CSAPP也是要继续学习，但这属于长时间的打地基工作，没必要说一定把CSAPP学完了自底向上都明白了再去接触和实际工程更接近的内容。</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Networking/" rel="tag">Networking</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%9A%8F%E7%AC%94/" rel="tag">随笔</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+  
+</article>
+
+    
+    <article
+  id="post-Reading/乡土中国-从欲望到需要"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/05/08/Reading/%E4%B9%A1%E5%9C%9F%E4%B8%AD%E5%9B%BD-%E4%BB%8E%E6%AC%B2%E6%9C%9B%E5%88%B0%E9%9C%80%E8%A6%81/"
+    >乡土中国-从欲望到需要</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/05/08/Reading/%E4%B9%A1%E5%9C%9F%E4%B8%AD%E5%9B%BD-%E4%BB%8E%E6%AC%B2%E6%9C%9B%E5%88%B0%E9%9C%80%E8%A6%81/" class="article-date">
+  <time datetime="2020-05-08T00:54:47.000Z" itemprop="datePublished">2020-05-08</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E9%98%85%E8%AF%BB/">阅读</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>这一章主脉络是划分了欲望和需要的区别，进而描述了从乡土社会的基于欲望行事演变到现代社会的基于需要行事的过程。</p>
+<p>单纯的欲望指导行为符合这样的流程：欲望–紧张–行动–满足–愉快。这一种满足欲望的能力是天生的，最重要的一点就是人都需要生存，因此会去吃甜食。除了原始的欲望以外，还有基于经验和教化的欲望，我这里称之为“文化欲望”。费先生把欲望全然归结于文化，我觉得是有偏颇的，更何况两者本身就是相辅相成的存在。</p>
+<p>在乡土社会中，原始欲望和文化欲望大部分正好符合社会的良性发展，比如人饿了就吃东西，虽然只是考虑了自己的原始的欲望，但实际上整个族群也因为它没有饿死而得到更多的劳力；夫妻间的性行为可以说是爱和性冲动所结合的行为，但从社会的角度也是有益于族群的繁衍。当然夫妻之事经发展也成为了一种文化欲望：“传宗接代”仍是老一辈人根深蒂固的原则。</p>
+<p>关于文化欲望对社会的正面作用作者还举了一个比较好的例子——巫术。从现代科学的角度，巫术对于驱散鬼怪（无论是否真实存在）都没有什么大的意义，但巫术也切实地消减了人们对于未知的恐惧，心安对于社会继续稳定发展是特别有益的，毕竟恐慌蔓延下没有人会有心思关心生产。</p>
+<p>但为什么说这些欲望是“大部分”符合社会发展，而不是直接断言全部呢？因为实际上稳定的乡土社会也在以一个缓慢的速率改变着的，原来符合发展的欲望并不能直接切除，也是身处社会中的人不断试错而形成新的欲望来满足社会的需要。</p>
+<p>但现代社会发展的速度远非乡土社会可比，单靠欲望行事是靠不住的，正如亚当·斯密所描述的“冥冥中的手”也是具有局限性的。现代社会的欲望逐渐进化为需要，需要是自觉的，是对行为和目的背后的理解。譬如现在的人吃东西不单单是关注食物好吃（当然对好吃食物的追随这一原始欲望仍然很重要），而是开始关注这食物含了多少卡路里，有什么维生素，够不够蛋白质等等。</p>
+<p>因而在现代社会中，谁更能对行为和目的有更深刻的理解，谁就能有更多的时势权力来指导身边、社区乃至整个社会的人。这也就是我们通常所说的“知识就是力量”，这句话虽然俗，但蕴含了这么一部分的道理。</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+    </footer>
+  </div>
+
+   
+   
+  
+</article>
+
+    
+    <article
+  id="post-Reading/乡土中国-名实分离"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/05/07/Reading/%E4%B9%A1%E5%9C%9F%E4%B8%AD%E5%9B%BD-%E5%90%8D%E5%AE%9E%E5%88%86%E7%A6%BB/"
+    >乡土中国-名实分离</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/05/07/Reading/%E4%B9%A1%E5%9C%9F%E4%B8%AD%E5%9B%BD-%E5%90%8D%E5%AE%9E%E5%88%86%E7%A6%BB/" class="article-date">
+  <time datetime="2020-05-07T00:54:51.000Z" itemprop="datePublished">2020-05-07</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E9%98%85%E8%AF%BB/">阅读</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <blockquote>
+<p>晨读day two</p>
+</blockquote>
+<p>这章有点标题党的感觉，虽然名字叫“名实分离”，但其实关于这一部分在最后才有所提及，也是前文论述的部分延伸结果。名实分离实际是变动社会中人们对长老权力的一种适应，在权力未惠及自己（还不是长老）时选择“阳奉阴违”的方式，而后在自己也成为长老以后以注释的方式为权力加入新的解释内容（注释），满足变动社会中维护长老社会的需求。</p>
+<p>来进一步总结一下社会的几种权力的形式。首先就是上文提到的长老权力，这是稳定的乡村社会中具备的一种权力，父命子不可违。其次是横暴权力，是独裁和专制，其基础是剥削。随后是同意权力，发生在契约建立的基础上，辅以对权力的监督；最后是变动社会中特有的权力，可以说是长老权力的反面，时势权力。这里其实是化用了“时势造英雄”这一句，因为这种权力突出的就是英雄这个符号。由英雄带领大家走出社会变更时期的惶恐和迷茫。</p>
+<p>这一章实际上针对时势权力影射了当时的政治内容，但并没有举出时下的例子，也没有拿乡村社会的变更作为示例。这一点其实让我有些不满意，有点“没有值回票价”的感觉。倒不是我想实际地看政治例子，这方面可以自己补充，我想了解的是乡村是怎么样受时势权力影响和变更的。当然这里我自己也有记忆储备，便是前段时间看的《平凡的世界》，里面的孙少安就可以算是这样的一个英雄。</p>
+<p>横暴权力压制反对，同意权力实际上建立在反对（监督）的基础上，长老社会虽也不同意反对但有独特的改进方法。而对于时势权力，反对也当然是存在的，因为文化英雄的观点受其局限性总会有失偏颇或不公的地方，再者说，一个迷茫的时代肯定不止一个英雄，社会不会缺少自信的人。这时候反对的声音引起的结果就是拉阵营、搞宣传、打嘴仗，从而争取人民的跟随和信任。所以实际上时势权力也是无法容忍反对的，反对者不是同一个阵营。因此在我理解上，时势权力也是需要逐渐被同意权力过渡的，这也是因为人民无法容忍一直迷茫，总要向平稳发展过渡。</p>
+<p>另外讲到社会结构的变动时候，作者提到了一个观点（他不同意），社会结构也类似于有机体，也有生长、发展和衰老的阶段。他认为社会结构就是人用于满足生活需要的工具，当社会结构不满足人的需要时，就会发生社会结构的变更，这一动作是人主动去做的。实际我认为两种说法都有合理性，社会结构确实是由人发明和更改的，但根据论文 More Is Different 的说法，更宏观的内容实际上已经不能够用微观的调研方法去研究，正如小球的自由落体不能用分子动力学来研究一样，社会结构本身应该以高于个体的宏观研究方法去研究。</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+    </footer>
+  </div>
+
+   
+   
+  
+</article>
+
+    
+    <article
+  id="post-Reading/乡土中国-血缘与地缘"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/05/06/Reading/%E4%B9%A1%E5%9C%9F%E4%B8%AD%E5%9B%BD-%E8%A1%80%E7%BC%98%E4%B8%8E%E5%9C%B0%E7%BC%98/"
+    >乡土中国-血缘与地缘</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/05/06/Reading/%E4%B9%A1%E5%9C%9F%E4%B8%AD%E5%9B%BD-%E8%A1%80%E7%BC%98%E4%B8%8E%E5%9C%B0%E7%BC%98/" class="article-date">
+  <time datetime="2020-05-06T01:01:38.000Z" itemprop="datePublished">2020-05-06</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E9%98%85%E8%AF%BB/">阅读</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <blockquote>
+<p>很久没有好好看书做笔记了</p>
+</blockquote>
+<h2 id="血缘与地缘的联系"><a href="#血缘与地缘的联系" class="headerlink" title="血缘与地缘的联系"></a>血缘与地缘的联系</h2><p>乡土社会稳定的社会结构是以血缘为基础的，以子继父业的形式形成稳定的社会分工，也就是所谓“农人之子恒为农，商人之子恒为商”。血缘以不由分说、无可争辩地形式分配传统社会中各人的职业、身份和财产。</p>
+<p>在稳定的乡土社会中，地缘不过是血缘的投影，地域的远近一定程度反映着血缘的亲疏，因此地理区位也就成为了社会化了的空间。我们现在仍然可以见到这样对区位的划分：左尊于右，南尊于北；更明显的例子是，我们现在仍然用“地位”一词表示一个人的社会阶层，这便是来自血缘的地域投影。在原始社会中血缘和地域是合一的，而现代社会仍然延续了部分的传统。</p>
+<p>但人，特别是现代人，终究是要流动的。传统社会的人口流动主要源自于繁殖引起的土地资源不足，首先会引起向内的精耕以提升土地的单位报酬，但随着人口的继续增加，社群便会分裂，形成新的村落，寻找新的耕地。而现代人流动的理由就更多了，就业、教育，亦或是单纯对某一地的喜爱，这在发达的现代社会已成为可能。</p>
+<p>但人口在流动时，仍然会以另外的形式保有血缘的空间投影。比如移民社会中的“新英伦新约克New York”云云。再者还有我们的籍贯，即使我们一生都可能不会去往我们籍贯所在的地方，但我们还是会在介绍自己以及填写资料的时候诚实地写上。但事实上，现在随着社会的进一步变迁、城市化的发展，籍贯的概念可能会越来越模糊并最终消失。但在它消失之前，我们仍可以说，籍贯是血缘的一种表现形式。</p>
+<h2 id="血缘关系的局限和新地域概念"><a href="#血缘关系的局限和新地域概念" class="headerlink" title="血缘关系的局限和新地域概念"></a>血缘关系的局限和新地域概念</h2><p>血缘关系对社会活动有许多限制，最大的体现莫过于商业活动。亲戚间的交易往往是基于人情和相互拖欠，也就是俗话说的“亲戚间不用计较那么细”。反而明算账意味着人情的减弱甚至有点绝交的意味。这样一来，一宗“人情交易”可以被长期甚至永久地搁置，因此对于不亲的关系人们反而会减少这样的往来，避免太多的人情债，无论是别人欠自己的还是自己欠别人的。</p>
+<p>随着社会生活的逐渐发达，牵扯的社会活动越来越多，就越来越不能靠人情来维系权利和义务的平衡，这时候就需要一定程度的“当场清算”，也就是商业。但这种形式是有悖于传统的亲密血缘关系的，因此就衍生出集市的概念，乡村社会划分出一个特定的地点让大家都到这里来，暂时撇开社会联系，进行纯粹的商业交易与结算，不用讲人情。</p>
+<p>因为有集市的存在，“外村人”也可以参与本村的商业活动并生活于此，这是由商业衍生出的新的地缘概念，有别于传统的附加在血缘上的地缘关系，是契约关系的基础，也是现代社会的基础。从学院结合转变到地缘结合是社会性质的转变，也是社会史上的大转变。</p>
+<blockquote>
+<p>有不少概念也是在自己的理解上添油加醋，也不保证能准确传达费孝通先生原文的意思，比如关于籍贯、新地缘关系的产生部分。</p>
+</blockquote>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+    </footer>
+  </div>
+
+   
+   
+  
+</article>
+
+    
+    <article
+  id="post-Algorithm/leetcode-42-trapping-rain-water"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2019/02/25/Algorithm/leetcode-42-trapping-rain-water/"
+    >LeetCode 42. Trapping Rain Water</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2019/02/25/Algorithm/leetcode-42-trapping-rain-water/" class="article-date">
+  <time datetime="2019-02-25T01:27:45.000Z" itemprop="datePublished">2019-02-25</time>
+</a>    
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="42-Trapping-Rain-Water"><a href="#42-Trapping-Rain-Water" class="headerlink" title="42. Trapping Rain Water"></a>42. Trapping Rain Water</h1><p>Given <em>n</em> non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it is able to trap after raining.</p>
+<p><img src="/2019/02/25/Algorithm/leetcode-42-trapping-rain-water/image.png" alt="Alt text"></p>
+<p>The above elevation map is represented by array [0,1,0,2,1,0,1,3,2,1,2,1]. In this case, 6 units of rain water (blue section) are being trapped. Thanks <strong>Marcos</strong> for contributing this image!</p>
+<p><strong>Example:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: [0,1,0,2,1,0,1,3,2,1,2,1]</span><br><span class="line">Output: 6</span><br></pre></td></tr></table></figure>
+
+<h1 id="我的解法"><a href="#我的解法" class="headerlink" title="我的解法"></a>我的解法</h1><blockquote>
+<p>一开始我有一个错误的解法，这个解法是通过有穷自动机分析出来的；虽然这这种解法最终无法实现，但我发现有穷自动机真的是个逻辑分析的好工具，也算增长了经验</p>
+</blockquote>
+<ul>
+<li>先遍历一遍找出最大值，并假设一开始每一列都有着<code>max</code>高度的水；这个是个 <code>O(N)</code>的操作；</li>
+<li>而后从上至下，逐行地减去头和尾溢出的部分，这是个<code>kO(N)</code>的操作，<code>k</code>取决于最大的高度能有多大</li>
+<li>总结来说这是一个<code>O(kN)</code>的操作</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">trap</span><span class="params">(height []<span class="type">int</span>)</span></span> <span class="type">int</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(height) == <span class="number">0</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// fill with the max;</span></span><br><span class="line">    max := height[<span class="number">0</span>]</span><br><span class="line">    <span class="keyword">for</span> _, val := <span class="keyword">range</span> height &#123;</span><br><span class="line">        <span class="keyword">if</span> max &lt; val &#123;</span><br><span class="line">            max = val</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    result := max * <span class="built_in">len</span>(height)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// delete the first 0 cols</span></span><br><span class="line">    sp := <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> ; sp &lt; <span class="built_in">len</span>(height) &amp;&amp; height[sp] == <span class="number">0</span>; sp++ &#123;</span><br><span class="line">        result -= max;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// delete the existing places</span></span><br><span class="line">    <span class="keyword">for</span> e:=sp; e&lt;<span class="built_in">len</span>(height); e++&#123;</span><br><span class="line">        result -= height[e];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// delete row by row</span></span><br><span class="line">    <span class="keyword">for</span> curH := max; curH &gt;= <span class="number">1</span>; curH-- &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// delete the head</span></span><br><span class="line">        <span class="keyword">for</span> e := sp;; e++ &#123;</span><br><span class="line">            <span class="keyword">if</span> height[e] &lt; curH &#123;</span><br><span class="line">                result--;</span><br><span class="line">            &#125; <span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// delete the tail</span></span><br><span class="line">        <span class="keyword">for</span> e := <span class="built_in">len</span>(height)<span class="number">-1</span>;;e--&#123;</span><br><span class="line">            <span class="keyword">if</span> height[e] &lt; curH&#123;</span><br><span class="line">                result--;</span><br><span class="line">            &#125; <span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="更巧妙的"><a href="#更巧妙的" class="headerlink" title="更巧妙的"></a>更巧妙的</h1><p>讨论区里利用双指针，可以有 <code>O(N)</code>（只遍历一遍）的算法。具体看<a target="_blank" rel="noopener" href="https://leetcode.com/problems/trapping-rain-water/discuss/17357/Sharing-my-simple-c%2B%2B-code%3A-O(n)-time-O(1)-space">这里</a>，这里不说详细的解析，简单来说就是左右同步扫描，并将水从低处往高处逐列填。这里只贴一下代码</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">trap</span><span class="params">(<span class="type">int</span> A[], <span class="type">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> left=<span class="number">0</span>; <span class="type">int</span> right=n<span class="number">-1</span>;</span><br><span class="line">        <span class="type">int</span> res=<span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> maxleft=<span class="number">0</span>, maxright=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(left&lt;=right)&#123;</span><br><span class="line">            <span class="keyword">if</span>(A[left]&lt;=A[right])&#123;</span><br><span class="line">                <span class="keyword">if</span>(A[left]&gt;=maxleft) maxleft=A[left];</span><br><span class="line">                <span class="keyword">else</span> res+=maxleft-A[left];</span><br><span class="line">                left++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">if</span>(A[right]&gt;=maxright) maxright= A[right];</span><br><span class="line">                <span class="keyword">else</span> res+=maxright-A[right];</span><br><span class="line">                right--;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h1 id="更多的解法"><a href="#更多的解法" class="headerlink" title="更多的解法"></a>更多的解法</h1><p><a target="_blank" rel="noopener" href="https://leetcode.com/problems/trapping-rain-water/solution/">Solution</a>有更多的解法，还有一种动态规划的解法很有意思，将左边加起来，右边加起来，重叠部分就是所求。</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+    </footer>
+  </div>
+
+   
+   
+  
+</article>
+
+    
+  </article>
+  
+
+  
+  <nav class="page-nav">
+    
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">下一页</a>
+  </nav>
+  
+</section>
+</div>
+
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2024
+        <i class="ri-heart-fill heart_icon"></i> Jeff
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Jeff的博客"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+ <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+      tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+  });
+
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for(i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/mathjax/2.7.7/MathJax.js"></script>
+<script src="https://cdn.staticfile.org/mathjax/2.7.7/config/TeX-AMS-MML_HTMLorMML-full.js"></script>
+<script>
+  var ayerConfig = {
+    mathjax: true,
+  };
+</script>
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
 
 
+    
+    
 
-
-
-
+  </div>
+</body>
 
 </html>
